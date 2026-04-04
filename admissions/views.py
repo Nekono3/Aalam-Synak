@@ -1220,7 +1220,12 @@ def cycle_exam_submit(request, attempt_pk):
         variant = reg.variant if reg else '1A'
 
         region = reg.region if reg else (candidate.region if candidate and hasattr(candidate, 'region') else None)
-        school_name = reg.school_name if reg else (candidate.school.name if (candidate and candidate.school) else (candidate.school_name if candidate else ''))
+        
+        school_name = ''
+        if reg and getattr(reg, 'school_name', None):
+            school_name = reg.school_name
+        elif candidate and getattr(candidate, 'previous_school', None):
+            school_name = candidate.previous_school.name
 
         # Find common phone numbers from registrations
         phone1 = reg.phone1 if reg else None
