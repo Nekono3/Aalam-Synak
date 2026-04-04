@@ -60,7 +60,7 @@ def logout_view(request):
 def register_view(request):
     """Student registration view."""
     if request.user.is_authenticated:
-        return redirect('accounts:dashboard')
+        return redirect('admissions:student_admission')
     
     # Handle language switch
     lang = request.GET.get('lang')
@@ -74,7 +74,7 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, _('Registration successful! Welcome to Aalam Synak.'))
-            return redirect('accounts:dashboard')
+            return redirect('admissions:student_admission')
     else:
         form = StudentRegistrationForm()
     

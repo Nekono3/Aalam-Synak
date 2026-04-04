@@ -94,7 +94,7 @@ class AdmissionRegistrationForm(forms.Form):
     )
     phone1 = forms.CharField(
         max_length=50,
-        label=_("Phone Number 1"),
+        label='Номериңиз',
         widget=forms.TextInput(attrs={
             'class': 'form-input',
             'placeholder': _('Напр: 0555 123 456'),
@@ -102,11 +102,11 @@ class AdmissionRegistrationForm(forms.Form):
     )
     phone2 = forms.CharField(
         max_length=50,
-        required=False,
-        label=_("Phone Number 2"),
+        required=True,
+        label='Ата-энеңиздин номери',
         widget=forms.TextInput(attrs={
             'class': 'form-input',
-            'placeholder': _('Необязательно'),
+            'placeholder': _('Напр: 0555 123 456'),
         })
     )
     variant = forms.ChoiceField(

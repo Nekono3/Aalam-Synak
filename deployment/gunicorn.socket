@@ -1,0 +1,8 @@
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/home/ubuntu/Aalam-Synak/aalam.sock
+
+[Install]
+WantedBy=sockets.target

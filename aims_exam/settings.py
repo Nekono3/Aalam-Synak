@@ -10,12 +10,15 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = 'django-insecure-pkaa7_y0-sva$rwtpv0$rf(pagqqac%==yyr@5^j96(e@rzwlr'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-pkaa7_y0-sva$rwtpv0$rf(pagqqac%==yyr@5^j96(e@rzwlr')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition

@@ -80,7 +80,7 @@ class StudentRegistrationForm(forms.ModelForm):
     ADDRESS_CHOICES = [
         ('', _('-- Выберите регион --')),
         ('Сүлүктү ш.', 'Сүлүктү ш.'),
-        ('Лейлек ш.', 'Лейлек ш.'),
+        ('Лейлек р.', 'Лейлек р.'),
         ('Баткен ш.', 'Баткен ш.'),
         ('Баткен р.', 'Баткен р.'),
         ('Кадамжай р.', 'Кадамжай р.'),
@@ -100,7 +100,14 @@ class StudentRegistrationForm(forms.ModelForm):
         })
     )
     phone = forms.CharField(
-        label=_('Ата-Энесинин телефону'),
+        label='Номериңиз',
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': _('Мисалы: 0555 123 456'),
+        })
+    )
+    father_phone = forms.CharField(
+        label='Ата-энеңиздин номери',
         widget=forms.TextInput(attrs={
             'class': 'form-input',
             'placeholder': _('Мисалы: 0555 123 456'),
@@ -109,7 +116,7 @@ class StudentRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'phone']
+        fields = ['email', 'first_name', 'last_name', 'phone', 'father_phone']
         labels = {
             'first_name': _('Аты'),
             'last_name': _('Фамилиясы'),
@@ -136,6 +143,7 @@ class StudentRegistrationForm(forms.ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['phone'].required = True
+        self.fields['father_phone'].required = True
     
     def clean_email(self):
         email = self.cleaned_data.get('email')

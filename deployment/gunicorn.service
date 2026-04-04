@@ -1,0 +1,19 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/Aalam-Synak
+Environment="PATH=/home/ubuntu/Aalam-Synak/venv/bin"
+EnvironmentFile=/home/ubuntu/Aalam-Synak/.env
+ExecStart=/home/ubuntu/Aalam-Synak/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/home/ubuntu/Aalam-Synak/aalam.sock \
+          aims_exam.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

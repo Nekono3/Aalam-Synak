@@ -386,15 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
     goTo(0);
 });
 
-// Proctoring: Tab Switch
-if ({% if cycle.max_tab_switches %}true{% else %}false{% endif %}) {
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden && !isDone) {
-            isDone = true;
-            document.getElementById('id_tab_warning').value = 'banned';
-            document.getElementById('submit-form').submit();
-        }
-    });
-}
+// Proctoring: Tab Switch functionality has been globally disabled by admin.
 </script>
 {% endblock %}
