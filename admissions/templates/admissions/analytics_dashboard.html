@@ -39,6 +39,15 @@
     <div class="d-flex justify-between align-end">
         <div>
             <h1 class="h2">{% trans "Admission Dashboard" %}</h1>
+            <div class="mt-2 mb-2">
+                <form method="get" id="cycle-form">
+                    <select name="cycle" class="form-select d-inline-block w-auto" onchange="document.getElementById('cycle-form').submit();" style="font-weight: 600; border: 2px solid var(--primary-blue); border-radius: 8px; padding: 6px 12px; background-color: rgba(0, 102, 255, 0.05);">
+                        {% for c in all_cycles %}
+                            <option value="{{ c.id }}" {% if c.id == active_cycle.id %}selected{% endif %}>{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
             <p class="text-muted">{% trans "See overall statistics and rankings for this admission session" %}</p>
         </div>
         <div class="d-flex gap-2 flex-wrap">
@@ -85,6 +94,7 @@
     <!-- Filters & Passing Score Control -->
     <div class="card p-3 mb-4">
         <form method="get" class="row align-center">
+            <input type="hidden" name="cycle" value="{{ active_cycle.id }}">
             <div class="col-md-2">
                 <label class="small text-muted mb-1 d-block">{% trans "Region" %}</label>
                 <select name="region" class="form-select" onchange="this.form.submit()">

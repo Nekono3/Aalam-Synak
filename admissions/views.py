@@ -259,14 +259,22 @@ def cycle_subject_splits(request, pk):
     """Configure subject ranges for a cycle calculation."""
     cycle = get_object_or_404(AdmissionCycle, pk=pk)
     
+    # Universal splits are stored under variant '1A'
+    queryset = AdmissionSubjectSplit.objects.filter(cycle=cycle, variant='1A')
+    
     if request.method == 'POST':
-        formset = AdmissionSubjectSplitFormSet(request.POST, instance=cycle)
+        formset = AdmissionSubjectSplitFormSet(request.POST, instance=cycle, queryset=queryset)
         if formset.is_valid():
-            formset.save()
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.variant = '1A'
+                instance.save()
+            for obj in formset.deleted_objects:
+                obj.delete()
             messages.success(request, _('Subject splits saved successfully.'))
             return redirect('admissions:cycle_questions', pk=cycle.pk)
     else:
-        formset = AdmissionSubjectSplitFormSet(instance=cycle)
+        formset = AdmissionSubjectSplitFormSet(instance=cycle, queryset=queryset)
     
     return render(request, 'admissions/cycle_subject_splits.html', {
         'cycle': cycle, 'formset': formset
@@ -738,12 +746,8 @@ def admission_analytics_upload(request):
                 for ma in AdmissionMasterAnswer.objects.filter(cycle=cycle):
                     master_answers[ma.variant] = ma.answers[:70]  # Only first 70
                 
-                # Load subject splits
-                subject_splits = {}
-                for split in AdmissionSubjectSplit.objects.filter(cycle=cycle):
-                    if split.variant not in subject_splits:
-                        subject_splits[split.variant] = []
-                    subject_splits[split.variant].append(split)
+                # Load universal subject splits (stored as 1A)
+                universal_splits = list(AdmissionSubjectSplit.objects.filter(cycle=cycle, variant='1A'))
                 
                 rows_processed = 0
                 rows_skipped = 0
@@ -841,8 +845,8 @@ def admission_analytics_upload(request):
                         )
                         
                         # Calculate subject scores
-                        if variant in subject_splits and variant in master_answers:
-                            _calculate_subject_scores(result, answers_70, master_answers[variant], subject_splits[variant])
+                        if variant in master_answers:
+                            _calculate_subject_scores(result, answers_70, master_answers[variant], universal_splits)
                         
                         rows_processed += 1
                     except Exception as row_err:
@@ -878,31 +882,7 @@ def _ensure_subject_splits(cycle):
             ('география', 41, 50),
             ('тарых', 51, 60),
             ('англис тил', 61, 70),
-        ],
-        '1B': [
-            ('математика', 1, 20),
-            ('кыргыз тил', 21, 30),
-            ('биология', 31, 40),
-            ('география', 41, 50),
-            ('тарых', 51, 60),
-            ('англис тил', 61, 70),
-        ],
-        '2A': [
-            ('математика', 1, 20),
-            ('орус тил', 21, 30),
-            ('биология', 31, 40),
-            ('география', 41, 50),
-            ('тарых', 51, 60),
-            ('англис тил', 61, 70),
-        ],
-        '2B': [
-            ('математика', 1, 20),
-            ('орус тил', 21, 30),
-            ('биология', 31, 40),
-            ('география', 41, 50),
-            ('тарых', 51, 60),
-            ('англис тил', 61, 70),
-        ],
+        ]
     }
     
     for variant, subjects in SPLITS.items():
@@ -965,9 +945,15 @@ def delete_admission_session(request, pk):
 @user_passes_test(is_super_admin)
 def admission_analytics_dashboard(request):
     """Main dashboard for consolidated admission analytics."""
-    active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
-    if not active_cycle:
-        active_cycle = AdmissionCycle.objects.first()
+    cycle_id = request.GET.get('cycle')
+    if cycle_id:
+        active_cycle = get_object_or_404(AdmissionCycle, pk=cycle_id)
+    else:
+        active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
+        if not active_cycle:
+            active_cycle = AdmissionCycle.objects.first()
+            
+    all_cycles = AdmissionCycle.objects.all().order_by('-start_date')
         
     results = AdmissionResult.objects.filter(cycle=active_cycle) if active_cycle else AdmissionResult.objects.all()
     
@@ -1021,6 +1007,7 @@ def admission_analytics_dashboard(request):
     }
 
     context = {
+        'all_cycles': all_cycles,
         'active_cycle': active_cycle,
         'custom_passing_score': custom_passing_score,
         'total_students': total_students,
@@ -1118,7 +1105,7 @@ def cycle_exam_take(request, attempt_pk):
     # Get student's variant from registration
     registration = AdmissionRegistration.objects.filter(user=request.user, cycle=attempt.cycle).first()
     variant = registration.variant if registration else '1A'
-    splits = attempt.cycle.subject_splits.filter(variant=variant).order_by('start_question')
+    splits = attempt.cycle.subject_splits.filter(variant='1A').order_by('start_question')
     
     # Pre-calculate assigned subject for each question
     question_list = list(attempt.cycle.admission_questions.prefetch_related('options').order_by('order'))
@@ -1262,7 +1249,7 @@ def cycle_exam_submit(request, attempt_pk):
         )
         
         # Subject Splits
-        splits = attempt.cycle.subject_splits.filter(variant=variant)
+        splits = attempt.cycle.subject_splits.filter(variant='1A')
         for split in splits:
             split_total = 0
             split_earned = 0
@@ -1424,12 +1411,8 @@ def recalculate_results(request, cycle_id=None):
         messages.error(request, _("No master answers defined. Please set them first."))
         return redirect('admissions:master_answer_setup')
     
-    # Load subject splits
-    subject_splits = {}
-    for split in AdmissionSubjectSplit.objects.filter(cycle=cycle):
-        if split.variant not in subject_splits:
-            subject_splits[split.variant] = []
-        subject_splits[split.variant].append(split)
+    # Load universal subject splits (stored as 1A)
+    universal_splits = list(AdmissionSubjectSplit.objects.filter(cycle=cycle, variant='1A'))
     
     results = AdmissionResult.objects.filter(cycle=cycle, answer_string__gt='')
     recalculated = 0
@@ -1473,8 +1456,8 @@ def recalculate_results(request, cycle_id=None):
         
         # Recalculate subject scores
         AdmissionSubjectScore.objects.filter(result=result).delete()
-        if normalized_variant in subject_splits:
-            _calculate_subject_scores(result, answers_70, master, subject_splits[normalized_variant])
+        if normalized_variant in master_answers:
+            _calculate_subject_scores(result, answers_70, master, universal_splits)
         
         recalculated += 1
     
@@ -1517,9 +1500,15 @@ def save_answer_ajax(request, attempt_pk):
 @user_passes_test(is_super_admin)
 def subject_top_students(request):
     """Show top students filtered by subject."""
-    active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
-    if not active_cycle:
-        active_cycle = AdmissionCycle.objects.first()
+    cycle_id = request.GET.get('cycle')
+    if cycle_id:
+        active_cycle = get_object_or_404(AdmissionCycle, pk=cycle_id)
+    else:
+        active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
+        if not active_cycle:
+            active_cycle = AdmissionCycle.objects.first()
+            
+    all_cycles = AdmissionCycle.objects.all().order_by('-start_date')
     
     # Get available subjects
     all_subjects = AdmissionSubjectScore.objects.filter(
@@ -1536,6 +1525,7 @@ def subject_top_students(request):
         ).select_related('result').order_by('-correct_count')[:100]
     
     context = {
+        'all_cycles': all_cycles,
         'active_cycle': active_cycle,
         'subjects': list(all_subjects),
         'selected_subject': selected_subject,
@@ -1552,9 +1542,15 @@ def subject_top_students(request):
 @user_passes_test(is_super_admin)
 def school_subject_analytics(request):
     """Show average correct/wrong per school for each subject."""
-    active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
-    if not active_cycle:
-        active_cycle = AdmissionCycle.objects.first()
+    cycle_id = request.GET.get('cycle')
+    if cycle_id:
+        active_cycle = get_object_or_404(AdmissionCycle, pk=cycle_id)
+    else:
+        active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
+        if not active_cycle:
+            active_cycle = AdmissionCycle.objects.first()
+            
+    all_cycles = AdmissionCycle.objects.all().order_by('-start_date')
     
     # Get all subjects
     all_subjects = list(
@@ -1579,6 +1575,7 @@ def school_subject_analytics(request):
         ).order_by('-avg_correct')
     
     context = {
+        'all_cycles': all_cycles,
         'active_cycle': active_cycle,
         'subjects': all_subjects,
         'selected_subject': selected_subject,
@@ -1718,7 +1715,7 @@ def online_subject_analytics(request):
     active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
     if not active_cycle: active_cycle = AdmissionCycle.objects.first()
     
-    splits = active_cycle.subject_splits.all() if active_cycle else []
+    splits = active_cycle.subject_splits.filter(variant='1A') if active_cycle else []
     subject_stats = []
     
     for split in splits:
@@ -1926,7 +1923,7 @@ def recalculate_all_online_results(request):
         )
         
         # Fix splits
-        splits = attempt.cycle.subject_splits.all()
+        splits = attempt.cycle.subject_splits.filter(variant='1A')
         for split in splits:
             split_total = 0
             split_earned = 0
