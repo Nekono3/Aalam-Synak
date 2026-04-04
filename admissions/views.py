@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse, JsonResponse
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Count, Q, Avg
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side
@@ -1171,36 +1171,37 @@ def cycle_exam_submit(request, attempt_pk):
         max_score = 0
         questions = attempt.cycle.admission_questions.prefetch_related('options')
         
-        for q in questions:
-            max_score += q.points
-            ans_id = request.POST.get(f'q_{q.id}')
-            is_correct = False
-            selected_option = None
-            
-            if ans_id:
-                try:
-                    selected_option = q.options.get(id=ans_id)
-                except (AdmissionQuestionOption.DoesNotExist, ValueError):
-                    pass
-            
-            # If still no selected_option, check if it was already saved (AJAX)
-            if not selected_option:
-                saved_ans = attempt.answers.filter(question=q).first()
-                if saved_ans:
-                    selected_option = saved_ans.selected_option
-
-            if selected_option:
-                is_correct = selected_option.is_correct
-                if is_correct:
-                    total_score += q.points
-                    
-            OnlineAttemptAnswer.objects.update_or_create(
-                attempt=attempt,
-                question=q,
-                defaults={
-                    'selected_option': selected_option
-                }
-            )
+        with transaction.atomic():
+            for q in questions:
+                max_score += q.points
+                ans_id = request.POST.get(f'q_{q.id}')
+                is_correct = False
+                selected_option = None
+                
+                if ans_id:
+                    try:
+                        selected_option = q.options.get(id=ans_id)
+                    except (AdmissionQuestionOption.DoesNotExist, ValueError):
+                        pass
+                
+                # If still no selected_option, check if it was already saved (AJAX)
+                if not selected_option:
+                    saved_ans = attempt.answers.filter(question=q).first()
+                    if saved_ans:
+                        selected_option = saved_ans.selected_option
+    
+                if selected_option:
+                    is_correct = selected_option.is_correct
+                    if is_correct:
+                        total_score += q.points
+                        
+                OnlineAttemptAnswer.objects.update_or_create(
+                    attempt=attempt,
+                    question=q,
+                    defaults={
+                        'selected_option': selected_option
+                    }
+                )
             
         percentage = (total_score / max_score * 100) if max_score > 0 else 0
         is_passed = percentage >= attempt.cycle.passing_score
