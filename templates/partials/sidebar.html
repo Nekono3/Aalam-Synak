@@ -1,18 +1,34 @@
 {% load static i18n i18n_extras %}
+<!-- Mobile Header (Visible on Desktop as hidden, on Mobile as topbar) -->
+<div class="mobile-header">
+    <div class="mobile-header-brand">
+        <img src="{% static 'images/logo.png' %}" alt="AIMS" class="sidebar-logo" onerror="this.style.display='none'" style="height: 32px;">
+        <span>Aalam Synak</span>
+    </div>
+    <button class="sidebar-toggle" aria-label="Toggle menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+</div>
+
 <!-- Sidebar Navigation -->
 <aside class="sidebar">
     <div class="sidebar-header">
         <img src="{% static 'images/logo.png' %}" alt="AIMS" class="sidebar-logo" onerror="this.style.display='none'">
-        <span class="sidebar-brand">AIMS EXAM</span>
+        <span class="sidebar-brand">Aalam Synak</span>
     </div>
 
     <nav class="sidebar-nav">
         <!-- Main Navigation -->
+        {% if not user.is_authenticated or user.role != 'student' or user.school_class %}
         <div class="nav-section">
             <span class="nav-section-title">{% trans "Main" %}</span>
 
             <a href="{% url 'accounts:dashboard' %}"
-                class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                class="nav-item {% if request.resolver_match.view_name == 'accounts:dashboard' %}active{% endif %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="9"></rect>
@@ -23,14 +39,17 @@
                 <span>{% trans "Dashboard" %}</span>
             </a>
         </div>
+        {% endif %}
 
-        <!-- Admin Section (visible to Super Admin) -->
+        <!-- ============================================ -->
+        <!-- ADMIN SECTION (visible to Super Admin only) -->
+        <!-- ============================================ -->
         {% if user.is_authenticated and user.role == 'super_admin' %}
         <div class="nav-section">
             <span class="nav-section-title">{% trans "Administration" %}</span>
 
             <a href="{% url 'schools:list' %}"
-                class="nav-item {% if 'schools' in request.path and 'subjects' not in request.path and 'analytics' not in request.path and 'students' not in request.path %}active{% endif %}">
+                class="nav-item {% if 'schools' in request.path and 'subjects' not in request.path and 'analytics' not in request.path and 'students' not in request.path and 'classes' not in request.path %}active{% endif %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -61,7 +80,7 @@
             </a>
 
             <a href="{% url 'schools:master_students' %}"
-                class="nav-item {% if 'students' in request.path and 'schools' in request.path %}active{% endif %}">
+                class="nav-item {% if 'students' in request.path and 'schools' in request.path and 'classes' not in request.path %}active{% endif %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -72,13 +91,78 @@
                 <span>{% trans "Master ID" %}</span>
             </a>
         </div>
+
+        <!-- Admin: Admission (admin only) -->
+        <div class="nav-section">
+            <span class="nav-section-title">{% trans "Admission" %}</span>
+
+            <a href="{% url 'admissions:dashboard' %}"
+                class="nav-item {% if request.resolver_match.view_name == 'admissions:dashboard' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <polyline points="16 11 18 13 22 9"></polyline>
+                </svg>
+                <span>{% trans "Admissions" %}</span>
+            </a>
+
+            <a href="{% url 'admissions:school_registry' %}"
+                class="nav-item {% if 'admissions/registry' in request.path or 'admissions/candidate' in request.path %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>{% trans "School Registry" %}</span>
+            </a>
+
+            <a href="{% url 'admissions:admission_analytics_dashboard' %}"
+                class="nav-item {% if 'admissions/analytics' in request.path and 'online-analytics' not in request.path %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>{% trans "Admission Analytics" %}</span>
+            </a>
+
+            <a href="{% url 'admissions:online_analytics_dashboard' %}"
+                class="nav-item {% if 'admissions/online-analytics' in request.path %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>{% trans "Online Analytics" %}</span>
+            </a>
+        </div>
+
+        <!-- Admin: Student Management (admin only) -->
+        <div class="nav-section">
+            <span class="nav-section-title">{% trans "Student Management" %}</span>
+
+            <a href="{% url 'schools:class_list' %}"
+                class="nav-item {% if 'classes' in request.path and 'analytics' not in request.path %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
+                <span>{% trans "Classes" %}</span>
+            </a>
+        </div>
         {% endif %}
 
-        <!-- Teacher Section -->
-        {% if user.is_authenticated and user.role in 'super_admin,teacher' %}
+        <!-- ============================================ -->
+        <!-- EXAMS: Admin + Teacher can see this -->
+        <!-- ============================================ -->
+        {% if user.is_authenticated and user.role == 'super_admin' or user.is_authenticated and user.role == 'teacher' %}
         <div class="nav-section">
             <span class="nav-section-title">{% trans "Exams" %}</span>
 
+            {% if user.role == 'super_admin' %}
             <a href="{% url 'zipgrade:upload' %}"
                 class="nav-item {% if 'zipgrade/upload' in request.path %}active{% endif %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -101,9 +185,10 @@
                 </svg>
                 <span>{% trans "ZipGrade Archives" %}</span>
             </a>
+            {% endif %}
 
             <a href="{% url 'exams:exam_list' %}"
-                class="nav-item {% if 'exams' in request.path and 'create' not in request.path %}active{% endif %}">
+                class="nav-item {% if 'exams' in request.path and 'create' not in request.path and 'my-exams' not in request.path %}active{% endif %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -128,8 +213,10 @@
         </div>
         {% endif %}
 
-        <!-- Analytics Section -->
-        {% if user.is_authenticated and user.role in 'super_admin,teacher' %}
+        <!-- ============================================ -->
+        <!-- TEACHER + ADMIN: Analytics -->
+        <!-- ============================================ -->
+        {% if user.is_authenticated and user.role == 'super_admin' or user.is_authenticated and user.role == 'teacher' %}
         <div class="nav-section">
             <span class="nav-section-title">{% trans "Analytics" %}</span>
 
@@ -164,11 +251,46 @@
                 </svg>
                 <span>{% trans "Student Analytics" %}</span>
             </a>
+
+            <a href="{% url 'analytics:rankings' %}"
+                class="nav-item {% if 'analytics/rankings' in request.path %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 21h8"></path>
+                    <path d="M12 17v4"></path>
+                    <path d="M17 8a5 5 0 1 0-10 0c0 2 2 3.5 2 6h6c0-2.5 2-4 2-6z"></path>
+                    <path d="M17 8c0-2.5 2-4 2-6"></path>
+                    <path d="M7 8c0-2.5-2-4-2-6"></path>
+                </svg>
+                <span>🏆 {% trans "Hall of Fame" %}</span>
+            </a>
         </div>
         {% endif %}
 
-        <!-- Student Section -->
-        {% if user.is_authenticated and user.role == 'student' %}
+        <!-- ============================================ -->
+        <!-- ADMISSION SECTION (only students without a class) -->
+        <!-- ============================================ -->
+        {% if user.is_authenticated and user.role == 'student' and not user.school_class %}
+        <div class="nav-section">
+            <span class="nav-section-title">Менин кабыл алуум</span>
+
+            <a href="{% url 'admissions:student_admission' %}"
+                class="nav-item {% if 'admissions' in request.path %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <polyline points="16 11 18 13 22 9"></polyline>
+                </svg>
+                <span>Кабыл алуу сынагы – ААЛАМ</span>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- ============================================ -->
+        <!-- STUDENT SECTION (only students with a class) -->
+        <!-- ============================================ -->
+        {% if user.is_authenticated and user.role == 'student' and user.school_class %}
         <div class="nav-section">
             <span class="nav-section-title">{% trans "My Exams" %}</span>
 

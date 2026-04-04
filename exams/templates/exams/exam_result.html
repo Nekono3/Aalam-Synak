@@ -32,6 +32,13 @@
             {{ attempt.score }} / {{ exam.total_points }} {% trans "Points" %}
         </div>
 
+        {% if attempt.student.admission_profile %}
+        <div style="margin-bottom: 20px; font-size: 1.1em; color: var(--text-secondary);">
+            <i class="fas fa-school"></i> {% trans "School" %}: 
+            <strong>{{ attempt.student.admission_profile.previous_school.name|default:"—" }}</strong>
+        </div>
+        {% endif %}
+
         <div class="status-badge"
             style="display: inline-block; padding: 10px 20px; border-radius: 20px; font-weight: bold; background: {% if attempt.is_passed %}rgba(16, 185, 129, 0.1); color: var(--success);{% else %}rgba(239, 68, 68, 0.1); color: var(--danger);{% endif %}">
             {% if attempt.is_passed %}
@@ -65,43 +72,158 @@
     </div>
 </div>
 
+{% if attempt.recording %}
+<div class="card" style="margin-top: var(--spacing-lg);">
+    <h3 style="margin-bottom: var(--spacing-md);">🎥 {% trans "Exam Recording" %}</h3>
+    <video controls style="width: 100%; max-height: 400px; border-radius: 8px; background: #000;">
+        <source src="{{ attempt.recording.url }}" type="video/webm">
+        {% trans "Your browser does not support video playback." %}
+    </video>
+</div>
+{% endif %}
+
 {% if answers %}
 <div class="card" style="margin-top: var(--spacing-lg);">
     <h3 style="margin-bottom: var(--spacing-lg);">{% trans "Detailed Review" %}</h3>
 
     {% for answer in answers %}
     <div class="review-item" style="border-bottom: 1px solid var(--border-color); padding: 20px 0;">
-        <div style="margin-bottom: 10px; font-weight: bold; font-size: 1.1em;">
-            <span class="badge badge-secondary">Q{{ forloop.counter }}</span>
-            {{ answer.question.question_text }}
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+            <div style="font-weight: bold; font-size: 1.1em;">
+                <span class="badge badge-secondary">Q{{ forloop.counter }}</span>
+                <span class="badge" style="margin-left: 4px;">{{ answer.question.get_question_type_display }}</span>
+                {{ answer.question.question_text }}
+            </div>
+            <div>
+                {% if answer.is_correct %}
+                <span class="badge badge-success">+{{ answer.question.points }} {% trans "pts" %}</span>
+                {% else %}
+                <span class="badge badge-danger">0 {% trans "pts" %}</span>
+                {% endif %}
+            </div>
         </div>
 
         <div style="margin-left: 20px;">
+            {% if answer.question.question_type == 'fill_blanks' %}
+            {# Fill in the Blanks review #}
+            <div style="margin-bottom: 8px;">
+                <strong>{% trans "Your Answer" %}:</strong>
+                <span class="{% if answer.is_correct %}text-success{% else %}text-danger{% endif %}" style="font-weight: 500;">
+                    {{ answer.text_answer|default:"—" }}
+                </span>
+                {% if answer.is_correct %}✅{% else %}❌{% endif %}
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.9em;">
+                <strong>{% trans "Accepted Answers" %}:</strong> {{ answer.question.correct_answers }}
+            </div>
+
+            {% elif answer.question.question_type == 'matching' %}
+            {# Matching review — pair-by-pair #}
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                {% for pair in answer.question.matching_pairs.all %}
+                {% with student_val=answer.matching_answers %}
+                <div style="display: grid; grid-template-columns: 1fr auto 1fr auto; gap: 10px; align-items: center; padding: 8px 12px; border-radius: 6px; background: var(--bg-secondary); border: 1px solid var(--border-color);">
+                    <span style="font-weight: 500;">{{ pair.left_item }}</span>
+                    <span style="color: var(--text-muted);">→</span>
+                    <span style="font-weight: 500;">
+                        {% for k, v in student_val.items %}
+                            {% if k == pair.left_item %}{{ v }}{% endif %}
+                        {% empty %}
+                            —
+                        {% endfor %}
+                    </span>
+                    <span>
+                        {% for k, v in student_val.items %}
+                            {% if k == pair.left_item %}
+                                {% if v == pair.right_item %}✅{% else %}❌{% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                </div>
+                {% endwith %}
+                {% endfor %}
+                <div style="font-size: 0.85em; color: var(--text-muted); margin-top: 4px;">
+                    {% trans "Correct pairings shown below:" %}
+                </div>
+                {% for pair in answer.question.matching_pairs.all %}
+                <div style="font-size: 0.85em; color: var(--success); padding-left: 12px;">
+                    {{ pair.left_item }} → {{ pair.right_item }}
+                </div>
+                {% endfor %}
+            </div>
+
+            {% elif answer.question.question_type == 'ordering' %}
+            {# Ordering review — item-by-item position comparison #}
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                {% for item in answer.question.ordering_items.all %}
+                {% with student_val=answer.ordering_answers %}
+                <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 8px 12px; border-radius: 6px; background: var(--bg-secondary); border: 1px solid var(--border-color);">
+                    <span style="font-weight: 600; color: var(--text-muted); min-width: 60px;">
+                        {% for k, v in student_val.items %}
+                            {% if k == item.text %}#{{ v }}{% endif %}
+                        {% empty %}
+                            —
+                        {% endfor %}
+                    </span>
+                    <span style="font-weight: 500;">{{ item.text }}</span>
+                    <span>
+                        {% for k, v in student_val.items %}
+                            {% if k == item.text %}
+                                {% if v == item.correct_position %}✅{% else %}❌{% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                </div>
+                {% endwith %}
+                {% endfor %}
+                <div style="font-size: 0.85em; color: var(--text-muted); margin-top: 4px;">
+                    {% trans "Correct order:" %}
+                </div>
+                {% for item in answer.question.ordering_items.all %}
+                <div style="font-size: 0.85em; color: var(--success); padding-left: 12px;">
+                    {{ item.correct_position }}. {{ item.text }}
+                </div>
+                {% endfor %}
+            </div>
+            {% if answer.partial_score is not None %}
+            <div style="margin-top: 8px; padding: 8px 12px; border-radius: 6px; background: var(--bg-secondary); border: 1px solid var(--border-color);">
+                <strong>{% trans "Score" %}:</strong>
+                <span style="font-weight: 600; {% if answer.is_correct %}color: var(--success){% elif answer.partial_score > 0 %}color: var(--warning){% else %}color: var(--danger){% endif %}">
+                    {{ answer.partial_score }} / {{ answer.question.points }} {% trans "points" %}
+                </span>
+            </div>
+            {% endif %}
+
+            {% elif answer.question.question_type == 'true_false' %}
+            {# True/False review #}
+            <div style="margin-bottom: 8px;">
+                <strong>{% trans "Your Answer" %}:</strong>
+                <span class="{% if answer.is_correct %}text-success{% else %}text-danger{% endif %}" style="font-weight: 500;">
+                    {% if answer.text_answer == 'true' %}{% trans "True" %}{% elif answer.text_answer == 'false' %}{% trans "False" %}{% else %}—{% endif %}
+                </span>
+                {% if answer.is_correct %}✅{% else %}❌{% endif %}
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.9em;">
+                <strong>{% trans "Correct Answer" %}:</strong>
+                {% if answer.question.correct_answer_boolean %}{% trans "True" %}{% else %}{% trans "False" %}{% endif %}
+            </div>
+
+            {% else %}
+            {# Multiple Choice review #}
             {% for option in answer.question.options.all %}
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px; 
-                {% if option.is_correct %}color: var(--success); font-weight: bold;{% endif %}
-                {% if answer.selected_option == option and not option.is_correct %}color: var(--danger); text-decoration: line-through;{% endif %}
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px; padding: 4px 8px; border-radius: 4px;
+                {% if option.is_correct %}background: rgba(16, 185, 129, 0.08); color: var(--success); font-weight: bold;{% endif %}
+                {% if answer.selected_option == option and not option.is_correct %}background: rgba(239, 68, 68, 0.08); color: var(--danger); text-decoration: line-through;{% endif %}
             ">
                 {% if answer.selected_option == option %}
-                {% if option.is_correct %}
-                ✅
+                    {% if option.is_correct %}✅{% else %}❌{% endif %}
                 {% else %}
-                ❌
+                    <span style="display: inline-block; width: 20px;"></span>
                 {% endif %}
-                {% else %}
-                <span style="display: inline-block; width: 20px;"></span>
-                {% endif %}
-
                 {{ option.text }}
+                {% if option.is_correct %}<span style="font-size: 0.85em; color: var(--text-muted); margin-left: 4px;">({% trans "correct" %})</span>{% endif %}
             </div>
             {% endfor %}
-        </div>
-
-        <div style="margin-top: 10px; font-size: 0.9em; color: var(--text-muted);">
-            {% if answer.is_correct %}
-            {% trans "Result" %}: +{{ answer.question.points }} {% trans "points" %}
-            {% else %}
-            {% trans "Result" %}: 0 {% trans "points" %}
             {% endif %}
         </div>
     </div>

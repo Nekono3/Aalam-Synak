@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "My Admission" %} | Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content text-center py-6">
+        <h1 class="gradient-text text-4xl mb-2">Кош келиңиз, {{ request.user.first_name }}!</h1>
+        <p class="text-secondary text-lg">Бул жерден сиз кабыл алуу сынагына катышып, статусуңузду көрө аласыз.</p>
+    </div>
+</div>
+
+<div class="admission-status-grid animate-slide-up">
+    <!-- Status Card -->
+    <div class="glass-card status-card">
+        <div class="card-header">
+            <h3>{% trans "Admission Status" %}</h3>
+            <span class="status-badge status-active">{% trans "Candidate" %}</span>
+        </div>
+        <div class="status-info">
+            <div class="info-item">
+                <span class="label">Окуу жылы:</span>
+                <span class="value">{{ active_cycle.name|default:"N/A" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admission Exam Card (NEW SYSTEM) -->
+    <div class="glass-card exam-card">
+        <div class="card-header">
+            <h3>📝 {% trans "Admission Exam" %}</h3>
+        </div>
+        {% if has_online_exam %}
+            <div class="exam-content">
+                <div class="exam-details">
+                    <p><strong>{% trans "Title" %}:</strong> {{ active_cycle.name }}</p>
+                    <p><strong>{% trans "Duration" %}:</strong> {{ active_cycle.timer_minutes }} {% trans "minutes" %}</p>
+                    <p><strong>{% trans "Questions" %}:</strong> {{ active_cycle.admission_questions.count }}</p>
+                    <p><strong>{% trans "Passing Score" %}:</strong> {{ active_cycle.passing_score }}%</p>
+                </div>
+                
+                {% if admission_attempt %}
+                    <div class="attempt-status">
+                        {% if admission_attempt.status == 'completed' %}
+                            <div class="alert alert-success">
+                                {% if admission_result %}
+                                    {% if admission_result.is_passed %}
+                                        Экзамен аяктады. Жыйынтык: {{ admission_result.percentage|floatformat:1 }}% — <strong>ӨТТҮҢҮЗ ✅</strong>
+                                        
+                                        {% if candidate.gender == 'F' or candidate.gender == 'M' %}
+                                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1);">
+                                            <h4 style="margin-bottom: 0.5rem; font-weight: 700; color: #166534;">Сиз экзаменден өттүңүз!</h4>
+                                            <p style="margin-bottom: 1rem; color: #15803d;">Группага кирүү үчүн төмөнкү баскычты басыңыз.</p>
+                                            
+                                            {% if candidate.gender == 'F' %}
+                                            <a href="https://chat.whatsapp.com/IAWWKBMsykhJbfN19vJnnv?mode=gi_t" target="_blank" class="btn btn-block" style="background-color: #25D366; color: white; padding: 12px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.4);">
+                                                💬 Группага кирүү
+                                            </a>
+                                            {% elif candidate.gender == 'M' %}
+                                            <a href="https://chat.whatsapp.com/BY6HMyveevl9vLnu0HVomZ?mode=gi_t" target="_blank" class="btn btn-block" style="background-color: #25D366; color: white; padding: 12px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.4);">
+                                                💬 Группага кирүү
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                    {% else %}
+                                        — <strong>{% trans "NOT PASSED" %} ❌</strong>
+                                    {% endif %}
+                                {% else %}
+                                    {% trans "Exam completed. Calculating results..." %}
+                                {% endif %}
+                            </div>
+                        {% elif admission_attempt.status == 'locked' %}
+                            <div class="alert alert-danger">
+                                ⚠️ {% trans "Your exam was locked." %}
+                                {% if admission_attempt.lock_reason %} ({{ admission_attempt.lock_reason }}){% endif %}
+                            </div>
+                        {% elif admission_attempt.status == 'timed_out' %}
+                            <div class="alert alert-warning">
+                                ⏰ {% trans "Your exam timed out." %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                {% trans "Exam in progress." %}
+                            </div>
+                            <a href="{% url 'admissions:cycle_exam_take' attempt_pk=admission_attempt.pk %}" class="btn btn-primary btn-block">
+                                ▶️ {% trans "Continue Exam" %}
+                            </a>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="exam-actions text-center mt-4">
+                        <p class="text-muted mb-4 text-lg">Сынактан өтүүгө даярсызбы?</p>
+                        <a href="{% url 'admissions:cycle_exam_start' pk=active_cycle.pk %}" class="btn btn-primary btn-block" style="font-size: 1.25rem; padding: 1.25rem; border-radius: 12px; background: linear-gradient(135deg, var(--primary-blue), #4F46E5); box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);">
+                            🚀 Экзаменди башта!
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="empty-exam">
+                <p class="text-muted">{% trans "No online admission exam is currently available for this cycle." %}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.admission-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+}
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+.status-active { background: rgba(0, 102, 255, 0.1); color: var(--primary-blue); }
+
+.status-info { display: grid; gap: var(--spacing-md); }
+.info-item { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; }
+.info-item .label { color: var(--text-muted); font-size: 0.9375rem; }
+.info-item .value { font-weight: 600; color: var(--text-primary); }
+
+.exam-content { padding: var(--spacing-md); }
+.exam-details { margin-bottom: var(--spacing-lg); }
+.exam-details p { margin-bottom: 8px; }
+
+.empty-exam {
+    padding: var(--spacing-2xl);
+    text-align: center;
+}
+</style>
+{% endblock %}

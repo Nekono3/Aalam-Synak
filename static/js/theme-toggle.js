@@ -1,5 +1,5 @@
 /**
- * AIMS EXAM - Theme Toggle
+ * Aalam Synak - Theme Toggle
  * Handles Light/Dark mode switching with localStorage persistence
  */
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% if is_edit %}{% trans "Edit Exam" %}{% else %}{% trans "Create Exam" %}{% endif %} - AIMS EXAM{% endblock %}
+{% block title %}{% if is_edit %}{% trans "Edit Exam" %}{% else %}{% trans "Create Exam" %}{% endif %} - Aalam Synak{% endblock %}
 
 {% block content %}
 <div class="topbar">
@@ -88,8 +88,20 @@
                 {% trans "Show Results Immediately" %}
             </label>
             <label style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                <input type="checkbox" name="prevent_go_back" {% if form.prevent_go_back.value %}checked{% endif %}>
+                {% trans "Prevent Returning to Previous Questions" %}
+            </label>
+            <label style="display: flex; align-items: center; gap: var(--spacing-sm);">
                 <input type="checkbox" name="is_active" {% if form.is_active.value or not is_edit %}checked{% endif %}>
                 {% trans "Active" %}
+            </label>
+            <label style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                <input type="checkbox" name="enable_recording" {% if form.enable_recording.value %}checked{% endif %}>
+                {% trans "Enable Video Recording" %}
+            </label>
+            <label style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                <input type="checkbox" name="enable_proctoring" {% if form.enable_proctoring.value or not is_edit %}checked{% endif %}>
+                {% trans "Enable Proctoring (Warnings)" %}
             </label>
         </div>
 

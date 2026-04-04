@@ -476,8 +476,8 @@ msgstr "С возвращением"
 msgid "Welcome Back"
 msgstr "С возвращением"
 
-msgid "Sign in to your AIMS EXAM account"
-msgstr "Войдите в свой аккаунт AIMS EXAM"
+msgid "Sign in to your Aalam Synak account"
+msgstr "Войдите в свой аккаунт Aalam Synak"
 
 msgid "Sign In"
 msgstr "Войти"
@@ -501,8 +501,8 @@ msgid "Create Account"
 msgstr "Создать аккаунт"
 
 # --- Registration Form ---
-msgid "Register as a student to access AIMS EXAM"
-msgstr "Зарегистрируйтесь как студент для доступа к AIMS EXAM"
+msgid "Register as a student to access Aalam Synak"
+msgstr "Зарегистрируйтесь как студент для доступа к Aalam Synak"
 
 msgid "Register as Student"
 msgstr "Регистрация студента"
@@ -542,3 +542,249 @@ msgstr "Введите ваш email"
 
 msgid "Enter your password"
 msgstr "Введите ваш пароль"
+
+# --- Admission Module ---
+msgid "Admission"
+msgstr "Приёмная комиссия"
+
+msgid "Admissions"
+msgstr "Приём"
+
+msgid "Admission Dashboard"
+msgstr "Панель приёмной комиссии"
+
+msgid "Admission Registration"
+msgstr "Регистрация на приём"
+
+msgid "Admission Registrations"
+msgstr "Регистрации на приём"
+
+msgid "Admission Analytics"
+msgstr "Аналитика приёма"
+
+msgid "Admission Cycle"
+msgstr "Цикл приёма"
+
+msgid "Admission Type"
+msgstr "Тип приёма"
+
+msgid "XLSX File"
+msgstr "XLSX файл"
+
+msgid "Upload New File"
+msgstr "Загрузить новый файл"
+
+msgid "Master Answers"
+msgstr "Ключи ответов"
+
+msgid "Subject Rankings"
+msgstr "Рейтинг по предметам"
+
+msgid "Export Results"
+msgstr "Экспорт результатов"
+
+msgid "Top Schools"
+msgstr "Топ школ"
+
+msgid "Upload Sessions"
+msgstr "Загруженные сессии"
+
+msgid "All Regions"
+msgstr "Все регионы"
+
+msgid "Combined"
+msgstr "Комбинированный"
+
+msgid "Only Online"
+msgstr "Только онлайн"
+
+msgid "Only Offline"
+msgstr "Только оффлайн"
+
+msgid "Passing Threshold"
+msgstr "Проходной порог"
+
+msgid "See overall statistics and rankings for this admission session"
+msgstr "Общая статистика и рейтинги для этого приёма"
+
+msgid "Region"
+msgstr "Регион"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Passed"
+msgstr "Прошли"
+
+msgid "Failed"
+msgstr "Не прошли"
+
+msgid "Medal"
+msgstr "Медаль"
+
+msgid "Gold"
+msgstr "Золото"
+
+msgid "Silver"
+msgstr "Серебро"
+
+msgid "Bronze"
+msgstr "Бронза"
+
+msgid "Passed / Failed"
+msgstr "Прошли / Не прошли"
+
+msgid "Rate"
+msgstr "Процент"
+
+msgid "Total"
+msgstr "Всего"
+
+# --- Registration Form ---
+msgid "Student Registration"
+msgstr "Регистрация ученика"
+
+msgid "Fill in the details below to register for the admission exam"
+msgstr "Заполните данные ниже для регистрации на приёмный экзамен"
+
+msgid "Register for the admission process"
+msgstr "Зарегистрируйтесь на приёмный процесс"
+
+msgid "Full Name (ФИО)"
+msgstr "ФИО (Фамилия Имя Отчество)"
+
+msgid "Gender"
+msgstr "Пол"
+
+msgid "Exam Variant"
+msgstr "Вариант экзамена"
+
+msgid "Phone Number 1"
+msgstr "Номер телефона 1"
+
+msgid "Phone Number 2"
+msgstr "Номер телефона 2"
+
+msgid "Register for Admission"
+msgstr "Зарегистрироваться на приём"
+
+msgid "Registration Successful!"
+msgstr "Регистрация прошла успешно!"
+
+msgid "You have been registered for the admission process. Your details have been saved."
+msgstr "Вы были зарегистрированы на приём. Ваши данные сохранены."
+
+msgid "Register Another Student"
+msgstr "Зарегистрировать другого ученика"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Variant"
+msgstr "Вариант"
+
+msgid "No Active Admission Cycle"
+msgstr "Нет активного цикла приёма"
+
+msgid "There is currently no active admission cycle. Please check back later."
+msgstr "На данный момент нет активного цикла приёма. Пожалуйста, проверьте позже."
+
+msgid "Type the full name of your school."
+msgstr "Напишите полное название вашей школы."
+
+msgid "Optional"
+msgstr "Необязательно"
+
+msgid "Please fix the following errors:"
+msgstr "Пожалуйста, исправьте следующие ошибки:"
+
+# --- Registration Form Placeholders ---
+msgid "Напр: Иванов Иван Иванович"
+msgstr "Напр: Иванов Иван Иванович"
+
+msgid "Напр: №15 мектеп, Бишкек"
+msgstr "Напр: №15 мектеп, Бишкек"
+
+msgid "Напр: Баткен, Ош, Бишкек"
+msgstr "Напр: Баткен, Ош, Бишкек"
+
+msgid "Напр: 0555 123 456"
+msgstr "Напр: 0555 123 456"
+
+msgid "Необязательно"
+msgstr "Необязательно"
+
+msgid "-- Выберите --"
+msgstr "-- Выберите --"
+
+msgid "Бала (Male)"
+msgstr "Бала (Мальчик)"
+
+msgid "Кыз (Female)"
+msgstr "Кыз (Девочка)"
+
+msgid "e.g. Баткен, Ош, Бишкек..."
+msgstr "напр. Баткен, Ош, Бишкек..."
+
+# --- Upload Form ---
+msgid "Analyze Admission Data"
+msgstr "Анализ данных приёма"
+
+msgid "Upload your XLSX result files to generate rankings and analytics"
+msgstr "Загрузите XLSX файлы с результатами для создания рейтингов и аналитики"
+
+msgid "Back to Dashboard"
+msgstr "Назад к панели"
+
+msgid "Target Region"
+msgstr "Регион"
+
+msgid "Type the region name or select from suggestions."
+msgstr "Введите название региона или выберите из подсказок."
+
+msgid "Process & Analyze"
+msgstr "Обработать и проанализировать"
+
+msgid "Standard Format"
+msgstr "Стандартный формат"
+
+msgid "Duplicate Protection"
+msgstr "Защита от дубликатов"
+
+msgid "Automated Registry"
+msgstr "Автоматический реестр"
+
+msgid "Instructions & Requirements"
+msgstr "Инструкции и требования"
+
+msgid "The system will automatically process the uploaded XLSX file, identify schools, calculate scores, and assign medals based on the active cycle's passing score."
+msgstr "Система автоматически обработает загруженный XLSX файл, определит школы, подсчитает баллы и назначит медали на основе проходного балла активного цикла."
+
+# --- Dashboard Analytics ---
+msgid "Top Scoring Students"
+msgstr "Лучшие ученики по баллам"
+
+msgid "Ranked list of best performing students"
+msgstr "Рейтинг лучших учеников"
+
+msgid "Rank"
+msgstr "Место"
+
+msgid "Incorrect %"
+msgstr "% ошибок"
+
+msgid "Registration Form"
+msgstr "Форма регистрации"
+
+msgid "Total Registrations"
+msgstr "Всего регистраций"
+
+msgid "students"
+msgstr "учеников"
+
+msgid "Registered"
+msgstr "Зарегистрирован"
+
+msgid "No registrations yet."
+msgstr "Регистраций пока нет."
+

@@ -6,26 +6,26 @@ from .models import User
 
 
 class LoginForm(forms.Form):
-    """User login form with email authentication."""
+    """User login form with email or username authentication."""
     
-    email = forms.EmailField(
-        label=_('Email'),
-        widget=forms.EmailInput(attrs={
+    login = forms.CharField(
+        label=_('Email же колдонуучу аты'),
+        widget=forms.TextInput(attrs={
             'class': 'form-input',
-            'placeholder': _('Enter your email'),
+            'placeholder': _('Email же колдонуучу атыңызды жазыңыз'),
             'autofocus': True,
         })
     )
     password = forms.CharField(
-        label=_('Password'),
+        label=_('Сырсөз'),
         widget=forms.PasswordInput(attrs={
             'class': 'form-input',
-            'placeholder': _('Enter your password'),
+            'placeholder': _('Сырсөзүңүздү жазыңыз'),
         })
     )
     remember_me = forms.BooleanField(
         required=False,
-        label=_('Remember me'),
+        label=_('Мени эстеп калуу'),
         widget=forms.CheckboxInput(attrs={'class': 'form-checkbox'})
     )
     
@@ -35,13 +35,15 @@ class LoginForm(forms.Form):
         super().__init__(*args, **kwargs)
     
     def clean(self):
-        email = self.cleaned_data.get('email')
+        login_value = self.cleaned_data.get('login', '').strip()
         password = self.cleaned_data.get('password')
         
-        if email and password:
-            self.user_cache = authenticate(self.request, username=email, password=password)
+        if login_value and password:
+            # EmailOrUsernameBackend handles both email and username lookup
+            self.user_cache = authenticate(self.request, username=login_value, password=password)
+            
             if self.user_cache is None:
-                raise forms.ValidationError(_('Invalid email or password.'))
+                raise forms.ValidationError(_('Invalid email/username or password.'))
             elif not self.user_cache.is_active:
                 raise forms.ValidationError(_('This account is inactive.'))
         
@@ -49,7 +51,6 @@ class LoginForm(forms.Form):
     
     def get_user(self):
         return self.user_cache
-
 
 class StudentRegistrationForm(forms.ModelForm):
     """Student registration form with all required fields."""
@@ -69,33 +70,63 @@ class StudentRegistrationForm(forms.ModelForm):
         })
     )
     
+    # Extra fields for AdmissionCandidate profile
+    gender = forms.ChoiceField(
+        label=_('Gender'),
+        choices=[('', _('-- Выберите --')), ('M', _('Эркек')), ('F', _('Кыз'))],
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    
+    ADDRESS_CHOICES = [
+        ('', _('-- Выберите регион --')),
+        ('Сүлүктү ш.', 'Сүлүктү ш.'),
+        ('Лейлек ш.', 'Лейлек ш.'),
+        ('Баткен ш.', 'Баткен ш.'),
+        ('Баткен р.', 'Баткен р.'),
+        ('Кадамжай р.', 'Кадамжай р.'),
+        ('Кызыл-Кыя ш.', 'Кызыл-Кыя ш.'),
+        ('Башка', 'Башка'),
+    ]
+    address = forms.ChoiceField(
+        label=_('Дарек'),
+        choices=ADDRESS_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    previous_school = forms.CharField(
+        label=_('Мектебиңиз'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': _('Мисалы: №15 мектеп, Бишкек'),
+        })
+    )
+    phone = forms.CharField(
+        label=_('Ата-Энесинин телефону'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': _('Мисалы: 0555 123 456'),
+        })
+    )
+
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'phone', 'mother_phone', 'father_phone']
+        fields = ['email', 'first_name', 'last_name', 'phone']
+        labels = {
+            'first_name': _('Аты'),
+            'last_name': _('Фамилиясы'),
+            'email': _('Email дареги'),
+        }
         widgets = {
             'email': forms.EmailInput(attrs={
                 'class': 'form-input',
-                'placeholder': _('Your email address'),
+                'placeholder': _('Email'),
             }),
             'first_name': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': _('First name'),
+                'placeholder': _('Аты'),
             }),
             'last_name': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': _('Last name'),
-            }),
-            'phone': forms.TextInput(attrs={
-                'class': 'form-input',
-                'placeholder': _('Your phone number'),
-            }),
-            'mother_phone': forms.TextInput(attrs={
-                'class': 'form-input',
-                'placeholder': _("Mother's phone number"),
-            }),
-            'father_phone': forms.TextInput(attrs={
-                'class': 'form-input',
-                'placeholder': _("Father's phone number"),
+                'placeholder': _('Фамилиясы'),
             }),
         }
     
@@ -105,8 +136,6 @@ class StudentRegistrationForm(forms.ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['phone'].required = True
-        self.fields['mother_phone'].required = True
-        self.fields['father_phone'].required = True
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -130,6 +159,41 @@ class StudentRegistrationForm(forms.ModelForm):
         user.role = 'student'
         if commit:
             user.save()
+            
+            # Auto-create ExternalSchool from typed school name
+            from admissions.views import _auto_create_external_school
+            school_name = self.cleaned_data['previous_school'].strip()
+            external_school = _auto_create_external_school(school_name) if school_name else None
+            
+            # Create the AdmissionCandidate profile
+            from admissions.models import AdmissionCandidate, AdmissionCycle
+            active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
+            
+            AdmissionCandidate.objects.create(
+                user=user,
+                gender=self.cleaned_data['gender'],
+                birth_date=None,  # Removed from form
+                address=self.cleaned_data['address'],
+                previous_school=external_school,
+                grade_applying_for="N/A",  # Removed from form
+                cycle=active_cycle
+            )
+            
+            # Also create AdmissionRegistration so the school data
+            # is available for export and analytics
+            from admissions.models import AdmissionRegistration
+            if active_cycle and school_name:
+                AdmissionRegistration.objects.create(
+                    cycle=active_cycle,
+                    full_name=f"{user.first_name} {user.last_name}",
+                    gender=self.cleaned_data['gender'],
+                    school_name=school_name,
+                    region=self.cleaned_data.get('address', ''),
+                    phone1=user.phone or '',
+                    phone2='',
+                    variant='',
+                    user=user,
+                )
         return user
 
 

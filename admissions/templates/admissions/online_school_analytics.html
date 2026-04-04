@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Online School Analytics" %} | AIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .nav-tabs { border-bottom: 1px solid var(--border-color); display: flex; gap: 2rem; margin-bottom: 2rem; }
+    .nav-link { padding: 1rem 0; color: var(--text-muted); text-decoration: none; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s; }
+    .nav-link:hover { color: var(--text-primary); }
+    .nav-link.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+    
+    .medal-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+    .dot-gold { background: #FFD700; }
+    .dot-silver { background: #C0C0C0; }
+    .dot-bronze { background: #CD7F32; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="h2">{% trans "Online School Analytics" %}</h1>
+    <p class="text-muted">{% trans "Performance comparison across schools for online registered applicants" %}</p>
+</div>
+
+<div class="nav-tabs">
+    <a href="{% url 'admissions:online_analytics_dashboard' %}" class="nav-link">{% trans "Overview" %}</a>
+    <a href="{% url 'admissions:online_subject_analytics' %}" class="nav-link">{% trans "Subject Analysis" %}</a>
+    <a href="{% url 'admissions:online_school_analytics' %}" class="nav-link active">{% trans "School Analysis" %}</a>
+    <a href="{% url 'admissions:online_top_students' %}" class="nav-link">{% trans "Top Performers" %}</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="h5 mb-0">{% trans "Performance by School" %}</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{% trans "School Name" %}</th>
+                    <th class="text-center">{% trans "Applicants" %}</th>
+                    <th class="text-center">{% trans "Pass Rate" %}</th>
+                    <th class="text-center">{% trans "Medals (G/S/B)" %}</th>
+                    <th class="text-right">{% trans "Avg Percentage" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for school in school_stats %}
+                <tr>
+                    <td class="font-bold">{{ school.name }}</td>
+                    <td class="text-center">{{ school.count }}</td>
+                    <td class="text-center">
+                        <div class="small mb-1">{{ school.pass_rate|floatformat:1 }}%</div>
+                        <div class="progress-bar-container" style="height: 4px; width: 80px; margin: 0 auto;">
+                            <div class="progress-bar bg-success" style="width: {{ school.pass_rate }}%"></div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge badge-secondary mr-1"><span class="medal-dot dot-gold"></span>{{ school.gold }}</span>
+                        <span class="badge badge-secondary mr-1"><span class="medal-dot dot-silver"></span>{{ school.silver }}</span>
+                        <span class="badge badge-secondary"><span class="medal-dot dot-bronze"></span>{{ school.bronze }}</span>
+                    </td>
+                    <td class="text-right font-bold text-primary">{{ school.avg_percentage|floatformat:1 }}%</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4">{% trans "No school data available for online applicants." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

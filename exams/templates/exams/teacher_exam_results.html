@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ exam.title }} - {% trans "Results" %} - Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <h1 class="topbar-title">{{ exam.title }} — {% trans "Results" %}</h1>
+    <div class="topbar-actions">
+        <a href="{% url 'exams:teacher_exam_list' %}" class="btn btn-outline">{% trans "Back to Exams" %}</a>
+    </div>
+</div>
+
+{% include 'partials/messages.html' %}
+
+<!-- Stats -->
+<div style="display: flex; gap: var(--spacing-lg); margin-bottom: var(--spacing-xl);">
+    <div class="card" style="flex: 1; text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--primary-blue);">{{ total_attempts }}</div>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">{% trans "Completed" %}</div>
+    </div>
+    <div class="card" style="flex: 1; text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--primary-blue);">{{ avg_score|default:"—" }}{% if avg_score %}%{% endif %}</div>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">{% trans "Average Score" %}</div>
+    </div>
+</div>
+
+<!-- Search -->
+<div class="card" style="margin-bottom: var(--spacing-lg);">
+    <form method="get" style="display: flex; gap: var(--spacing-md); align-items: flex-end;">
+        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+            <label class="form-label">{% trans "Search Student" %}</label>
+            <input type="text" name="search" value="{{ search }}" class="form-input"
+                placeholder="{% trans 'Search by name or email...' %}">
+        </div>
+        <button type="submit" class="btn btn-secondary">{% trans "Search" %}</button>
+        <a href="{% url 'exams:teacher_exam_results' exam.pk %}" class="btn btn-outline">{% trans "Clear" %}</a>
+    </form>
+</div>
+
+<!-- Results Table -->
+<div class="card">
+    {% if attempts %}
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>{% trans "Student" %}</th>
+                    <th>{% trans "Score" %}</th>
+                    <th>{% trans "Percentage" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Submitted" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <strong>{{ attempt.student.get_full_name }}</strong>
+                        <br>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">{{ attempt.student.email }}</span>
+                    </td>
+                    <td>{{ attempt.score|default:"—" }} / {{ attempt.total_points|default:"—" }}</td>
+                    <td>
+                        {% if attempt.score_percentage is not None %}
+                        <span style="font-weight: 600; color: {% if attempt.score_percentage >= 70 %}var(--success){% elif attempt.score_percentage >= 50 %}var(--warning){% else %}var(--danger){% endif %};">
+                            {{ attempt.score_percentage|floatformat:1 }}%
+                        </span>
+                        {% else %}
+                        —
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {% if attempt.status == 'completed' %}badge-success{% else %}badge-muted{% endif %}">
+                            {{ attempt.get_status_display }}
+                        </span>
+                    </td>
+                    <td style="font-size: 0.875rem; color: var(--text-muted);">
+                        {% if attempt.submitted_at %}{{ attempt.submitted_at|date:"d.m.Y H:i" }}{% else %}—{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: var(--spacing-xl); color: var(--text-muted);">
+        {% trans "No results found." %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .badge {
+        padding: 2px 8px;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .badge-muted { background: var(--bg-secondary); color: var(--text-muted); }
+</style>
+{% endblock %}

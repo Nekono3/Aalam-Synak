@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Online Top Performers" %} | AIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .nav-tabs { border-bottom: 1px solid var(--border-color); display: flex; gap: 2rem; margin-bottom: 2rem; }
+    .nav-link { padding: 1rem 0; color: var(--text-muted); text-decoration: none; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s; }
+    .nav-link:hover { color: var(--text-primary); }
+    .nav-link.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+    
+    .medal-badge-gold { background: #FFD70033; color: #B8860B; }
+    .medal-badge-silver { background: #C0C0C033; color: #708090; }
+    .medal-badge-bronze { background: #CD7F3233; color: #8B4513; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="h2">{% trans "Online Top Performers" %}</h1>
+    <p class="text-muted">{% trans "Ranking of the highest scoring online applicants" %}</p>
+</div>
+
+<div class="nav-tabs">
+    <a href="{% url 'admissions:online_analytics_dashboard' %}" class="nav-link">{% trans "Overview" %}</a>
+    <a href="{% url 'admissions:online_subject_analytics' %}" class="nav-link">{% trans "Subject Analysis" %}</a>
+    <a href="{% url 'admissions:online_school_analytics' %}" class="nav-link">{% trans "School Analysis" %}</a>
+    <a href="{% url 'admissions:online_top_students' %}" class="nav-link active">{% trans "Top Performers" %}</a>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-between align-center">
+        <h3 class="h5 mb-0">{% trans "Top 100 Students" %}</h3>
+        <span class="small text-muted">{% trans "Showing top performers by percentage" %}</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">{% trans "Rank" %}</th>
+                    <th>{% trans "Student Name" %}</th>
+                    <th>{% trans "School" %}</th>
+                    <th class="text-center">{% trans "Score" %}</th>
+                    <th class="text-center">{% trans "Percentage" %}</th>
+                    <th class="text-center">{% trans "Medal" %}</th>
+                    <th class="text-right">{% trans "Status" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for res in results %}
+                <tr>
+                    <td class="font-bold">#{{ forloop.counter }}</td>
+                    <td>
+                        <div class="font-bold">{{ res.first_name }} {{ res.last_name }}</div>
+                        <div class="small text-muted">{{ res.region }}</div>
+                    </td>
+                    <td class="small">{{ res.school_name }}</td>
+                    <td class="text-center font-bold text-primary">{{ res.score|floatformat:0 }}</td>
+                    <td class="text-center font-bold">{{ res.percentage|floatformat:1 }}%</td>
+                    <td class="text-center">
+                        {% if res.medal == 'gold' %}
+                            <span class="badge medal-badge-gold">🥇 {% trans "Gold" %}</span>
+                        {% elif res.medal == 'silver' %}
+                            <span class="badge medal-badge-silver">🥈 {% trans "Silver" %}</span>
+                        {% elif res.medal == 'bronze' %}
+                            <span class="badge medal-badge-bronze">🥉 {% trans "Bronze" %}</span>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-right">
+                        {% if res.is_passed %}
+                            <span class="badge badge-success">{% trans "Passed" %}</span>
+                        {% else %}
+                            <span class="badge badge-danger">{% trans "Failed" %}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4">{% trans "No results found." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

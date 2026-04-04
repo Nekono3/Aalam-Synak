@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Admission Registration" %} | AIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-card {
+        max-width: 680px;
+        margin: 0 auto;
+    }
+    .register-card .form-group {
+        margin-bottom: 1.25rem;
+    }
+    .register-card .form-label {
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+    .register-header {
+        text-align: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 1.5rem;
+    }
+    .register-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+    .register-header .cycle-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        background: var(--primary-blue);
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    .row-2col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    .success-card {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+    .success-card .check-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #10B981, #059669);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-between align-end">
+        <div>
+            <h1 class="h2">{% trans "Admission Registration" %}</h1>
+            <p class="text-muted">{% trans "Register for the admission process" %}</p>
+        </div>
+        <a href="{% url 'admissions:dashboard' %}" class="btn btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            {% trans "Back" %}
+        </a>
+    </div>
+</div>
+
+{% if success %}
+<div class="card success-card mt-4">
+    <div class="check-icon">✓</div>
+    <h2 class="h4 mb-2">{% trans "Registration Successful!" %}</h2>
+    <p class="text-muted mb-4">{% trans "You have been registered for the admission process. Your details have been saved." %}</p>
+    <div class="card p-3 mb-4" style="max-width: 400px; margin: 0 auto; text-align: left;">
+        <div class="small text-muted mb-1">{% trans "Name" %}</div>
+        <div class="font-bold mb-2">{{ registration.full_name }}</div>
+        <div class="small text-muted mb-1">{% trans "School" %}</div>
+        <div class="font-bold mb-2">{{ registration.school_name }}</div>
+        <div class="small text-muted mb-1">{% trans "Region" %}</div>
+        <div class="font-bold mb-2">{{ registration.region }}</div>
+        <div class="small text-muted mb-1">{% trans "Variant" %}</div>
+        <div class="font-bold">{{ registration.variant }}</div>
+    </div>
+    <a href="{% url 'admissions:admission_register' %}" class="btn btn-primary">{% trans "Register Another Student" %}</a>
+</div>
+{% else %}
+
+{% if not active_cycle %}
+<div class="card p-4 mt-4">
+    <div class="text-center text-muted">
+        <h3 class="h5">{% trans "No Active Admission Cycle" %}</h3>
+        <p>{% trans "There is currently no active admission cycle. Please check back later." %}</p>
+    </div>
+</div>
+{% else %}
+
+<div class="register-card mt-4">
+    <div class="card p-4">
+        <div class="register-header">
+            <h1>📋 {% trans "Student Registration" %}</h1>
+            <p class="text-muted mb-2">{% trans "Fill in the details below to register for the admission exam" %}</p>
+            <span class="cycle-badge">{{ active_cycle.name }}</span>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger mb-4">
+            <div class="font-bold mb-1">{% trans "Please fix the following errors:" %}</div>
+            <ul class="mb-0 small">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" class="form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-label">{% trans "Full Name (ФИО)" %} *</label>
+                {{ form.full_name }}
+            </div>
+
+            <div class="row-2col">
+                <div class="form-group">
+                    <label class="form-label">{% trans "Gender" %} *</label>
+                    {{ form.gender }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{% trans "Exam Variant" %} *</label>
+                    {{ form.variant }}
+                </div>
+            </div>
+
+            <h4 class="mb-3 mt-4" style="border-bottom: 1px solid var(--border-color); padding-bottom: 8px; color: var(--primary-blue);">📍 {% trans "Location & School" %}</h4>
+
+            <div class="form-group">
+                <label class="form-label">{% trans "School Name" %} *</label>
+                {{ form.school_name }}
+                <div class="small text-muted mt-1">{% trans "Type the full name of your school." %}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">{% trans "Region" %} *</label>
+                {{ form.region }}
+            </div>
+
+            <div class="row-2col">
+                <div class="form-group">
+                    <label class="form-label">{% trans "Phone Number 1" %} *</label>
+                    {{ form.phone1 }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{% trans "Phone Number 2" %}</label>
+                    {{ form.phone2 }}
+                    <div class="small text-muted mt-1">{% trans "Optional" %}</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3" style="padding: 0.85rem;">
+                📝 {% trans "Register for Admission" %}
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

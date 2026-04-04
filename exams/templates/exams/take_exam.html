@@ -12,17 +12,26 @@
         -moz-user-select: none;
     }
 
+    /* Allow selection inside input/textarea */
+    input[type="text"],
+    textarea {
+        user-select: text;
+        -webkit-user-select: text;
+        -moz-user-select: text;
+    }
+
     .exam-timer {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: var(--surface);
+        background: var(--bg-card);
         padding: 10px 20px;
         border-radius: 30px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-md);
         font-weight: bold;
         z-index: 1000;
-        border: 2px solid var(--primary);
+        border: 2px solid var(--primary-blue);
+        color: var(--text-primary);
     }
 
     .timer-warning {
@@ -31,17 +40,9 @@
     }
 
     @keyframes pulse {
-        0% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.5;
-        }
-
-        100% {
-            opacity: 1;
-        }
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
     }
 
     .question-nav {
@@ -56,21 +57,68 @@
         padding: 8px;
         text-align: center;
         border: 1px solid var(--border-color);
-        border-radius: 4px;
+        border-radius: var(--radius-md);
         cursor: pointer;
-        background: var(--surface);
+        background: var(--bg-card);
+        color: var(--text-primary);
+        font-weight: 500;
+        transition: all var(--transition-fast);
+    }
+
+    .nav-btn:hover:not(.disabled) {
+        border-color: var(--primary-blue);
     }
 
     .nav-btn.answered {
-        background-color: var(--primary-light);
-        border-color: var(--primary);
-        color: var(--primary);
+        background-color: var(--bg-tertiary);
+        border-color: var(--primary-blue);
+        color: var(--primary-blue);
     }
 
     .nav-btn.current {
-        background-color: var(--primary);
-        color: white;
-        border-color: var(--primary);
+        background-color: var(--primary-blue);
+        color: var(--text-inverse);
+        border-color: var(--primary-blue);
+    }
+
+    .nav-btn.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    /* Question card hidden by default */
+    .question-card {
+        display: none;
+    }
+    .question-card.active {
+        display: block;
+    }
+
+    /* Navigation buttons */
+    .question-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    /* Warning counter badge */
+    .warning-badge {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: var(--bg-card);
+        padding: 8px 16px;
+        border-radius: 30px;
+        box-shadow: var(--shadow-md);
+        font-weight: 600;
+        z-index: 1000;
+        border: 2px solid var(--danger);
+        color: var(--danger);
+        font-size: 0.85em;
     }
 
     #warning-modal {
@@ -80,59 +128,198 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.85);
         z-index: 9999;
         align-items: center;
         justify-content: center;
     }
 
     .warning-content {
-        background: white;
+        background: var(--bg-card);
+        color: var(--text-primary);
         padding: 40px;
-        border-radius: 12px;
+        border-radius: var(--radius-xl);
         text-align: center;
         max-width: 500px;
+        box-shadow: var(--shadow-lg);
+        border: 2px solid var(--danger);
+    }
+
+    /* Dark mode dropdown fix */
+    .matching-select,
+    .form-select {
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-primary) !important;
+    }
+
+    .matching-select option,
+    .form-select option {
+        background-color: var(--bg-card);
+        color: var(--text-primary);
+    }
+
+    /* Progress bar */
+    .progress-bar-container {
+        width: 100%;
+        height: 6px;
+        background: var(--bg-tertiary);
+        border-radius: 3px;
+        margin-bottom: 16px;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: var(--primary-blue);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    /* Webcam preview */
+    .webcam-preview {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 160px;
+        height: 120px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        border: 2px solid var(--border-color);
+        z-index: 900;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+    }
+    .webcam-preview:hover {
+        opacity: 1;
+    }
+    .webcam-preview video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1);
+    }
+    .webcam-preview .cam-label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        font-size: 0.7em;
+        text-align: center;
+        padding: 2px;
+    }
+    .webcam-preview .rec-dot {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--danger);
+        animation: pulse 1.5s infinite;
+    }
+
+    /* Detection toast */
+    .detection-toast {
+        position: fixed;
+        bottom: 160px;
+        right: 20px;
+        background: var(--bg-card);
+        border: 2px solid var(--warning, orange);
+        border-radius: 12px;
+        padding: 12px 16px;
+        max-width: 240px;
+        box-shadow: var(--shadow-lg);
+        z-index: 950;
+        font-size: 0.85em;
+        color: var(--text-primary);
+        display: none;
+        animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+        from { transform: translateX(100px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
 </style>
 
+<!-- Warning Modal -->
 <div id="warning-modal">
     <div class="warning-content">
-        <h2 style="color: var(--danger);">{% trans "⚠️ Warning!" %}</h2>
-        <p style="font-size: 1.2em; margin: 20px 0;">
-            {% trans "Tab switching is prohibited!" %}
+        <h2 style="color: var(--danger); margin-bottom: 16px;">{% trans "⚠️ Warning!" %}</h2>
+        <p style="font-size: 1.1em; margin-bottom: 16px; line-height: 1.5;">
+            {% trans "Do not leave the exam page. This activity is being monitored." %}
         </p>
-        <p>{% trans "You have" %} <strong id="strike-count">0</strong>/{{ exam.max_tab_switches }} {% trans "strikes."
-            %}</p>
-        <p>{% trans "If you reach the limit, your exam will be locked." %}</p>
-        <button class="btn btn-primary" onclick="closeWarning()">{% trans "I Understand" %}</button>
+        <p style="margin-bottom: 24px;">
+            {% trans "You have" %} <strong id="strike-count" style="color: var(--danger); font-size: 1.3em;">0</strong> / {{ exam.max_tab_switches }}
+            {% trans "warnings." %}
+        </p>
+        <p style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 24px;">
+            {% trans "If you reach the limit, your exam will be automatically submitted." %}
+        </p>
+        <button class="btn btn-primary" onclick="closeWarning()" style="min-width: 160px;">{% trans "I Understand" %}</button>
     </div>
 </div>
 
+<!-- Warning Badge (top-left) -->
+<div class="warning-badge" id="warning-badge">
+    ⚠️ <span id="warning-badge-count">0</span>/{{ exam.max_tab_switches }}
+</div>
+
+<!-- Timer (top-right) -->
 <div class="exam-timer" id="timer-display">
     --:--:--
+</div>
+
+<!-- Webcam Preview -->
+<div class="webcam-preview" id="webcam-container" style="display: none;">
+    <div class="rec-dot"></div>
+    <video id="webcam-video" autoplay muted playsinline></video>
+    <div class="cam-label">REC</div>
+</div>
+<canvas id="detection-canvas" style="display: none;"></canvas>
+
+<!-- Detection Toast -->
+<div class="detection-toast" id="detection-toast">
+    ⚠️ <span id="detection-msg"></span>
 </div>
 
 <div class="topbar">
     <h1 class="topbar-title">{{ exam.title }}</h1>
 </div>
 
+<!-- Progress Bar -->
+<div class="progress-bar-container">
+    <div class="progress-bar-fill" id="progress-bar" style="width: 0%;"></div>
+</div>
+
+<!-- Question Navigation Grid -->
 <div class="card" style="margin-bottom: 20px;">
-    <h3>{% trans "Question Navigation" %}</h3>
-    <div class="question-nav">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin: 0;">{% trans "Question Navigation" %}</h3>
+        <span style="font-size: 0.9em; color: var(--text-muted);" id="question-counter">
+            {% trans "Question" %} 1 / {{ questions|length }}
+        </span>
+    </div>
+    <div class="question-nav" id="question-nav">
         {% for q in questions %}
-        <a href="#q-{{ q.pk }}" class="nav-btn {% if q.pk in existing_answers %}answered{% endif %}"
-            id="nav-{{ q.pk }}">
+        <button type="button"
+            class="nav-btn {% if q.pk in existing_answers or q.pk in existing_text_answers %}answered{% endif %}"
+            id="nav-{{ q.pk }}"
+            data-index="{{ forloop.counter0 }}"
+            onclick="goToQuestion({{ forloop.counter0 }})">
             {{ forloop.counter }}
-        </a>
+        </button>
         {% endfor %}
     </div>
 </div>
 
+<!-- Exam Form with Question Cards -->
 <form method="post" action="{% url 'exams:submit_exam' attempt.pk %}" id="exam-form">
     {% csrf_token %}
 
     {% for q in questions %}
-    <div class="card" id="q-{{ q.pk }}" style="margin-bottom: 30px;">
+    <div class="card question-card" id="q-{{ forloop.counter0 }}" data-question-id="{{ q.pk }}" style="margin-bottom: 30px;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
             <span class="badge badge-secondary">{% trans "Question" %} {{ forloop.counter }}</span>
             <span class="badge badge-outline">{{ q.points }} {% trans "pts" %}</span>
@@ -154,46 +341,221 @@
                 placeholder="{% trans 'Type your answer here...' %}" onchange="saveTextAnswer({{ q.pk }}, this.value)"
                 style="max-width: 500px;">
         </div>
+        {% elif q.question_type == 'matching' %}
+        <div class="matching-group" id="matching-{{ q.pk }}">
+            <p style="margin-bottom: 12px; color: var(--text-secondary); font-size: 0.9em;">
+                {% trans "Match each item in Column A with the correct item from Column B." %}
+            </p>
+            <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding: 0 12px 4px; font-size: 0.85em; color: var(--text-muted); font-weight: 600;">
+                            {% trans "Column A" %}</th>
+                        <th style="width: 30px;"></th>
+                        <th style="text-align: left; padding: 0 12px 4px; font-size: 0.85em; color: var(--text-muted); font-weight: 600;">
+                            {% trans "Column B" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pair in q.matching_pairs.all %}
+                    <tr>
+                        <td style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px 0 0 8px; font-weight: 500; color: var(--text-primary);">
+                            {{ pair.left_item }}
+                        </td>
+                        <td style="text-align: center; color: var(--text-muted); padding: 0 6px;">→</td>
+                        <td style="padding: 4px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 0 8px 8px 0;">
+                            <select class="form-select matching-select" data-question="{{ q.pk }}"
+                                data-left="{{ pair.left_item }}" onchange="saveMatchingAnswer({{ q.pk }})"
+                                style="width: 100%; border: none; background: transparent; color: var(--text-primary); padding: 10px 12px; cursor: pointer;">
+                                <option value="">-- {% trans "Select" %} --</option>
+                                {% for p in q.shuffled_right_items %}
+                                <option value="{{ p }}">{{ p }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% elif q.question_type == 'ordering' %}
+        <div class="ordering-group" id="ordering-{{ q.pk }}">
+            <p style="margin-bottom: 12px; color: var(--text-secondary); font-size: 0.9em;">
+                {% trans "Arrange the items in the correct order by selecting the position for each item." %}
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                {% for item in q.shuffled_ordering_items %}
+                <div style="display: flex; gap: 12px; align-items: center; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px;">
+                    <select class="form-select ordering-select" data-question="{{ q.pk }}"
+                        data-item="{{ item.text }}" onchange="saveOrderingAnswer({{ q.pk }})"
+                        style="width: 80px; flex-shrink: 0; padding: 8px; cursor: pointer; background-color: var(--bg-secondary); color: var(--text-primary);">
+                        <option value="">--</option>
+                        {% for i in q.ordering_items.all %}
+                        <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                        {% endfor %}
+                    </select>
+                    <span style="font-weight: 500; color: var(--text-primary);">{{ item.text }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% elif q.question_type == 'true_false' %}
+        <div class="true-false-group">
+            <div class="option-item" style="margin-bottom: 10px;">
+                <label style="display: flex; gap: 10px; align-items: start; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: 0.2s;">
+                    <input type="radio" name="question_{{ q.pk }}_tf" value="true"
+                        onchange="saveTrueFalseAnswer({{ q.pk }}, 'true')" style="margin-top: 4px;"
+                        {% if existing_text_answers|get_item:q.pk == 'true' %}checked{% endif %}>
+                    <span style="font-weight: 500;">{% trans "True" %}</span>
+                </label>
+            </div>
+            <div class="option-item" style="margin-bottom: 10px;">
+                <label style="display: flex; gap: 10px; align-items: start; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: 0.2s;">
+                    <input type="radio" name="question_{{ q.pk }}_tf" value="false"
+                        onchange="saveTrueFalseAnswer({{ q.pk }}, 'false')" style="margin-top: 4px;"
+                        {% if existing_text_answers|get_item:q.pk == 'false' %}checked{% endif %}>
+                    <span style="font-weight: 500;">{% trans "False" %}</span>
+                </label>
+            </div>
+        </div>
         {% else %}
         <div class="options-group">
             {% for option in q.options.all %}
             <div class="option-item" style="margin-bottom: 10px;">
-                <label
-                    style="display: flex; gap: 10px; align-items: start; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: 0.2s;">
+                <label style="display: flex; gap: 10px; align-items: start; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: 0.2s;">
                     <input type="radio" name="question_{{ q.pk }}" value="{{ option.pk }}"
-                        onchange="saveAnswer({{ q.pk }}, {{ option.pk }})" {% if existing_answers|get_item:q.pk == option.pk %}checked{% endif %} style="margin-top: 4px;">
+                        onchange="saveAnswer({{ q.pk }}, {{ option.pk }})" style="margin-top: 4px;">
                     <span>{{ option.text }}</span>
                 </label>
             </div>
             {% endfor %}
         </div>
         {% endif %}
+
+        <!-- Question Navigation Buttons -->
+        <div class="question-actions">
+            <button type="button" class="btn btn-outline prev-btn" onclick="prevQuestion()" style="min-width: 120px;">
+                ← {% trans "Previous" %}
+            </button>
+            <span style="font-size: 0.9em; color: var(--text-muted);">
+                {{ forloop.counter }} / {{ questions|length }}
+            </span>
+            {% if forloop.last %}
+            <button type="button" class="btn btn-primary" onclick="confirmSubmit()" style="min-width: 120px;">
+                {% trans "Submit Exam" %} →
+            </button>
+            {% else %}
+            <button type="button" class="btn btn-primary next-btn" onclick="nextQuestion()" style="min-width: 120px;">
+                {% trans "Next" %} →
+            </button>
+            {% endif %}
+        </div>
     </div>
     {% endfor %}
-
-    <div class="card" style="text-align: center; padding: 40px;">
-        <h3>{% trans "Exam Completed?" %}</h3>
-        <p>{% trans "Review your answers before submitting." %}</p>
-        <button type="button" class="btn btn-primary" onclick="confirmSubmit()">
-            {% trans "Submit Exam" %}
-        </button>
-    </div>
 </form>
 
 <script>
-    // Config
+    // =========================================
+    // Configuration
+    // =========================================
     const ATTEMPT_ID = {{ attempt.pk }};
     const MAX_STRIKES = {{ exam.max_tab_switches }};
+    const PROCTORING_ENABLED = {{ exam.enable_proctoring|yesno:"true,false" }};
+    const PREVENT_GO_BACK = {{ exam.prevent_go_back|yesno:"true,false" }};
+    const TOTAL_QUESTIONS = {{ questions|length }};
     let timeRemaining = {{ time_remaining }};
     let strikes = {{ attempt.tab_switch_count }};
+    let currentIndex = 0;
+    let isSubmitting = false;
 
+    // Update warning badge on load
+    document.getElementById('strike-count').textContent = strikes;
+    document.getElementById('warning-badge-count').textContent = strikes;
+
+    // =========================================
+    // One Question Per Page Navigation
+    // =========================================
+    const questionCards = document.querySelectorAll('.question-card');
+    const navButtons = document.querySelectorAll('.question-nav .nav-btn');
+
+    function showQuestion(index) {
+        // Hide all
+        questionCards.forEach(card => card.classList.remove('active'));
+        navButtons.forEach(btn => btn.classList.remove('current'));
+
+        // Show selected
+        questionCards[index].classList.add('active');
+        navButtons[index].classList.add('current');
+
+        currentIndex = index;
+
+        // Update counter
+        document.getElementById('question-counter').textContent =
+            '{% trans "Question" %} ' + (index + 1) + ' / ' + TOTAL_QUESTIONS;
+
+        // Update progress bar
+        const progress = ((index + 1) / TOTAL_QUESTIONS) * 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+
+        // Handle Previous button visibility
+        const prevBtns = document.querySelectorAll('.prev-btn');
+        prevBtns.forEach(btn => {
+            if (index === 0 || PREVENT_GO_BACK) {
+                btn.style.visibility = 'hidden';
+            } else {
+                btn.style.visibility = 'visible';
+            }
+        });
+
+        // Handle nav buttons for prevent_go_back
+        if (PREVENT_GO_BACK) {
+            navButtons.forEach((btn, i) => {
+                if (i < index) {
+                    btn.classList.add('disabled');
+                } else {
+                    btn.classList.remove('disabled');
+                }
+            });
+        }
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextQuestion() {
+        if (currentIndex < TOTAL_QUESTIONS - 1) {
+            showQuestion(currentIndex + 1);
+        }
+    }
+
+    function prevQuestion() {
+        if (!PREVENT_GO_BACK && currentIndex > 0) {
+            showQuestion(currentIndex - 1);
+        }
+    }
+
+    function goToQuestion(index) {
+        if (PREVENT_GO_BACK && index < currentIndex) {
+            return; // Block going back
+        }
+        if (index >= 0 && index < TOTAL_QUESTIONS) {
+            showQuestion(index);
+        }
+    }
+
+    // Initialize: show first question
+    showQuestion(0);
+
+    // =========================================
     // Timer Logic
+    // =========================================
     const timerDisplay = document.getElementById('timer-display');
     const timerInterval = setInterval(() => {
         timeRemaining--;
 
         if (timeRemaining <= 0) {
             clearInterval(timerInterval);
+            isSubmitting = true;
             document.getElementById('exam-form').submit();
         }
 
@@ -201,16 +563,21 @@
         const m = Math.floor((timeRemaining % 3600) / 60);
         const s = timeRemaining % 60;
 
-        timerDisplay.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        timerDisplay.textContent =
+            h.toString().padStart(2, '0') + ':' +
+            m.toString().padStart(2, '0') + ':' +
+            s.toString().padStart(2, '0');
 
-        if (timeRemaining < 300) { // 5 mins left
+        if (timeRemaining < 300) {
             timerDisplay.classList.add('timer-warning');
         }
     }, 1000);
 
-    // Save Answer Logic
+    // =========================================
+    // Answer Save Functions
+    // =========================================
     function saveAnswer(questionId, optionId) {
-        fetch(`{% url 'exams:save_answer' attempt.pk %}`, {
+        fetch("{% url 'exams:save_answer' attempt.pk %}", {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
@@ -222,14 +589,13 @@
             })
         }).then(response => {
             if (response.ok) {
-                document.getElementById(`nav-${questionId}`).classList.add('answered');
+                document.getElementById('nav-' + questionId).classList.add('answered');
             }
         });
     }
 
-    // Save Text Answer Logic (for fill_blanks)
     function saveTextAnswer(questionId, textAnswer) {
-        fetch(`{% url 'exams:save_answer' attempt.pk %}`, {
+        fetch("{% url 'exams:save_answer' attempt.pk %}", {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
@@ -241,68 +607,466 @@
             })
         }).then(response => {
             if (response.ok) {
-                document.getElementById(`nav-${questionId}`).classList.add('answered');
+                document.getElementById('nav-' + questionId).classList.add('answered');
             }
         });
     }
 
-    // Proctoring Logic (3-Strike Rule)
-    function logEvent(type, details = {}) {
-        fetch(`{% url 'exams:log_proctor_event' attempt.pk %}`, {
+    function saveMatchingAnswer(questionId) {
+        const selects = document.querySelectorAll('#matching-' + questionId + ' .matching-select');
+        const matchingAnswers = {};
+        let allAnswered = true;
+
+        selects.forEach(select => {
+            const leftItem = select.getAttribute('data-left');
+            if (select.value) {
+                matchingAnswers[leftItem] = select.value;
+            } else {
+                allAnswered = false;
+            }
+        });
+
+        fetch("{% url 'exams:save_answer' attempt.pk %}", {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                question_id: questionId,
+                matching_answers: matchingAnswers
+            })
+        }).then(response => {
+            if (response.ok && allAnswered) {
+                document.getElementById('nav-' + questionId).classList.add('answered');
+            }
+        });
+    }
+
+    function saveOrderingAnswer(questionId) {
+        const selects = document.querySelectorAll('#ordering-' + questionId + ' .ordering-select');
+        const orderingAnswers = {};
+        let allAnswered = true;
+
+        selects.forEach(select => {
+            const itemText = select.getAttribute('data-item');
+            if (select.value) {
+                orderingAnswers[itemText] = parseInt(select.value);
+            } else {
+                allAnswered = false;
+            }
+        });
+
+        fetch("{% url 'exams:save_answer' attempt.pk %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                question_id: questionId,
+                ordering_answers: orderingAnswers
+            })
+        }).then(response => {
+            if (response.ok && allAnswered) {
+                document.getElementById('nav-' + questionId).classList.add('answered');
+            }
+        });
+    }
+
+    function saveTrueFalseAnswer(questionId, answer) {
+        fetch("{% url 'exams:save_answer' attempt.pk %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                question_id: questionId,
+                text_answer: answer
+            })
+        }).then(response => {
+            if (response.ok) {
+                document.getElementById('nav-' + questionId).classList.add('answered');
+            }
+        });
+    }
+
+    // =========================================
+    // Pre-select Saved Answers
+    // =========================================
+    const existingMatchingAnswers = {{ existing_matching_answers|safe }};
+    if (existingMatchingAnswers) {
+        Object.keys(existingMatchingAnswers).forEach(function(qId) {
+            const pairs = existingMatchingAnswers[qId];
+            if (pairs) {
+                Object.keys(pairs).forEach(function(leftItem) {
+                    const select = document.querySelector(
+                        '#matching-' + qId + ' .matching-select[data-left="' + leftItem + '"]'
+                    );
+                    if (select) {
+                        select.value = pairs[leftItem];
+                    }
+                });
+            }
+        });
+    }
+
+    const existingOrderingAnswers = {{ existing_ordering_answers|safe }};
+    if (existingOrderingAnswers) {
+        Object.keys(existingOrderingAnswers).forEach(function(qId) {
+            const items = existingOrderingAnswers[qId];
+            if (items) {
+                Object.keys(items).forEach(function(itemText) {
+                    const select = document.querySelector(
+                        '#ordering-' + qId + ' .ordering-select[data-item="' + itemText + '"]'
+                    );
+                    if (select) {
+                        select.value = items[itemText];
+                    }
+                });
+            }
+        });
+    }
+
+    const existingMCAnswers = {{ existing_answers_json|safe }};
+    if (existingMCAnswers) {
+        Object.keys(existingMCAnswers).forEach(function(qId) {
+            const optionId = existingMCAnswers[qId];
+            if (optionId) {
+                const radio = document.querySelector('input[name="question_' + qId + '"][value="' + optionId + '"]');
+                if (radio) {
+                    radio.checked = true;
+                }
+            }
+        });
+    }
+
+    // =========================================
+    // Proctoring: Warning System (Strict)
+    // =========================================
+    let warningModalOpen = false;
+
+    function logEvent(type, details) {
+        details = details || {};
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch("{% url 'exams:log_proctor_event' attempt.pk %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
                 event_type: type,
                 details: details
             })
-        }).then(res => res.json())
-            .then(data => {
-                if (data.locked) {
-                    window.location.reload();
-                }
-                if (data.tab_count ! ==  undefined) {
-                    strikes = data.tab_count;
-                    document.getElementById('strike-count').textContent = strikes;
+        }).then(function(res) { return res.json(); })
+          .then(function(data) {
+            if (data.locked) {
+                isSubmitting = true;
+                document.getElementById('exam-form').submit();
+                return;
+            }
+            if (data.tab_count !== undefined) {
+                strikes = data.tab_count;
+                document.getElementById('strike-count').textContent = strikes;
+                document.getElementById('warning-badge-count').textContent = strikes;
+
+                if (strikes >= MAX_STRIKES) {
+                    // Auto-submit at max warnings
+                    isSubmitting = true;
+                    document.getElementById('exam-form').submit();
+                } else {
                     showWarning();
                 }
-            });
+            }
+        });
     }
 
-    // Visibility Change API (Tab switching)
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            logEvent('tab_switch');
+    // Proctoring: Warning System
+    if (PROCTORING_ENABLED) {
+        // Visibility Change (tab switch, minimize, app switch)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && !isSubmitting) {
+                logEvent('tab_switch');
+            }
+        });
+
+        // Window Blur (clicking outside browser) — SOFTENED
+        window.addEventListener('blur', function() {
+            if (!isSubmitting && !warningModalOpen) {
+                // Only log if not already showing a warning to avoid spam
+                logEvent('window_blur');
+            }
+        });
+    }
+
+    // Handle "I Understand" to prevent multiple triggers
+    function closeWarning() {
+        warningModalOpen = false;
+        document.getElementById('warning-modal').style.display = 'none';
+        // Give a small buffer before re-enabling blur detection
+        setTimeout(() => {
+            // No-op, just a delay
+      // =========================================
+    // Anti-Cheating: Block Copy/Paste/Select
+    // =========================================
+    if (PROCTORING_ENABLED) {
+        // Block right-click
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+            showDetectionWarning('{% trans "Right-click is disabled during the exam." %}');
+            logEvent('right_click');
+        });
+
+        // Block Copy
+        document.addEventListener('copy', function(event) {
+            event.preventDefault();
+            showDetectionWarning('{% trans "Copying text is strictly prohibited." %}');
+            logEvent('copy_attempt');
+        });
+
+        // Block Cut
+        document.addEventListener('cut', function(event) {
+            event.preventDefault();
+            showDetectionWarning('{% trans "Cutting text is strictly prohibited." %}');
+            logEvent('cut_attempt');
+        });
+
+        // Block Paste
+        document.addEventListener('paste', function(event) {
+            const tag = event.target.tagName.toLowerCase();
+            const isInputField = (tag === 'input' || tag === 'textarea');
+            
+            event.preventDefault();
+            showDetectionWarning('{% trans "Pasting is disabled. Please type your answers." %}');
+            logEvent('paste_attempt');
+        });
+
+        // Block keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            const key = event.key.toLowerCase();
+            
+            // Ctrl/Meta shortcuts
+            if (event.ctrlKey || event.metaKey) {
+                const blockedKeys = ['c', 'v', 'x', 'a', 'u', 's', 'p', 'j'];
+                if (blockedKeys.includes(key)) {
+                    event.preventDefault();
+                    showDetectionWarning('{% trans "Shortcut disabled for security." %}');
+                    logEvent('shortcut_violation', { key: key });
+                    return;
+                }
+            }
+
+            // Function keys
+            if (event.key === 'F12' || event.key === 'F7') {
+                event.preventDefault();
+                showDetectionWarning('{% trans "Developer tools are disabled." %}');
+                logEvent('dev_tools_attempt');
+            }
+        });
+    }
+
+    // =========================================
+    // Prevent Page Refresh / Reload
+    // =========================================
+    window.addEventListener('beforeunload', function(event) {
+        if (!isSubmitting) {
+            event.preventDefault();
+            event.returnValue = '';
         }
     });
 
-    // Window Blur (Detects clicking outside browser)
-    window.addEventListener('blur', () => {
-        // Optional: Can be too sensitive, leaving disabled for now or enable strict mode
-        // logEvent('window_blur');
-    });
-
-    // Prevent Context Menu (Right Click)
-    document.addEventListener('contextmenu', event => {
-        event.preventDefault();
-        logEvent('right_click');
-    });
-
-    // UI Helpers
-    function showWarning() {
-        document.getElementById('warning-modal').style.display = 'flex';
-    }
-
-    function closeWarning() {
-        document.getElementById('warning-modal').style.display = 'none';
-    }
-
+    // =========================================
+    // Submit Confirmation
+    // =========================================
     function confirmSubmit() {
         if (confirm("{% trans 'Are you sure you want to submit? This action cannot be undone.' %}")) {
-            document.getElementById('exam-form').submit();
+            isSubmitting = true;
+            submitWithRecording();
         }
+    }
+
+    // =========================================
+    // Webcam Recording
+    // =========================================
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let webcamStream = null;
+
+    async function startWebcam() {
+        try {
+            webcamStream = await navigator.mediaDevices.getUserMedia({
+                video: { width: 320, height: 240, frameRate: 10 },
+                audio: false
+            });
+
+            const videoEl = document.getElementById('webcam-video');
+            videoEl.srcObject = webcamStream;
+            document.getElementById('webcam-container').style.display = 'block';
+
+            // Start recording
+            const options = { mimeType: 'video/webm;codecs=vp8' };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                options.mimeType = 'video/webm';
+            }
+            mediaRecorder = new MediaRecorder(webcamStream, options);
+            mediaRecorder.ondataavailable = function(event) {
+                if (event.data && event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            mediaRecorder.start(10000); // Chunk every 10 seconds
+
+            // Start behavior detection
+            startBehaviorDetection();
+        } catch (err) {
+            console.warn('Webcam not available:', err.message);
+        }
+    }
+
+    function stopWebcam() {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+        if (webcamStream) {
+            webcamStream.getTracks().forEach(function(track) { track.stop(); });
+        }
+    }
+
+    function submitWithRecording() {
+        // Show a loading/submitting overlay if needed
+        const submitBtn = document.querySelector('button[onclick="confirmSubmit()"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {% trans "Submitting..." %}';
+        }
+
+        const form = document.getElementById('exam-form');
+
+        // Fallback submission function
+        const performFinalSubmit = () => {
+            console.log("Form submission triggered.");
+            if (form) {
+                form.submit();
+            } else {
+                console.error("Form not found!");
+            }
+        };
+
+        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+            performFinalSubmit();
+            return;
+        }
+
+        // Safety timeout: if recording stop/upload takes > 10s, just submit the form
+        const forceSubmitTimeout = setTimeout(() => {
+            console.warn('Recording submission timed out, forcing form submit.');
+            performFinalSubmit();
+        }, 10000);
+
+        mediaRecorder.onstop = function() {
+            if (recordedChunks.length === 0) {
+                clearTimeout(forceSubmitTimeout);
+                performFinalSubmit();
+                return;
+            }
+
+            var blob = new Blob(recordedChunks, { type: 'video/webm' });
+            var formData = new FormData();
+            formData.append('recording', blob, 'exam_recording.webm');
+
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch("{% url 'exams:upload_recording' attempt.pk %}", {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                body: formData
+            }).then(function() {
+                clearTimeout(forceSubmitTimeout);
+                performFinalSubmit();
+            }).catch(function(err) {
+                console.error('Recording upload failed:', err);
+                clearTimeout(forceSubmitTimeout);
+                performFinalSubmit();
+            });
+        };
+
+        try {
+            mediaRecorder.stop();
+        } catch (e) {
+            console.error('Error stopping recorder:', e);
+            clearTimeout(forceSubmitTimeout);
+            performFinalSubmit();
+        }
+    }
+
+    // Start webcam on page load (only if recording enabled)
+    const RECORDING_ENABLED = {{ exam.enable_recording|yesno:"true,false" }};
+    if (RECORDING_ENABLED) {
+        startWebcam();
+    }
+
+    // =========================================
+    // Basic Behavior Detection
+    // =========================================
+    let prevFrameData = null;
+    let detectionToastTimeout = null;
+
+    function startBehaviorDetection() {
+        var canvas = document.getElementById('detection-canvas');
+        var ctx = canvas.getContext('2d');
+        var videoEl = document.getElementById('webcam-video');
+        canvas.width = 160;
+        canvas.height = 120;
+
+        setInterval(function() {
+            if (!webcamStream || !videoEl.videoWidth) return;
+
+            ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imageData.data;
+
+            // Calculate average brightness
+            var totalBrightness = 0;
+            var pixelCount = data.length / 4;
+            for (var i = 0; i < data.length; i += 4) {
+                totalBrightness += (data[i] + data[i+1] + data[i+2]) / 3;
+            }
+            var avgBrightness = totalBrightness / pixelCount;
+
+            // Check 1: Camera covered / too dark
+            if (avgBrightness < 20) {
+                showDetectionWarning('{% trans "Camera appears to be covered. Please uncover your camera." %}');
+                logEvent('camera_covered');
+            }
+
+            // Check 2: Large frame movement
+            if (prevFrameData) {
+                var diffSum = 0;
+                for (var j = 0; j < data.length; j += 16) {
+                    diffSum += Math.abs(data[j] - prevFrameData[j]);
+                }
+                var avgDiff = diffSum / (data.length / 16);
+
+                if (avgDiff > 60) {
+                    showDetectionWarning('{% trans "Suspicious activity detected. Please focus on the exam." %}');
+                    logEvent('suspicious_movement');
+                }
+            }
+
+            // Store current frame for next comparison
+            prevFrameData = new Uint8ClampedArray(data);
+        }, 3000);
+    }
+
+    function showDetectionWarning(msg) {
+        var toast = document.getElementById('detection-toast');
+        document.getElementById('detection-msg').textContent = msg;
+        toast.style.display = 'block';
+        clearTimeout(detectionToastTimeout);
+        detectionToastTimeout = setTimeout(function() {
+            toast.style.display = 'none';
+        }, 4000);
     }
 </script>
 {% endblock %}

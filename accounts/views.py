@@ -73,7 +73,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, _('Registration successful! Welcome to AIMS EXAM.'))
+            messages.success(request, _('Registration successful! Welcome to Aalam Synak.'))
             return redirect('accounts:dashboard')
     else:
         form = StudentRegistrationForm()

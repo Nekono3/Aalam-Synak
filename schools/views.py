@@ -7,7 +7,7 @@ from django.db.models import Q, Count
 from django.http import JsonResponse
 
 from accounts.decorators import super_admin_required, teacher_or_admin_required
-from .models import School, Subject, MasterStudent
+from .models import School, Subject, MasterStudent, SchoolClass
 from .forms import SchoolForm, SubjectForm, MasterStudentUploadForm, MasterStudentForm
 from .utils import parse_master_student_excel
 
@@ -413,3 +413,293 @@ def master_student_delete_view(request, pk):
     return render(request, 'schools/master_student_confirm_delete.html', {
         'student': student,
     })
+
+
+# ============ Class Management Views ============
+
+@login_required
+@super_admin_required
+def class_list_view(request):
+    """List all classes with school filter."""
+    school_filter = request.GET.get('school', '')
+    
+    classes = SchoolClass.objects.select_related('school').all()
+    
+    if school_filter:
+        classes = classes.filter(school_id=school_filter)
+    
+    schools = School.objects.filter(is_active=True)
+    
+    # Group classes by school
+    classes_by_school = {}
+    for cls in classes:
+        school_name = cls.school.name
+        if school_name not in classes_by_school:
+            classes_by_school[school_name] = []
+        classes_by_school[school_name].append(cls)
+    
+    return render(request, 'schools/class_list.html', {
+        'classes': classes,
+        'classes_by_school': classes_by_school,
+        'schools': schools,
+        'school_filter': int(school_filter) if school_filter else '',
+    })
+
+
+@login_required
+@super_admin_required
+def class_create_view(request):
+    """Create a new class."""
+    if request.method == 'POST':
+        school_id = request.POST.get('school')
+        grade = request.POST.get('grade')
+        section = request.POST.get('section')
+        
+        if school_id and grade and section:
+            school = get_object_or_404(School, pk=school_id)
+            
+            # Check for duplicate
+            if SchoolClass.objects.filter(school=school, grade=grade, section=section).exists():
+                messages.error(request, _('Class %(grade)s%(section)s already exists for this school.') % {
+                    'grade': grade, 'section': section
+                })
+            else:
+                SchoolClass.objects.create(school=school, grade=grade, section=section)
+                messages.success(request, _('Class %(grade)s%(section)s created successfully.') % {
+                    'grade': grade, 'section': section
+                })
+                return redirect('schools:class_list')
+        else:
+            messages.error(request, _('Please fill in all fields.'))
+    
+    schools = School.objects.filter(is_active=True)
+    grades = SchoolClass.GRADE_CHOICES
+    sections = SchoolClass.SECTION_CHOICES
+    
+    return render(request, 'schools/class_form.html', {
+        'schools': schools,
+        'grades': grades,
+        'sections': sections,
+        'title': _('Add Class'),
+    })
+
+
+@login_required
+@super_admin_required
+def class_detail_view(request, pk):
+    """View students in a class."""
+    school_class = get_object_or_404(SchoolClass, pk=pk)
+    
+    from accounts.models import User
+    # Get student users assigned to this class
+    students = User.objects.filter(
+        school_class=school_class,
+        role='student'
+    ).order_by('last_name', 'first_name')
+    
+    # Get available MasterStudent records that match this class grade/section
+    available_master_students = MasterStudent.objects.filter(
+        school=school_class.school,
+        grade=school_class.grade,
+        section=school_class.section
+    ).order_by('surname', 'name')
+    
+    return render(request, 'schools/class_detail.html', {
+        'school_class': school_class,
+        'students': students,
+        'available_master_students': available_master_students,
+    })
+
+
+@login_required
+@super_admin_required
+def class_student_add_view(request, pk):
+    """Add students to a class from MasterStudent data."""
+    school_class = get_object_or_404(SchoolClass, pk=pk)
+    
+    if request.method == 'POST':
+        from accounts.models import User
+        
+        selected_ids = request.POST.getlist('master_student_ids')
+        manual_name = request.POST.get('manual_name', '').strip()
+        manual_surname = request.POST.get('manual_surname', '').strip()
+        
+        created_count = 0
+        
+        # Add from MasterStudent selection
+        for ms_id in selected_ids:
+            try:
+                ms = MasterStudent.objects.get(pk=ms_id)
+                # Check if student already exists
+                existing = User.objects.filter(
+                    first_name=ms.name,
+                    last_name=ms.surname,
+                    school_class=school_class,
+                    role='student'
+                ).exists()
+                
+                if not existing:
+                    User.objects.create(
+                        first_name=ms.name,
+                        last_name=ms.surname,
+                        email=f"{ms.name.lower()}.{ms.surname.lower()}.{ms.student_id}@student.aims",
+                        role='student',
+                        school_class=school_class,
+                        primary_school=school_class.school,
+                        username=None,
+                    )
+                    created_count += 1
+            except MasterStudent.DoesNotExist:
+                continue
+        
+        # Add manual student
+        if manual_name and manual_surname:
+            import random
+            import string
+            random_suffix = ''.join(random.choices(string.digits, k=4))
+            User.objects.create(
+                first_name=manual_name,
+                last_name=manual_surname,
+                email=f"{manual_name.lower()}.{manual_surname.lower()}.{random_suffix}@student.aims",
+                role='student',
+                school_class=school_class,
+                primary_school=school_class.school,
+                username=None,
+            )
+            created_count += 1
+        
+        if created_count:
+            messages.success(request, _('%(count)d students added to class.') % {'count': created_count})
+        else:
+            messages.info(request, _('No new students were added.'))
+        
+        return redirect('schools:class_detail', pk=school_class.pk)
+    
+    # GET - show form with available MasterStudents
+    available_master_students = MasterStudent.objects.filter(
+        school=school_class.school,
+        grade=school_class.grade,
+        section=school_class.section
+    ).order_by('surname', 'name')
+    
+    return render(request, 'schools/class_add_students.html', {
+        'school_class': school_class,
+        'available_master_students': available_master_students,
+    })
+
+
+@login_required
+@super_admin_required
+def generate_credentials_view(request, pk):
+    """Auto-generate username and password for students in a class."""
+    school_class = get_object_or_404(SchoolClass, pk=pk)
+    
+    if request.method == 'POST':
+        from accounts.models import User
+        import random
+        import string
+        
+        students = User.objects.filter(
+            school_class=school_class,
+            role='student'
+        )
+        
+        generated_count = 0
+        grade_lower = school_class.grade.lower()
+        section_lower = school_class.section.lower()
+        
+        for student in students:
+            # Generate username: user{grade}{section}_{random5} e.g. user7a_38291
+            while True:
+                random_suffix = ''.join(random.choices(string.digits, k=5))
+                username = f"user{grade_lower}{section_lower}_{random_suffix}"
+                if not User.objects.filter(username=username).exclude(pk=student.pk).exists():
+                    break
+            
+            # Generate password: random 8 characters 
+            password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+            
+            student.username = username
+            student.set_password(password)
+            student.plain_password = password
+            student.save()
+            generated_count += 1
+        
+        messages.success(request, _('Credentials generated for %(count)d students.') % {'count': generated_count})
+        return redirect('schools:class_detail', pk=school_class.pk)
+    
+    return redirect('schools:class_detail', pk=school_class.pk)
+
+
+@login_required
+@super_admin_required
+def print_credentials_view(request, pk):
+    """Printable page with student credentials."""
+    school_class = get_object_or_404(SchoolClass, pk=pk)
+    
+    from accounts.models import User
+    students = User.objects.filter(
+        school_class=school_class,
+        role='student'
+    ).order_by('last_name', 'first_name')
+    
+    return render(request, 'schools/credentials_print.html', {
+        'school_class': school_class,
+        'students': students,
+    })
+
+
+@login_required
+@super_admin_required
+def reset_student_password_view(request, pk):
+    """Reset a student's password and store it as plain text for admin visibility."""
+    from accounts.models import User
+    import random
+    import string
+    
+    student = get_object_or_404(User, pk=pk, role='student')
+    
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password', '').strip()
+        
+        if not new_password:
+            # Auto-generate if not provided
+            new_password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        
+        student.set_password(new_password)
+        student.plain_password = new_password
+        student.save()
+        
+        messages.success(request, _('Password reset for %(name)s. New password: %(pwd)s') % {
+            'name': student.get_full_name(),
+            'pwd': new_password
+        })
+        
+        if student.school_class:
+            return redirect('schools:class_detail', pk=student.school_class.pk)
+        return redirect('accounts:users')
+    
+    return render(request, 'schools/reset_password.html', {
+        'student': student,
+    })
+
+
+@login_required
+@super_admin_required
+def delete_student_from_class_view(request, pk):
+    """Remove a student from the system."""
+    from accounts.models import User
+    
+    student = get_object_or_404(User, pk=pk, role='student')
+    class_pk = student.school_class.pk if student.school_class else None
+    
+    if request.method == 'POST':
+        student_name = student.get_full_name()
+        student.delete()
+        messages.success(request, _('Student %(name)s removed.') % {'name': student_name})
+        
+        if class_pk:
+            return redirect('schools:class_detail', pk=class_pk)
+        return redirect('accounts:users')
+    
+    return redirect('schools:class_detail', pk=class_pk) if class_pk else redirect('accounts:users')

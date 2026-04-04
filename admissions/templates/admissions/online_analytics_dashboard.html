@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Online Admission Analytics" %} | AIMS{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .medal-gold { color: #FFD700; filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.5)); }
+    .medal-silver { color: #C0C0C0; filter: drop-shadow(0 0 2px rgba(192, 192, 192, 0.5)); }
+    .medal-bronze { color: #CD7F32; filter: drop-shadow(0 0 2px rgba(205, 127, 50, 0.5)); }
+    .medal-card { transition: transform 0.2s; border-bottom: 4px solid transparent; }
+    .medal-card:hover { transform: translateY(-5px); }
+    .card-gold { border-bottom-color: #FFD700; }
+    .card-silver { border-bottom-color: #C0C0C0; }
+    .card-bronze { border-bottom-color: #CD7F32; }
+    
+    .nav-tabs { border-bottom: 1px solid var(--border-color); display: flex; gap: 2rem; margin-bottom: 2rem; }
+    .nav-link { padding: 1rem 0; color: var(--text-muted); text-decoration: none; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s; }
+    .nav-link:hover { color: var(--text-primary); }
+    .nav-link.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <div class="d-flex justify-between align-end">
+        <div>
+            <h1 class="h2">{% trans "Online Admission Analytics" %}</h1>
+            <p class="text-muted">{% trans "Dedicated results and scoring for online registered students" %}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'admissions:export_online_results_full' %}" class="btn btn-primary">
+                📥 {% trans "Export Full Excel" %}
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="nav-tabs">
+    <a href="{% url 'admissions:online_analytics_dashboard' %}" class="nav-link active">{% trans "Overview" %}</a>
+    <a href="{% url 'admissions:online_subject_analytics' %}" class="nav-link">{% trans "Subject Analysis" %}</a>
+    <a href="{% url 'admissions:online_school_analytics' %}" class="nav-link">{% trans "School Analysis" %}</a>
+    <a href="{% url 'admissions:online_top_students' %}" class="nav-link">{% trans "Top Performers" %}</a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card p-4 medal-card card-gold">
+            <div class="text-muted small font-bold text-uppercase mb-1">🥇 {% trans "Gold Medals" %}</div>
+            <h2 class="mb-0">{{ medal_counts.gold }}</h2>
+            <div class="small text-muted">{% trans "Score 75%+" %}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4 medal-card card-silver">
+            <div class="text-muted small font-bold text-uppercase mb-1">🥈 {% trans "Silver Medals" %}</div>
+            <h2 class="mb-0">{{ medal_counts.silver }}</h2>
+            <div class="small text-muted">{% trans "Score 60-74%" %}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4 medal-card card-bronze">
+            <div class="text-muted small font-bold text-uppercase mb-1">🥉 {% trans "Bronze Medals" %}</div>
+            <h2 class="mb-0">{{ medal_counts.bronze }}</h2>
+            <div class="small text-muted">{% trans "Score 50-59%" %}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4">
+            <div class="text-muted small font-bold text-uppercase mb-1">📝 {% trans "Total Online" %}</div>
+            <h2 class="mb-0">{{ total_count }}</h2>
+            <div class="small text-muted">{% trans "Passed" %}: {{ passed_count }} | {% trans "Avg" %}: {{ avg_percentage|floatformat:1 }}%</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card p-4 h-full">
+            <h3 class="h5 mb-4">{% trans "Medal Distribution" %}</h3>
+            <div style="height: 300px;">
+                <canvas id="medalChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-4 h-full">
+            <h3 class="h5 mb-4">{% trans "Quick Actions" %}</h3>
+            <div class="d-flex flex-column gap-3">
+                <a href="{% url 'admissions:candidate_list' %}" class="btn btn-outline btn-block text-left">
+                    👥 {% trans "View Online Candidate List" %}
+                </a>
+                <a href="{% url 'admissions:admission_registrations_list' %}" class="btn btn-outline btn-block text-left">
+                    📝 {% trans "View Raw Registrations" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('medalChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gold', 'Silver', 'Bronze', 'No Medal'],
+                datasets: [{
+                    data: [{{ medal_counts.gold }}, {{ medal_counts.silver }}, {{ medal_counts.bronze }}, {{ medal_counts.none }}],
+                    backgroundColor: ['#FFD700', '#C0C0C0', '#CD7F32', '#e2e8f0'],
+                    borderWidth: 0,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                plugins: { legend: { position: 'right' } },
+                cutout: '70%',
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    });
+</script>
+{% endblock %}

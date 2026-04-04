@@ -16,6 +16,7 @@ urlpatterns = [
     path('<int:pk>/results/', views.exam_results_view, name='exam_results'),
     path('attempts/<int:pk>/answers/', views.view_attempt_answers_view, name='view_attempt_answers'),
     path('attempts/<int:pk>/unlock/', views.unlock_attempt_view, name='unlock_attempt'),
+    path('attempts/<int:pk>/delete-recording/', views.delete_recording_view, name='delete_recording'),
     
     # Student - Exam Taking
     path('my-exams/', views.student_exams_view, name='student_exams'),
@@ -23,6 +24,11 @@ urlpatterns = [
     path('take/<int:pk>/', views.take_exam_view, name='take_exam'),
     path('take/<int:attempt_pk>/save-answer/', views.save_answer_view, name='save_answer'),
     path('take/<int:attempt_pk>/log-event/', views.log_proctor_event_view, name='log_proctor_event'),
+    path('take/<int:attempt_pk>/upload-recording/', views.upload_recording_view, name='upload_recording'),
     path('take/<int:pk>/submit/', views.submit_exam_view, name='submit_exam'),
     path('result/<int:pk>/', views.exam_result_view, name='exam_result'),
+    
+    # Teacher Management
+    path('teacher/management/', views.teacher_exam_list_view, name='teacher_exam_list'),
+    path('teacher/management/<int:pk>/results/', views.teacher_exam_results_view, name='teacher_exam_results'),
 ]

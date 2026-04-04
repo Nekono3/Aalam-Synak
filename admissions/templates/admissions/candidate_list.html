@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Candidate List" %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left">
+        <h1 class="topbar-title">{% trans "Admission Candidates" %}</h1>
+        <p class="text-secondary">{% trans "Manage and track all registered applicants." %}</p>
+    </div>
+    <div class="topbar-actions">
+        {% if active_cycle %}
+        <a href="{% url 'admissions:export_admission_results' active_cycle.id %}" class="btn btn-outline" style="display: flex; align-items: center; gap: 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            {% trans "Export Results" %}
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% include 'partials/messages.html' %}
+
+<div class="card mb-4" style="border: 1px solid var(--border-color);">
+    <form method="get" class="filter-form">
+        <div style="display: flex; gap: var(--spacing-md); align-items: center; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px; position: relative;">
+                <input type="text" name="search" id="candidateSearch" class="form-control" placeholder="{% trans 'Search by name or email...' %}" value="{{ search_query|default:'' }}" style="padding-left: 40px; border: 1px solid var(--border-color); width: 100%; border-radius: 8px; height: 42px; background: var(--bg-secondary); color: var(--text-primary);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 14px; top: 12px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <select name="cycle" class="form-control" style="width: 200px; border: 1px solid var(--border-color); border-radius: 8px; height: 42px; background: var(--bg-secondary); color: var(--text-primary);">
+                <option value="">{% trans "All Cycles" %}</option>
+                {% for cycle in all_cycles %}
+                    <option value="{{ cycle.id }}" {% if selected_cycle_id == cycle.id|stringformat:"s" %}selected{% endif %}>{{ cycle.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary" style="height: 42px; padding: 0 24px;">{% trans "Filter" %}</button>
+            <div style="margin-left: auto;">
+                <span class="badge badge-secondary" style="font-size: 0.9rem; padding: 6px 12px;">{% trans "Total" %}: {{ candidates.count }}</span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="card p-0" style="border: 1px solid var(--border-color); overflow: hidden;">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{% trans "Candidate" %}</th>
+                    <th>{% trans "School" %}</th>
+                    <th class="text-center">{% trans "Cycle" %}</th>
+                    <th class="text-center">{% trans "Grade" %}</th>
+                    <th class="text-center">{% trans "Exam Score" %}</th>
+                    <th class="text-center">{% trans "Status" %}</th>
+                    <th class="text-right">{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidate in candidates %}
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem;">
+                                {{ candidate.user.first_name|slice:":1"|upper }}
+                            </div>
+                            <div>
+                            <a href="{% url 'admissions:candidate_detail' candidate.id %}" style="text-decoration: none; display: block;">
+                                <div style="font-weight: 600; color: var(--text-primary); transition: color 0.2s;" onmouseover="this.style.color='var(--primary-blue)'" onmouseout="this.style.color='var(--text-primary)'">{{ candidate.user.get_full_name }}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">{{ candidate.user.email }}</div>
+                            </a>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 500;">{{ candidate.previous_school.name|default:_("N/A") }}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">ID: {{ candidate.previous_school.school_id|default:_("N/A") }}</div>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge badge-outline" style="border: 1px solid var(--border-color);">{{ candidate.cycle.name }}</span>
+                    </td>
+                    <td class="text-center">{{ candidate.grade_applying_for }}</td>
+                    <td class="text-center">
+                        {% if candidate.admission_result %}
+                            <span class="font-weight-700 {% if candidate.is_passed %}text-success{% else %}text-danger{% endif %}">{{ candidate.admission_result.percentage|floatformat:1 }}%</span>
+                            <div class="text-muted small">({{ candidate.admission_result.score|floatformat:0 }}/{{ candidate.admission_result.total_questions }})</div>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if candidate.admission_result %}
+                            <span class="badge badge-success">{% trans "Completed" %}</span>
+                        {% elif candidate.online_attempt %}
+                            {% if candidate.online_attempt.status == 'completed' %}
+                                <span class="badge badge-success">{% trans "Completed" %}</span>
+                            {% elif candidate.online_attempt.status == 'locked' %}
+                                <span class="badge badge-danger">{% trans "Locked" %}</span>
+                            {% else %}
+                                <span class="badge badge-warning">{% trans "In Progress" %}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge badge-secondary">{% trans "Not Started" %}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-right">
+                        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                            <span class="text-muted small">{% trans "Click name to manage" %}</span>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center p-5 text-muted">
+                        {% trans "No candidates found matching your criteria." %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

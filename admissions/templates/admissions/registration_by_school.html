@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{{ school.name }} - {% trans "Candidates" %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left">
+        <h1 class="topbar-title">{{ school.name }}</h1>
+        <p class="text-secondary">{% trans "Candidates for cycle" %}: <strong>{{ active_cycle.name }}</strong></p>
+    </div>
+    <div class="topbar-actions">
+        {% if active_cycle %}
+        <a href="{% url 'admissions:candidate_list' %}?school={{ school.pk }}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
+            {% trans "Add Candidate" %}
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="data-section animate-slide-up">
+    <div class="glass-card table-card">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Candidate Name" %}</th>
+                        <th>{% trans "Grade" %}</th>
+                        <th>{% trans "Phone" %}</th>
+                        <th>{% trans "Prev. School" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th class="actions-col">{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reg in registrations %}
+                    <tr>
+                        <td class="name-cell">
+                            <span class="full-name">{{ reg.candidate.full_name }}</span>
+                            <span class="meta-sub">{{ reg.candidate.gender }} • {{ reg.candidate.birth_date }}</span>
+                        </td>
+                        <td><span class="badge-accent">{{ reg.candidate.grade_applying_for }}</span></td>
+                        <td>{{ reg.candidate.phone }}</td>
+                        <td>{{ reg.candidate.previous_school }}</td>
+                        <td>
+                            <span class="status-pill status-{{ reg.status|lower }}">
+                                {{ reg.status }}
+                            </span>
+                        </td>
+                        <td class="actions-cell">
+                            <a href="{% url 'admissions:candidate_edit' reg.candidate.pk %}" class="btn-icon" title="{% trans 'Edit' %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </a>
+                            <a href="{% url 'admissions:candidate_delete' reg.candidate.pk %}" class="btn-icon delete" title="{% trans 'Delete' %}" onclick="return confirm('{% trans 'Are you sure?' %}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-table">
+                            <p>{% trans "No candidates registered for this school yet." %}</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.header-main { display: flex; justify-content: space-between; align-items: flex-end; margin-top: var(--spacing-md); }
+
+.table-card { padding: 0; overflow: hidden; }
+.data-table { width: 100%; border-collapse: collapse; text-align: left; }
+.data-table th { padding: var(--spacing-lg); font-weight: 600; color: var(--text-secondary); background: rgba(0, 0, 0, 0.02); }
+.data-table td { padding: var(--spacing-lg); border-top: 1px solid rgba(0, 0, 0, 0.05); vertical-align: middle; }
+
+.name-cell { display: flex; flex-direction: column; }
+.full-name { font-weight: 600; font-size: 1rem; }
+.meta-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+.badge-accent { 
+    background: rgba(0, 102, 255, 0.1); 
+    color: var(--primary-blue); 
+    padding: 2px 8px; 
+    border-radius: 6px; 
+    font-size: 0.8125rem; 
+    font-weight: 700; 
+}
+
+.status-pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.status-registered { background: rgba(0, 102, 255, 0.1); color: var(--primary-blue); }
+
+.actions-cell { display: flex; gap: 10px; }
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+.btn-icon:hover { background: rgba(0,0,0,0.05); color: var(--primary-blue); }
+.btn-icon.delete:hover { background: rgba(255, 59, 48, 0.1); color: #ff3b30; }
+
+.empty-table { padding: var(--spacing-3xl); text-align: center; color: var(--text-muted); }
+</style>
+{% endblock %}

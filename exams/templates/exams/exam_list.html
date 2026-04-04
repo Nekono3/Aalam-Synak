@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Online Exams" %} - AIMS EXAM{% endblock %}
+{% block title %}{% trans "Online Exams" %} - Aalam Synak{% endblock %}
 
 {% block content %}
 <div class="topbar">
@@ -37,6 +37,14 @@
                     <option value="ended" {% if status == 'ended' %}selected{% endif %}>{% trans "Ended" %}</option>
                 </select>
             </div>
+            <div class="filter-group">
+                <select name="class_id" class="form-select">
+                    <option value="">{% trans "All Students" %}</option>
+                    {% for cls in available_classes %}
+                    <option value="{{ cls.pk }}" {% if class_id == cls.pk|stringformat:"d" %}selected{% endif %}>{{ cls.display_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
         </div>
     </form>
@@ -70,8 +78,7 @@
                     <td>
                         {% if exam.is_available %}
                         <span class="badge badge-success">{% trans "Active" %}</span>
-                        {% elif exam.end_time < exam.start_time %} <span class="badge badge-secondary">{% trans "Ended"
-                            %}</span>
+                        {% elif exam.end_time < exam.start_time %} <span class="badge badge-secondary">{% trans "Ended" %}</span>
                             {% else %}
                             <span class="badge badge-warning">{% trans "Upcoming" %}</span>
                             {% endif %}

@@ -19,6 +19,7 @@ urlpatterns += i18n_patterns(
     path('exams/', include('exams.urls', namespace='exams')),
     path('zipgrade/', include('zipgrade.urls', namespace='zipgrade')),
     path('analytics/', include('analytics.urls', namespace='analytics')),
+    path('admissions/', include('admissions.urls', namespace='admissions')),
     prefix_default_language=False,
 )
 

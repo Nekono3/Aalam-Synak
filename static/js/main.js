@@ -1,5 +1,5 @@
 /**
- * AIMS EXAM - Main JavaScript
+ * Aalam Synak - Main JavaScript
  * Common functionality and utilities
  */
 
@@ -98,6 +98,38 @@
         });
     }
 
+    // Responsive Tables Automation
+    function initResponsiveTables() {
+        const tables = document.querySelectorAll('table.table, table.data-table, table.reg-table, table.split-table');
+        tables.forEach(table => {
+            if (table.classList.contains('no-responsive')) return;
+            
+            // Wrap in overflow container natively
+            if (!table.parentElement.classList.contains('table-container')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-container';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            }
+            
+            // Embed data labels for CSS extraction
+            const thead = table.querySelector('thead');
+            if (thead) {
+                const headers = Array.from(thead.querySelectorAll('th')).map(th => th.innerText.trim());
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    cells.forEach((cell, index) => {
+                        if (headers[index]) {
+                            cell.setAttribute('data-label', headers[index]);
+                        }
+                    });
+                });
+                table.classList.add('mobile-cards');
+            }
+        });
+    }
+
     // Initialize all components
     function init() {
         initSidebar();
@@ -105,6 +137,7 @@
         initAlerts();
         initForms();
         initConfirmDialogs();
+        initResponsiveTables();
     }
 
     // Run when DOM is ready

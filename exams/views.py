@@ -13,10 +13,10 @@ import random
 from accounts.decorators import role_required
 from schools.models import School, Subject
 from .models import (
-    OnlineExam, ExamQuestion, QuestionOption,
+    OnlineExam, ExamQuestion, QuestionOption, MatchingPair, OrderingItem,
     ExamAttempt, AttemptAnswer, ProctorEvent
 )
-from .forms import OnlineExamForm, ExamQuestionForm, QuestionOptionFormSet
+from .forms import OnlineExamForm, ExamQuestionForm, QuestionOptionFormSet, MatchingPairFormSet, OrderingItemFormSet
 
 
 # ============================================
@@ -27,6 +27,8 @@ from .forms import OnlineExamForm, ExamQuestionForm, QuestionOptionFormSet
 @role_required(['super_admin', 'teacher'])
 def exam_list_view(request):
     """List all online exams."""
+    from schools.models import SchoolClass
+    
     exams = OnlineExam.objects.select_related('subject', 'school', 'created_by')
     
     # Filter by school for teachers
@@ -51,6 +53,14 @@ def exam_list_view(request):
     elif status == 'ended':
         exams = exams.filter(end_time__lt=now)
     
+    # Filter by class
+    class_id = request.GET.get('class_id', '')
+    if class_id:
+        exams = exams.filter(target_classes__id=class_id).distinct()
+    
+    # Get available classes for the filter dropdown
+    available_classes = SchoolClass.objects.all().order_by('grade', 'section')
+    
     paginator = Paginator(exams, 20)
     page = request.GET.get('page', 1)
     exams = paginator.get_page(page)
@@ -59,6 +69,8 @@ def exam_list_view(request):
         'exams': exams,
         'search': search,
         'status': status,
+        'class_id': class_id,
+        'available_classes': available_classes,
     })
 
 
@@ -72,6 +84,7 @@ def exam_create_view(request):
             exam = form.save(commit=False)
             exam.created_by = request.user
             exam.save()
+            form.save_m2m()  # Save target_classes M2M
             messages.success(request, _('Exam created successfully. Now add questions.'))
             return redirect('exams:exam_questions', pk=exam.pk)
     else:
@@ -156,31 +169,69 @@ def add_question_view(request, exam_pk):
             question.order = exam.questions.count() + 1
             question.save()
             
-            # For fill_blanks questions, don't validate/save formset
-            if question.question_type == 'fill_blanks':
+            if question.question_type == 'fill_blanks' or question.question_type == 'true_false':
                 messages.success(request, _('Question added successfully.'))
                 return redirect('exams:exam_questions', pk=exam.pk)
             
-            # For multiple choice, validate and save formset
+            if question.question_type == 'matching':
+                matching_formset = MatchingPairFormSet(request.POST, instance=question)
+                if matching_formset.is_valid():
+                    matching_formset.save()
+                    messages.success(request, _('Matching question added successfully.'))
+                    return redirect('exams:exam_questions', pk=exam.pk)
+                else:
+                    question.delete()
+                    form = ExamQuestionForm(request.POST, request.FILES)
+                    formset = QuestionOptionFormSet()
+                    matching_formset = MatchingPairFormSet(request.POST)
+                    ordering_formset = OrderingItemFormSet()
+                    return render(request, 'exams/question_form.html', {
+                        'exam': exam, 'form': form, 'formset': formset,
+                        'matching_formset': matching_formset, 'ordering_formset': ordering_formset,
+                        'is_edit': False,
+                    })
+            
+            if question.question_type == 'ordering':
+                ordering_formset = OrderingItemFormSet(request.POST, instance=question)
+                if ordering_formset.is_valid():
+                    ordering_formset.save()
+                    messages.success(request, _('Ordering question added successfully.'))
+                    return redirect('exams:exam_questions', pk=exam.pk)
+                else:
+                    question.delete()
+                    form = ExamQuestionForm(request.POST, request.FILES)
+                    formset = QuestionOptionFormSet()
+                    matching_formset = MatchingPairFormSet()
+                    ordering_formset = OrderingItemFormSet(request.POST)
+                    return render(request, 'exams/question_form.html', {
+                        'exam': exam, 'form': form, 'formset': formset,
+                        'matching_formset': matching_formset, 'ordering_formset': ordering_formset,
+                        'is_edit': False,
+                    })
+            
+            # Multiple choice
             formset = QuestionOptionFormSet(request.POST, instance=question)
             if formset.is_valid():
                 formset.save()
                 messages.success(request, _('Question added successfully.'))
                 return redirect('exams:exam_questions', pk=exam.pk)
             else:
-                # Formset invalid - delete the question and show errors
                 question.delete()
         else:
-            # Form invalid - create empty formset for re-display
             formset = QuestionOptionFormSet(request.POST)
     else:
         form = ExamQuestionForm()
         formset = QuestionOptionFormSet()
     
+    matching_formset = MatchingPairFormSet()
+    ordering_formset = OrderingItemFormSet()
+    
     return render(request, 'exams/question_form.html', {
         'exam': exam,
         'form': form,
         'formset': formset,
+        'matching_formset': matching_formset,
+        'ordering_formset': ordering_formset,
         'is_edit': False,
     })
 
@@ -195,21 +246,43 @@ def edit_question_view(request, pk):
     if request.method == 'POST':
         form = ExamQuestionForm(request.POST, request.FILES, instance=question)
         formset = QuestionOptionFormSet(request.POST, instance=question)
+        matching_formset = MatchingPairFormSet(request.POST, instance=question)
+        ordering_formset = OrderingItemFormSet(request.POST, instance=question)
         
-        if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
-            messages.success(request, _('Question updated successfully.'))
-            return redirect('exams:exam_questions', pk=exam.pk)
+        if form.is_valid():
+            saved_question = form.save()
+            
+            if saved_question.question_type == 'fill_blanks' or saved_question.question_type == 'true_false':
+                messages.success(request, _('Question updated successfully.'))
+                return redirect('exams:exam_questions', pk=exam.pk)
+            elif saved_question.question_type == 'matching':
+                if matching_formset.is_valid():
+                    matching_formset.save()
+                    messages.success(request, _('Question updated successfully.'))
+                    return redirect('exams:exam_questions', pk=exam.pk)
+            elif saved_question.question_type == 'ordering':
+                if ordering_formset.is_valid():
+                    ordering_formset.save()
+                    messages.success(request, _('Question updated successfully.'))
+                    return redirect('exams:exam_questions', pk=exam.pk)
+            else:  # multiple_choice
+                if formset.is_valid():
+                    formset.save()
+                    messages.success(request, _('Question updated successfully.'))
+                    return redirect('exams:exam_questions', pk=exam.pk)
     else:
         form = ExamQuestionForm(instance=question)
         formset = QuestionOptionFormSet(instance=question)
+        matching_formset = MatchingPairFormSet(instance=question)
+        ordering_formset = OrderingItemFormSet(instance=question)
     
     return render(request, 'exams/question_form.html', {
         'exam': exam,
         'question': question,
         'form': form,
         'formset': formset,
+        'matching_formset': matching_formset,
+        'ordering_formset': ordering_formset,
         'is_edit': True,
     })
 
@@ -339,6 +412,23 @@ def student_exams_view(request):
     if request.user.primary_school:
         exams = exams.filter(school=request.user.primary_school)
     
+    # Filter by target classes: show exams that target the student's class
+    # or exams with no class restriction (empty target_classes)
+    from django.db.models import Count
+    if request.user.school_class:
+        # Annotate to find exams with no target classes (available to all)
+        exams = exams.annotate(
+            class_count=Count('target_classes')
+        ).filter(
+            Q(class_count=0) |
+            Q(target_classes=request.user.school_class)
+        ).distinct()
+    else:
+        # Student with no class sees only non-class-restricted exams
+        exams = exams.annotate(
+            class_count=Count('target_classes')
+        ).filter(class_count=0)
+    
     # Get student's attempts
     attempts = {
         a.exam_id: a 
@@ -423,7 +513,7 @@ def take_exam_view(request, pk):
         return redirect('exams:exam_result', pk=attempt.pk)
     
     exam = attempt.exam
-    questions = list(exam.questions.prefetch_related('options').all())
+    questions = list(exam.questions.prefetch_related('options', 'matching_pairs', 'ordering_items').all())
     
     # Shuffle if needed
     if exam.shuffle_questions:
@@ -436,11 +526,25 @@ def take_exam_view(request, pk):
         if a.selected_option_id
     }
     
-    # Get existing text answers for fill_blanks
+    # Get existing text answers for fill_blanks and true_false
     existing_text_answers = {
         a.question_id: a.text_answer
         for a in attempt.answers.all()
         if a.text_answer
+    }
+    
+    # Get existing matching answers
+    existing_matching_answers = {
+        a.question_id: a.matching_answers
+        for a in attempt.answers.all()
+        if a.matching_answers
+    }
+    
+    # Get existing ordering answers
+    existing_ordering_answers = {
+        a.question_id: a.ordering_answers
+        for a in attempt.answers.all()
+        if a.ordering_answers
     }
     
     return render(request, 'exams/take_exam.html', {
@@ -448,7 +552,10 @@ def take_exam_view(request, pk):
         'exam': exam,
         'questions': questions,
         'existing_answers': existing_answers,
+        'existing_answers_json': json.dumps({str(k): v for k, v in existing_answers.items()}),
         'existing_text_answers': existing_text_answers,
+        'existing_matching_answers': json.dumps(existing_matching_answers),
+        'existing_ordering_answers': json.dumps(existing_ordering_answers),
         'time_remaining': attempt.time_remaining,
     })
 
@@ -473,6 +580,40 @@ def save_answer_view(request, attempt_pk):
         # Handle different question types
         if question.question_type == 'fill_blanks':
             # Text-based answer
+            answer, created = AttemptAnswer.objects.update_or_create(
+                attempt=attempt,
+                question=question,
+                defaults={
+                    'text_answer': text_answer,
+                    'selected_option': None
+                }
+            )
+        elif question.question_type == 'matching':
+            # Matching answer — JSON pairs
+            matching_data = data.get('matching_answers', {})
+            answer, created = AttemptAnswer.objects.update_or_create(
+                attempt=attempt,
+                question=question,
+                defaults={
+                    'matching_answers': matching_data,
+                    'selected_option': None,
+                    'text_answer': ''
+                }
+            )
+        elif question.question_type == 'ordering':
+            # Ordering answer — JSON positions
+            ordering_data = data.get('ordering_answers', {})
+            answer, created = AttemptAnswer.objects.update_or_create(
+                attempt=attempt,
+                question=question,
+                defaults={
+                    'ordering_answers': ordering_data,
+                    'selected_option': None,
+                    'text_answer': ''
+                }
+            )
+        elif question.question_type == 'true_false':
+            # True/False answer — stored as text "true" or "false"
             answer, created = AttemptAnswer.objects.update_or_create(
                 attempt=attempt,
                 question=question,
@@ -595,4 +736,120 @@ def exam_result_view(request, pk):
         'attempt': attempt,
         'exam': exam,
         'answers': answers,
+    })
+
+
+@login_required
+@require_POST
+def upload_recording_view(request, attempt_pk):
+    """Upload exam recording video."""
+    attempt = get_object_or_404(ExamAttempt, pk=attempt_pk, student=request.user)
+    
+    video_file = request.FILES.get('recording')
+    if video_file:
+        # Save with a descriptive filename
+        from django.core.files.base import ContentFile
+        filename = f"exam_{attempt.exam.pk}_student_{request.user.pk}_{attempt.pk}.webm"
+        attempt.recording.save(filename, video_file, save=True)
+        return JsonResponse({'status': 'ok'})
+    
+    return JsonResponse({'status': 'error', 'message': 'No recording file provided'}, status=400)
+
+
+@login_required
+@role_required(['super_admin', 'teacher'])
+@require_POST
+def delete_recording_view(request, pk):
+    """Delete a recording file from an exam attempt."""
+    attempt = get_object_or_404(ExamAttempt, pk=pk)
+    
+    if attempt.recording:
+        attempt.recording.delete(save=True)
+        messages.success(request, _('Recording deleted successfully.'))
+    else:
+        messages.warning(request, _('No recording found for this attempt.'))
+    
+    return redirect('exams:exam_results', pk=attempt.exam.pk)
+
+
+# ============ Teacher Management Views ============
+
+@login_required
+@role_required(['teacher', 'super_admin'])
+def teacher_exam_list_view(request):
+    """Teacher management - List exams for teacher's school (read-only)."""
+    school = request.user.primary_school
+    
+    exams = OnlineExam.objects.all().order_by('-created_at')
+    
+    if school and request.user.role == 'teacher':
+        exams = exams.filter(school=school)
+    elif request.user.role == 'super_admin':
+        school_filter = request.GET.get('school')
+        if school_filter:
+            exams = exams.filter(school_id=school_filter)
+    
+    # Search
+    search = request.GET.get('search', '')
+    if search:
+        exams = exams.filter(Q(title__icontains=search))
+    
+    paginator = Paginator(exams, 20)
+    page = request.GET.get('page', 1)
+    exams = paginator.get_page(page)
+    
+    schools = School.objects.filter(is_active=True) if request.user.role == 'super_admin' else None
+    
+    return render(request, 'exams/teacher_exam_list.html', {
+        'exams': exams,
+        'search': search,
+        'school': school,
+        'schools': schools,
+    })
+
+
+@login_required
+@role_required(['teacher', 'super_admin'])
+def teacher_exam_results_view(request, pk):
+    """Teacher management - View exam results with student search."""
+    exam = get_object_or_404(OnlineExam, pk=pk)
+    
+    # Teachers can only see exams from their school
+    if request.user.role == 'teacher' and request.user.primary_school:
+        if exam.school != request.user.primary_school:
+            messages.error(request, _('You do not have access to this exam.'))
+            return redirect('exams:teacher_exam_list')
+    
+    attempts = ExamAttempt.objects.filter(
+        exam=exam
+    ).select_related('student').order_by('-submitted_at')
+    
+    # Search by student name
+    search = request.GET.get('search', '')
+    if search:
+        attempts = attempts.filter(
+            Q(student__first_name__icontains=search) |
+            Q(student__last_name__icontains=search) |
+            Q(student__email__icontains=search)
+        )
+    
+    # Stats
+    completed_attempts = attempts.filter(status='completed')
+    total_attempts = completed_attempts.count()
+    avg_score = None
+    if total_attempts > 0:
+        from django.db.models import Avg
+        avg_result = completed_attempts.aggregate(avg=Avg('score_percentage'))
+        avg_score = round(avg_result['avg'], 1) if avg_result['avg'] else None
+    
+    paginator = Paginator(attempts, 50)
+    page = request.GET.get('page', 1)
+    attempts = paginator.get_page(page)
+    
+    return render(request, 'exams/teacher_exam_results.html', {
+        'exam': exam,
+        'attempts': attempts,
+        'search': search,
+        'total_attempts': total_attempts,
+        'avg_score': avg_score,
     })

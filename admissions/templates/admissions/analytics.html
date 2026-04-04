@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Admission Analytics" %}{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left">
+        <h1 class="topbar-title">{% trans "Admission Analytics" %}</h1>
+        <p class="text-secondary">
+            {{ active_cycle.name }} — {{ exam.title }}
+        </p>
+    </div>
+    <div class="topbar-actions">
+        <a href="{% url 'admissions:export_admission_results' active_cycle.id %}" class="btn btn-outline" style="display: flex; align-items: center; gap: 8px;">
+            <span>📊</span>
+            {% trans "Download Results (XLSX)" %}
+        </a>
+        <span class="badge badge-primary">
+            {% trans "Live Stats" %}
+        </span>
+    </div>
+</div>
+
+{% if error %}
+<div class="card bg-warning-subtle mb-4">
+    <div class="d-flex align-center gap-2">
+        <span>⚠️</span>
+        <p class="mb-0">{{ error }}</p>
+    </div>
+</div>
+{% else %}
+
+<div class="analytics-top-grid mb-4" style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-lg);">
+    <!-- Top Schools Card -->
+    <div class="card">
+        <div class="d-flex justify-between align-center mb-4">
+            <h3 class="h5 mb-0">{% trans "Top External Schools" %}</h3>
+            <span class="text-muted" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 600;">{% trans "By Pass Rate" %}</span>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "School Name" %}</th>
+                        <th class="text-center">{% trans "Total" %}</th>
+                        <th class="text-center">{% trans "Passed" %}</th>
+                        <th class="text-right">{% trans "Pass Rate" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for school in school_stats %}
+                    <tr>
+                        <td>
+                            <div class="font-weight-600">{{ school.name }}</div>
+                            <small class="text-muted">ID: {{ school.school_id }}</small>
+                        </td>
+                        <td class="text-center">{{ school.total_candidates }}</td>
+                        <td class="text-center">
+                            <span class="text-success font-weight-600">{{ school.passing_candidates }}</span>
+                        </td>
+                        <td class="text-right">
+                            <div class="d-flex align-center justify-end gap-2">
+                                <div style="width: 80px; height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; border: 1px solid var(--border-color);">
+                                    <div style="width: {{ school.pass_rate }}%; height: 100%; background: var(--success);"></div>
+                                </div>
+                                <span class="font-weight-600" style="min-width: 45px;">{{ school.pass_rate|stringformat:".1f" }}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center p-4 text-muted">{% trans "No school data available yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Overall Stats Card -->
+    <div class="card d-flex flex-column align-center justify-center text-center">
+        <h3 class="h5 mb-4">{% trans "Pass Threshold" %}</h3>
+        <div style="position: relative; width: 140px; height: 140px; margin-bottom: 20px;">
+            <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                <circle cx="18" cy="18" r="16" fill="none" stroke="var(--bg-secondary)" stroke-width="3" />
+                <circle cx="18" cy="18" r="16" fill="none" stroke="var(--primary-blue)" stroke-width="3" stroke-dasharray="{{ passing_score }}, 100" />
+            </svg>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <div class="h3 mb-0 text-blue font-weight-700">{{ passing_score }}%</div>
+            </div>
+        </div>
+        <p class="text-muted small mb-4">{% trans "Minimum score required" %}</p>
+        
+        <div class="w-100 p-3" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+            <div class="text-muted small text-uppercase font-weight-600">{% trans "Total Candidates" %}</div>
+            <div class="h3 mb-0 font-weight-700">{{ top_candidates|length }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Candidates Card -->
+<div class="card">
+    <div class="d-flex justify-between align-center mb-4">
+        <h3 class="h5 mb-0">{% trans "Top Performing Candidates" %}</h3>
+        <span class="badge badge-secondary">{% trans "Top 50" %}</span>
+    </div>
+    
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">{% trans "Rank" %}</th>
+                    <th>{% trans "Candidate" %}</th>
+                    <th>{% trans "School" %}</th>
+                    <th class="text-center">{% trans "Score" %}</th>
+                    <th class="text-center">{% trans "Percentage" %}</th>
+                    <th class="text-right">{% trans "Status" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in top_candidates %}
+                <tr>
+                    <td>
+                        <span class="font-weight-700 {% if forloop.counter <= 3 %}text-blue{% else %}text-muted{% endif %}">
+                            #{{ forloop.counter }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="font-weight-600">{{ attempt.student.get_full_name }}</div>
+                        <small class="text-muted">{{ attempt.student.email }}</small>
+                    </td>
+                    <td>
+                        <span class="text-secondary small">
+                            {{ attempt.student.admission_profile.previous_school.name|default:"—" }}
+                        </span>
+                    </td>
+                    <td class="text-center">{{ attempt.score|stringformat:"g" }} <span class="text-muted small">/ {{ exam.total_points }}</span></td>
+                    <td class="text-center">
+                        <span class="font-weight-700" style="color: {% if attempt.percentage >= passing_score %}var(--success){% else %}var(--danger){% endif %};">
+                            {{ attempt.percentage|stringformat:".1f" }}%
+                        </span>
+                    </td>
+                    <td class="text-right">
+                        {% if attempt.percentage >= passing_score %}
+                        <span class="badge badge-success">{% trans "Passed" %}</span>
+                        {% else %}
+                        <span class="badge badge-danger">{% trans "Not Qualified" %}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center p-5 text-muted">{% trans "No candidates have completed the exam yet." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}

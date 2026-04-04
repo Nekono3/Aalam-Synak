@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Upload Admission Results" %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-between align-end">
+        <div>
+            <h1 class="h2">{% trans "Analyze Admission Data" %}</h1>
+            <p class="text-muted">{% trans "Upload your XLSX result files to generate rankings and analytics" %}</p>
+        </div>
+        <a href="{% url 'admissions:admission_analytics_dashboard' %}" class="btn btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            {% trans "Back to Dashboard" %}
+        </a>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h3 class="h5 mb-3">{% trans "Upload New File" %}</h3>
+            <p class="text-muted small mb-4">
+                {% trans "The system will automatically process the uploaded XLSX file, identify schools, calculate scores, and assign medals based on the active cycle's passing score." %}
+            </p>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger mb-4">
+                <div class="font-bold mb-1">{% trans "Please fix the following errors:" %}</div>
+                <ul class="mb-0 small">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" class="form">
+                {% csrf_token %}
+                
+                <div class="form-group mb-3">
+                    <label class="form-label font-bold">{% trans "Admission Cycle" %}</label>
+                    {{ form.cycle }}
+                    {% if form.cycle.errors %}<div class="text-danger small mt-1">{{ form.cycle.errors.0 }}</div>{% endif %}
+                    <div class="small text-muted mt-1">{% trans "Select which admission cycle these results belong to." %}</div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label font-bold">{% trans "Target Region" %}</label>
+                    {{ form.region }}
+                    <datalist id="region-suggestions">
+                        <option value="Osh">
+                        <option value="Jalal-Abad">
+                        <option value="Bishkek">
+                        <option value="Batken">
+                        <option value="Naryn">
+                        <option value="Talas">
+                        <option value="Issyk-Kul">
+                        <option value="Chui">
+                    </datalist>
+                    {% if form.region.errors %}<div class="text-danger small mt-1">{{ form.region.errors.0 }}</div>{% endif %}
+                    <div class="small text-muted mt-1">{% trans "Type the region name or select from suggestions." %}</div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label font-bold">{% trans "Admission Type" %}</label>
+                    {{ form.admission_type }}
+                    {% if form.admission_type.errors %}<div class="text-danger small mt-1">{{ form.admission_type.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label font-bold">{% trans "XLSX Result File" %}</label>
+                    {{ form.file }}
+                    {% if form.file.errors %}<div class="text-danger small mt-1">{{ form.file.errors.0 }}</div>{% endif %}
+                    <div class="small text-muted mt-1">{% trans "Ensure your file follows the standard result format (Names, School ID, Score)." %}</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    {% trans "Process & Analyze" %}
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card p-4 h-100">
+            <h3 class="h5 mb-3">{% trans "Instructions & Requirements" %}</h3>
+            <ul class="list-unstyled space-y-3">
+                <li class="d-flex gap-3">
+                    <span class="text-primary font-bold">01</span>
+                    <div>
+                        <div class="font-bold">{% trans "Standard Format" %}</div>
+                        <div class="small text-muted">{% trans "The XLSX should have columns for Student Name, School ID/Name, and Score." %}</div>
+                    </div>
+                </li>
+                <li class="d-flex gap-3">
+                    <span class="text-primary font-bold">02</span>
+                    <div>
+                        <div class="font-bold">{% trans "Duplicate Protection" %}</div>
+                        <div class="small text-muted">{% trans "Uploading the same session again will append results. Use the 'Delete' action on the dashboard if you need to re-upload." %}</div>
+                    </div>
+                </li>
+                <li class="d-flex gap-3">
+                    <span class="text-primary font-bold">03</span>
+                    <div>
+                        <div class="font-bold">{% trans "Automated Registry" %}</div>
+                        <div class="small text-muted">{% trans "New schools found in the file will be added to the registry automatically." %}</div>
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="mt-auto pt-4 border-top">
+                <div class="small text-muted mb-2">{% trans "Need a template?" %}</div>
+                <a href="{% url 'admissions:download_sample_xlsx' %}" class="btn btn-sm btn-ghost">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    {% trans "Download Sample XLSX" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

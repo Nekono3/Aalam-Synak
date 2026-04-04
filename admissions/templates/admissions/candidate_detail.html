@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Candidate Details" %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'admissions:candidate_list' %}">{% trans "Candidates" %}</a>
+            <span class="separator">/</span>
+            <span class="active">{% trans "Details" %}</span>
+        </div>
+        <h1 class="gradient-text">{{ candidate.user.get_full_name }}</h1>
+        <p class="text-secondary">{{ candidate.user.email }}</p>
+    </div>
+</div>
+
+<div class="grid-layout animate-slide-up">
+    <!-- Basic Info -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3>{% trans "Personal Information" %}</h3>
+        </div>
+        <div class="info-list">
+            <div class="info-item">
+                <span class="label">{% trans "Full Name" %}:</span>
+                <span class="value">{{ candidate.user.get_full_name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">{% trans "Gender" %}:</span>
+                <span class="value">{{ candidate.get_gender_display }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">{% trans "Birth Date" %}:</span>
+                <span class="value">{{ candidate.birth_date }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">{% trans "Address" %}:</span>
+                <span class="value">{{ candidate.address }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">{% trans "Grade Applying For" %}:</span>
+                <span class="value">{{ candidate.grade_applying_for }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">{% trans "Previous School" %}:</span>
+                <span class="value">{{ candidate.previous_school.name|default:_("N/A") }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Info (from registrations) -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3>{% trans "Contact & Registration" %}</h3>
+        </div>
+        {% if registrations %}
+            <div class="info-list">
+                {% for reg in registrations %}
+                <div class="registration-block mb-3">
+                    <div class="info-item">
+                        <span class="badge badge-outline mb-2">{{ reg.cycle.name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">{% trans "Phone 1" %}:</span>
+                        <span class="value">{{ reg.phone1 }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">{% trans "Phone 2" %}:</span>
+                        <span class="value">{{ reg.phone2|default:"-" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">{% trans "Region" %}:</span>
+                        <span class="value">{{ reg.region }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted text-center pt-4">{% trans "No registration data found." %}</p>
+        {% endif %}
+    </div>
+
+    <!-- Exam Status -->
+    <div class="glass-card full-width">
+        <div class="card-header">
+            <h3>{% trans "Exam Attempts & Results" %}</h3>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Cycle" %}</th>
+                        <th>{% trans "Type" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Score" %}</th>
+                        <th>{% trans "Percentage" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.cycle.name }}</td>
+                        <td><span class="badge badge-secondary">{{ result.admission_type|title }}</span></td>
+                        <td><span class="badge badge-success">{% trans "Completed" %}</span></td>
+                        <td>{{ result.score|floatformat:0 }}/{{ result.total_questions }}</td>
+                        <td>
+                            <strong class="{% if result.is_passed %}text-success{% else %}text-danger{% endif %}">
+                                {{ result.percentage|floatformat:1 }}%
+                            </strong>
+                        </td>
+                        <td>
+                            {% if result.exam_attempt %}
+                                <a href="{% url 'admissions:cycle_exam_result' result.exam_attempt.id %}" class="btn btn-outline btn-sm">
+                                    {% trans "View Answers" %}
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                        {% for attempt in online_attempts %}
+                        <tr>
+                            <td>{{ attempt.cycle.name }}</td>
+                            <td><span class="badge badge-secondary">Online</span></td>
+                            <td><span class="badge {% if attempt.status == 'locked' %}badge-danger{% elif attempt.status == 'completed' %}badge-success{% else %}badge-warning{% endif %}">{{ attempt.get_status_display }}</span></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>
+                                {% if attempt.status == 'completed' %}
+                                    <a href="{% url 'admissions:cycle_exam_result' attempt.id %}" class="btn btn-outline btn-sm">
+                                        {% trans "View Results" %}
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center p-4 text-muted">{% trans "No exam attempts recorded." %}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+}
+.full-width { grid-column: span 2; }
+.info-list { display: grid; gap: var(--spacing-md); }
+.info-item { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+.info-item .label { color: var(--text-muted); }
+.info-item .value { font-weight: 600; }
+.registration-block { border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; background: rgba(0,0,0,0.02); }
+</style>
+{% endblock %}

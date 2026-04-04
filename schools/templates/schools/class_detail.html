@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Class" %} {{ school_class.display_name }} - Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <h1 class="topbar-title">
+        {% trans "Class" %} {{ school_class.display_name }}
+        <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400; margin-left: var(--spacing-sm);">
+            {{ school_class.school.name }}
+        </span>
+    </h1>
+    <div class="topbar-actions">
+        <a href="{% url 'schools:class_student_add' school_class.pk %}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <line x1="19" y1="8" x2="19" y2="14"></line>
+                <line x1="22" y1="11" x2="16" y2="11"></line>
+            </svg>
+            {% trans "Add Students" %}
+        </a>
+        <form method="post" action="{% url 'schools:generate_credentials' school_class.pk %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary" onclick="return confirm('{% trans "Generate login credentials for all students in this class?" %}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                {% trans "Generate Credentials" %}
+            </button>
+        </form>
+        <a href="{% url 'schools:print_credentials' school_class.pk %}" class="btn btn-outline" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            {% trans "Print Credentials" %}
+        </a>
+        <a href="{% url 'schools:class_list' %}" class="btn btn-outline">{% trans "Back" %}</a>
+    </div>
+</div>
+
+{% include 'partials/messages.html' %}
+
+<!-- Students Table -->
+<div class="card">
+    <div style="margin-bottom: var(--spacing-md);">
+        <h3 style="margin: 0;">{% trans "Students" %} ({{ students|length }})</h3>
+    </div>
+
+    {% if students %}
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>{% trans "Full Name" %}</th>
+                    <th>{% trans "Username" %}</th>
+                    <th>{% trans "Password" %}</th>
+                    <th>{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ student.get_full_name }}</strong></td>
+                    <td>
+                        {% if student.username %}
+                        <code style="background: var(--bg-secondary); padding: 2px 6px; border-radius: var(--radius-sm);">{{ student.username }}</code>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if student.plain_password %}
+                        <code style="background: var(--bg-secondary); padding: 2px 6px; border-radius: var(--radius-sm);">{{ student.plain_password }}</code>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 4px;">
+                            <!-- Reset Password -->
+                            <form method="post" action="{% url 'schools:reset_student_password' student.pk %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline" title="{% trans 'Reset Password' %}"
+                                    onclick="return confirm('{% trans "Reset password for this student?" %}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                            <!-- Delete Student -->
+                            <form method="post" action="{% url 'schools:delete_student' student.pk %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger" title="{% trans 'Delete Student' %}"
+                                    onclick="return confirm('{% trans "Delete this student? This cannot be undone." %}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: var(--spacing-xl); color: var(--text-muted);">
+        <p>{% trans "No students in this class yet." %}</p>
+        <a href="{% url 'schools:class_student_add' school_class.pk %}" class="btn btn-primary" style="margin-top: var(--spacing-md);">
+            {% trans "Add Students" %}
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% if available_master_students %}
+<div class="card" style="margin-top: var(--spacing-lg);">
+    <h3 style="margin: 0 0 var(--spacing-sm);">{% trans "Available from Master ID" %}</h3>
+    <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+        {% trans "These students from Master ID match this class's grade and section." %}
+    </p>
+    <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-sm);">
+        {% for ms in available_master_students %}
+        <span style="background: var(--bg-secondary); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.875rem;">
+            {{ ms.full_name }}
+        </span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

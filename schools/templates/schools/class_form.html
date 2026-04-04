@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ title }} - Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <h1 class="topbar-title">{{ title }}</h1>
+    <div class="topbar-actions">
+        <a href="{% url 'schools:class_list' %}" class="btn btn-outline">{% trans "Back to Classes" %}</a>
+    </div>
+</div>
+
+{% include 'partials/messages.html' %}
+
+<div class="card" style="max-width: 600px;">
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label class="form-label">{% trans "School" %}</label>
+            <select name="school" class="form-select" required>
+                <option value="">{% trans "Select school..." %}</option>
+                {% for school in schools %}
+                <option value="{{ school.pk }}">{{ school.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">{% trans "Grade" %}</label>
+            <select name="grade" class="form-select" required>
+                <option value="">{% trans "Select grade..." %}</option>
+                {% for value, label in grades %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">{% trans "Section" %}</label>
+            <select name="section" class="form-select" required>
+                <option value="">{% trans "Select section..." %}</option>
+                {% for value, label in sections %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+            <button type="submit" class="btn btn-primary">{% trans "Create Class" %}</button>
+            <a href="{% url 'schools:class_list' %}" class="btn btn-outline">{% trans "Cancel" %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

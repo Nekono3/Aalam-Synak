@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Admission Dashboard" %} | AIMS{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .medal-gold { color: #FFD700; filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.5)); }
+    .medal-silver { color: #C0C0C0; filter: drop-shadow(0 0 2px rgba(192, 192, 192, 0.5)); }
+    .medal-bronze { color: #CD7F32; filter: drop-shadow(0 0 2px rgba(205, 127, 50, 0.5)); }
+    .medal-card { transition: transform 0.2s; border-bottom: 4px solid transparent; }
+    .medal-card:hover { transform: translateY(-5px); }
+    .card-gold { border-bottom-color: #FFD700; }
+    .card-silver { border-bottom-color: #C0C0C0; }
+    .card-bronze { border-bottom-color: #CD7F32; }
+    .progress-stacked { display: flex; height: 10px; overflow: hidden; background-color: var(--bg-secondary); border-radius: 5px; }
+    .bg-gold { background-color: #FFD700; }
+    .bg-silver { background-color: #C0C0C0; }
+    .bg-bronze { background-color: #CD7F32; }
+    
+    /* Tabs Styling */
+    .nav-tabs { border-bottom: 1px solid var(--border-color); display: flex; gap: 2rem; margin-bottom: 2rem; }
+    .nav-tab { padding: 1rem 0; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s; }
+    .nav-tab:hover { color: var(--text-primary); }
+    .nav-tab.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-between align-end">
+        <div>
+            <h1 class="h2">{% trans "Admission Dashboard" %}</h1>
+            <p class="text-muted">{% trans "See overall statistics and rankings for this admission session" %}</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'admissions:master_answer_setup' %}" class="btn btn-secondary">
+                🔑 {% trans "Master Answers" %}
+            </a>
+            <a href="{% url 'admissions:subject_top_students' %}" class="btn btn-secondary">
+                📊 {% trans "Subject Rankings" %}
+            </a>
+            <a href="{% url 'admissions:school_subject_analytics' %}" class="btn btn-secondary">
+                🏫 {% trans "School Analytics" %}
+            </a>
+            <a href="{% url 'admissions:admission_analytics_upload' %}" class="btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                {% trans "Upload Results" %}
+            </a>
+            <a href="{% url 'admissions:online_analytics_dashboard' %}" class="btn btn-primary">
+                📈 {% trans "Online Analytics" %}
+            </a>
+            {% if active_cycle %}
+            <a href="{% url 'admissions:export_online' active_cycle.id %}" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                📥 {% trans "Export Online" %}
+            </a>
+            <a href="{% url 'admissions:export_offline' active_cycle.id %}" class="btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                📥 {% trans "Export Offline" %}
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<div class="nav-tabs">
+    <div class="nav-tab active" data-tab="dashboard">{% trans "Dashboard" %}</div>
+    <div class="nav-tab" data-tab="students">{% trans "Top Students" %}</div>
+    <div class="nav-tab" data-tab="schools">{% trans "Top Schools" %}</div>
+    <div class="nav-tab" data-tab="sessions">{% trans "Upload Sessions" %}</div>
+</div>
+
+<div id="dashboard" class="tab-content active">
+    <!-- Filters & Passing Score Control -->
+    <div class="card p-3 mb-4">
+        <form method="get" class="row align-center">
+            <div class="col-md-2">
+                <label class="small text-muted mb-1 d-block">{% trans "Region" %}</label>
+                <select name="region" class="form-select" onchange="this.form.submit()">
+                    <option value="">{% trans "All Regions" %}</option>
+                    {% for region in regions %}
+                    <option value="{{ region }}" {% if selected_region == region %}selected{% endif %}>{{ region }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="small text-muted mb-1 d-block">{% trans "Type" %}</label>
+                <select name="admission_type" class="form-select" onchange="this.form.submit()">
+                    <option value="">{% trans "Combined" %}</option>
+                    <option value="online" {% if selected_type == 'online' %}selected{% endif %}>{% trans "Only Online" %}</option>
+                    <option value="offline" {% if selected_type == 'offline' %}selected{% endif %}>{% trans "Only Offline" %}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="small text-muted mb-1 d-block">{% trans "Passing Threshold" %}: <strong>{{ passing_score }}%</strong></label>
+                <div class="d-flex align-center gap-2">
+                    <input type="range" name="passing_score" min="0" max="100" value="{{ passing_score }}" class="form-range flex-grow-1" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output class="small font-bold" style="min-width: 40px;">{{ passing_score }}%</output>
+                    <button type="submit" class="btn btn-sm btn-primary ml-2">{% trans "Apply" %}</button>
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="text-muted small">{% trans "Average Score" %}: <strong class="text-primary h5">{{ avg_score|stringformat:".1f" }}</strong></div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Medal Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-4 medal-card card-gold">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <div class="text-muted small font-bold text-uppercase mb-1">🥇 {% trans "Gold" %}</div>
+                        <h2 class="mb-0">{{ medal_stats.gold }}</h2>
+                        <div class="small text-muted">{% trans "Score 75+" %}</div>
+                    </div>
+                    <div class="medal-badge medal-badge-gold">
+                        <span class="medal-icon-sm">🥇</span> {% trans "Gold" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4 medal-card card-silver">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <div class="text-muted small font-bold text-uppercase mb-1">🥈 {% trans "Silver" %}</div>
+                        <h2 class="mb-0">{{ medal_stats.silver }}</h2>
+                        <div class="small text-muted">{% trans "Score 60-74" %}</div>
+                    </div>
+                    <div class="medal-badge medal-badge-silver">
+                        <span class="medal-icon-sm">🥈</span> {% trans "Silver" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4 medal-card card-bronze">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <div class="text-muted small font-bold text-uppercase mb-1">🥉 {% trans "Bronze" %}</div>
+                        <h2 class="mb-0">{{ medal_stats.bronze }}</h2>
+                        <div class="small text-muted">{% trans "Score 50-59" %}</div>
+                    </div>
+                    <div class="medal-badge medal-badge-bronze">
+                        <span class="medal-icon-sm">🥉</span> {% trans "Bronze" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4 medal-card">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <div class="text-muted small font-bold text-uppercase mb-1">❌ {% trans "Passed" %} / {% trans "Failed" %}</div>
+                        <h2 class="mb-0"><span class="text-success">{{ passed_count }}</span> / <span class="text-danger">{{ failed_count }}</span></h2>
+                        <div class="small text-muted">{% trans "Rate" %}: {{ pass_rate|stringformat:".1f" }}%</div>
+                    </div>
+                    <div class="h3 mb-0 text-muted">{% trans "Total" %}: {{ total_students }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medal Distribution Chart -->
+    <div class="card p-4">
+        <h3 class="h5 mb-4">{% trans "Medal Distribution" %}</h3>
+        <div class="d-flex align-center justify-center gap-5">
+            <div style="width: 280px; height: 280px;">
+                <canvas id="medalChart"></canvas>
+            </div>
+            <div class="flex-grow-1" style="max-width: 400px;">
+                <div class="d-flex justify-between p-2 rounded mb-2" style="background: var(--bg-secondary);">
+                    <span>🥇 {% trans "Gold" %} (75+)</span>
+                    <span class="font-bold">{{ medal_stats.gold }}</span>
+                </div>
+                <div class="d-flex justify-between p-2 rounded mb-2" style="background: var(--bg-secondary);">
+                    <span>🥈 {% trans "Silver" %} (60-74)</span>
+                    <span class="font-bold">{{ medal_stats.silver }}</span>
+                </div>
+                <div class="d-flex justify-between p-2 rounded mb-2" style="background: var(--bg-secondary);">
+                    <span>🥉 {% trans "Bronze" %} (50-59)</span>
+                    <span class="font-bold">{{ medal_stats.bronze }}</span>
+                </div>
+                <div class="d-flex justify-between p-2 rounded" style="background: var(--bg-secondary);">
+                    <span>⚪ {% trans "No Medal" %} (<50)</span>
+                    <span class="font-bold">{{ medal_stats.none }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="students" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="h5 mb-1">{% trans "Top Scoring Students" %}</h3>
+            <p class="text-muted small mb-0">{% trans "Ranked list of best performing students" %}</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Rank" %}</th>
+                        <th>{% trans "Student" %}</th>
+                        <th>{% trans "School" %}</th>
+                        <th class="text-center">{% trans "Score" %}</th>
+                        <th class="text-center">{% trans "Incorrect %" %}</th>
+                        <th class="text-center">{% trans "Medal" %}</th>
+                        <th class="text-right">{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in top_students %}
+                    <tr>
+                        <td class="font-bold">#{{ forloop.counter }}</td>
+                        <td>
+                            <div class="font-bold">{{ result.first_name }} {{ result.last_name }}</div>
+                            <div class="small text-muted">{{ result.region }}</div>
+                            {% if result.phone1 or result.phone2 %}
+                            <div class="small text-muted" style="font-size: 0.75rem;">
+                                📞 {% if result.phone1 %}{{ result.phone1 }}{% endif %}{% if result.phone1 and result.phone2 %}, {% endif %}{% if result.phone2 %}{{ result.phone2 }}{% endif %}
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td class="small">{{ result.school_name }}</td>
+                        <td class="text-center">
+                            <div class="font-bold text-primary">{{ result.score }}</div>
+                            <div class="small text-muted">{{ result.percentage|stringformat:".1f" }}%</div>
+                        </td>
+                        <td class="text-center">
+                            <div class="text-danger font-bold">{{ result.incorrect_percentage|stringformat:".1f" }}%</div>
+                        </td>
+                        <td class="text-center">
+                            {% if result.medal == 'gold' %}
+                                <div class="medal-badge medal-badge-gold"><span class="medal-icon-sm">🥇</span> {% trans "Gold" %}</div>
+                            {% elif result.medal == 'silver' %}
+                                <div class="medal-badge medal-badge-silver"><span class="medal-icon-sm">🥈</span> {% trans "Silver" %}</div>
+                            {% elif result.medal == 'bronze' %}
+                                <div class="medal-badge medal-badge-bronze"><span class="medal-icon-sm">🥉</span> {% trans "Bronze" %}</div>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-right">
+                            {% if result.percentage >= passing_score %}
+                            <span class="badge badge-success">{% trans "Passed" %}</span>
+                            {% else %}
+                            <span class="badge badge-danger">{% trans "Failed" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">{% trans "No candidates found." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="schools" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="h5 mb-1">{% trans "Top Performing Schools" %}</h3>
+            <p class="text-muted small mb-0">{% trans "Schools ranked by medals quality" %}</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Rank" %}</th>
+                        <th>{% trans "School Name" %}</th>
+                        <th class="text-center">{% trans "Students" %}</th>
+                        <th class="text-center">{% trans "Medals" %}</th>
+                        <th style="width: 250px;">{% trans "Distribution" %}</th>
+                        <th class="text-right">{% trans "Avg Score" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for school in top_schools %}
+                    <tr>
+                        <td class="font-bold">#{{ forloop.counter }}</td>
+                        <td class="font-bold">{{ school.school_name }}</td>
+                        <td class="text-center">{{ school.count }}</td>
+                        <td class="text-center">
+                            <span class="badge" style="background:#FFD70033; color:#B8860B">G: {{ school.gold }}</span>
+                            <span class="badge" style="background:#C0C0C033; color:#708090">S: {{ school.silver }}</span>
+                            <span class="badge" style="background:#CD7F3233; color:#8B4513">B: {{ school.bronze }}</span>
+                        </td>
+                        <td>
+                            <div class="progress-stacked">
+                                <div class="bg-gold" style="width: {% widthratio school.gold school.count 100 %}%"></div>
+                                <div class="bg-silver" style="width: {% widthratio school.silver school.count 100 %}%"></div>
+                                <div class="bg-bronze" style="width: {% widthratio school.bronze school.count 100 %}%"></div>
+                            </div>
+                        </td>
+                        <td class="text-right text-primary font-bold">{{ school.avg_score|stringformat:".1f" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">{% trans "No school data available." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="sessions" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="h5 mb-1">{% trans "Upload Sessions" %}</h3>
+            <p class="text-muted small mb-0">{% trans "Manage and delete uploaded admission files" %}</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Region" %}</th>
+                        <th>{% trans "Type" %}</th>
+                        <th>{% trans "File" %}</th>
+                        <th class="text-right">{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for session in upload_sessions %}
+                    <tr id="session-row-{{ session.pk }}">
+                        <td>{{ session.uploaded_at|date:"Y-m-d H:i" }}</td>
+                        <td>{{ session.region }}</td>
+                        <td><span class="badge badge-secondary">{{ session.admission_type|title }}</span></td>
+                        <td class="small">{{ session.file.name|truncatechars:30 }}</td>
+                        <td class="text-right">
+                            <button type="button" class="btn btn-sm btn-ghost-danger" onclick="deleteSession('{% url 'admissions:delete_admission_session' session.pk %}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                {% trans "Delete" %}
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4">{% trans "No upload sessions found." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden delete form (outside table to avoid browser stripping) -->
+<form id="delete-session-form" method="post" style="display: none;">
+    {% csrf_token %}
+</form>
+
+
+<script>
+    function deleteSession(url) {
+        if (confirm('Are you sure you want to delete this session and all its results?')) {
+            var form = document.getElementById('delete-session-form');
+            form.action = url;
+            form.submit();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab switching
+        const tabs = document.querySelectorAll('.nav-tab');
+        const contents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                contents.forEach(c => {
+                    c.classList.remove('active');
+                    if (c.id === target) c.classList.add('active');
+                });
+            });
+        });
+
+        // Medal Distribution Chart
+        const ctx = document.getElementById('medalChart').getContext('2d');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Gold', 'Silver', 'Bronze', 'No Medal'],
+                    datasets: [{
+                        data: [{{ medal_stats.gold }}, {{ medal_stats.silver }}, {{ medal_stats.bronze }}, {{ medal_stats.none }}],
+                        backgroundColor: ['#FFD700', '#C0C0C0', '#CD7F32', '#e2e8f0'],
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    cutout: '70%',
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

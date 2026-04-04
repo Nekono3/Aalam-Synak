@@ -78,6 +78,30 @@
         <div class="correct-answers" style="padding-left: var(--spacing-xl); color: var(--success);">
             <strong>{% trans "Correct Answers" %}:</strong> {{ question.correct_answers }}
         </div>
+        {% elif question.question_type == 'matching' %}
+        <div class="matching-list" style="padding-left: var(--spacing-xl);">
+            {% for pair in question.matching_pairs.all %}
+            <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-xs); color: var(--text-secondary);">
+                <span style="font-weight: 500;">{{ pair.left_item }}</span>
+                <span>↔</span>
+                <span style="font-weight: 500;">{{ pair.right_item }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% elif question.question_type == 'ordering' %}
+        <div class="ordering-list" style="padding-left: var(--spacing-xl);">
+            {% for item in question.ordering_items.all %}
+            <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-xs);">
+                <span class="badge badge-secondary" style="min-width: 28px; text-align: center;">{{ item.correct_position }}</span>
+                <span>{{ item.text }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% elif question.question_type == 'true_false' %}
+        <div class="correct-answers" style="padding-left: var(--spacing-xl); color: var(--success);">
+            <strong>{% trans "Correct Answer" %}:</strong>
+            {% if question.correct_answer_boolean %}{% trans "True" %}{% else %}{% trans "False" %}{% endif %}
+        </div>
         {% else %}
         <div class="options-list" style="padding-left: var(--spacing-xl);">
             {% for option in question.options.all %}

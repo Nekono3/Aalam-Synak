@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Exam Results" %} | Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <h1 class="gradient-text">📊 {% trans "Exam Result" %} — {{ cycle.name }}</h1>
+        <p class="text-secondary">{{ attempt.student.get_full_name }}</p>
+    </div>
+</div>
+
+<!-- Overall Score Card -->
+<div class="glass-card animate-slide-up" style="margin-top:var(--spacing-xl);">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:var(--spacing-xl);text-align:center;">
+        <div>
+            <div style="font-size:3rem;font-weight:800;{% if attempt.is_passed %}color:#28a745;{% else %}color:#dc3545;{% endif %}">
+                {{ attempt.percentage }}%
+            </div>
+            <div class="text-muted">{% trans "Overall Score" %}</div>
+        </div>
+        <div>
+            <div style="font-size:3rem;font-weight:800;color:var(--text-primary);">
+                {{ attempt.score|floatformat:0 }} / {{ cycle.admission_questions.count }}
+            </div>
+            <div class="text-muted">{% trans "Points Earned" %}</div>
+        </div>
+        <div>
+            <div style="font-size:2rem;font-weight:700;">
+                {% if attempt.is_passed %}
+                    <span style="color:#28a745;">✅ {% trans "PASSED" %}</span>
+                {% else %}
+                    <span style="color:#dc3545;">❌ {% trans "NOT PASSED" %}</span>
+                {% endif %}
+            </div>
+            <div class="text-muted">{% trans "Pass Threshold" %}: {{ cycle.passing_score }}%</div>
+        </div>
+        <div>
+            <div style="font-size:1.5rem;font-weight:700;">
+                {% if attempt.percentage >= 75 %}🥇 {% trans "Gold" %}
+                {% elif attempt.percentage >= 60 %}🥈 {% trans "Silver" %}
+                {% elif attempt.percentage >= 50 %}🥉 {% trans "Bronze" %}
+                {% else %}—{% endif %}
+            </div>
+            <div class="text-muted">{% trans "Medal" %}</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Status Info -->
+<div class="glass-card animate-slide-up" style="margin-top:var(--spacing-xl);">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:var(--spacing-md);">
+        <div>
+            <span class="text-muted">{% trans "Status" %}</span>
+            <div style="font-weight:600;">{{ attempt.get_status_display }}</div>
+        </div>
+        <div>
+            <span class="text-muted">{% trans "Started" %}</span>
+            <div style="font-weight:600;">{{ attempt.start_time|date:"d M Y H:i" }}</div>
+        </div>
+        {% if attempt.end_time %}
+        <div>
+            <span class="text-muted">{% trans "Finished" %}</span>
+            <div style="font-weight:600;">{{ attempt.end_time|date:"d M Y H:i" }}</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div style="margin-top:var(--spacing-xl);">
+    <h2 style="margin-bottom:var(--spacing-lg);">📋 {% trans "Answers Summary" %}</h2>
+    <div class="glass-card">
+        <ul style="list-style:none;padding:0;">
+            {% for answer in answers %}
+                <li style="padding: 10px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between;">
+                    <span>
+                        <strong>Q{{ answer.question.order }}</strong>: {{ answer.question.question_text|truncatechars:50 }}
+                    </span>
+                    <span style="font-weight:bold; color: {% if answer.is_correct %}#28a745{% else %}#dc3545{% endif %};">
+                        {% if answer.is_correct %}✅ {{ answer.points_earned }} pts{% else %}❌ 0 pts{% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div style="margin-top:var(--spacing-xl);">
+    <a href="{{ back_url }}" class="btn btn-outline">← {% trans "Back to Admission" %}</a>
+</div>
+{% endblock %}

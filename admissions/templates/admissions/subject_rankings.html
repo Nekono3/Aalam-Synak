@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Subject Rankings" %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-between align-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">📊 {% trans "Subject Top Students" %}</h1>
+            <p class="text-muted mb-0">{% if active_cycle %}{{ active_cycle.name }}{% endif %}</p>
+        </div>
+        <a href="{% url 'admissions:admission_analytics_dashboard' %}" class="btn btn-secondary">← {% trans "Dashboard" %}</a>
+    </div>
+
+    <!-- Subject Selector -->
+    <div class="card p-4 mb-4">
+        <form method="get" class="d-flex gap-3 align-center">
+            <label class="font-bold">{% trans "Select Subject" %}:</label>
+            <select name="subject" class="form-select" style="max-width: 300px;" onchange="this.form.submit()">
+                <option value="">-- {% trans "Choose a subject" %} --</option>
+                {% for subj in subjects %}
+                <option value="{{ subj }}" {% if subj == selected_subject %}selected{% endif %}>{{ subj }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    {% if selected_subject and scores %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="h5 mb-1">🏆 {% trans "Top Students" %} — {{ selected_subject }}</h3>
+            <p class="text-muted small mb-0">{{ scores|length }} {% trans "students" %}</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Rank" %}</th>
+                        <th>{% trans "Student" %}</th>
+                        <th>{% trans "School" %}</th>
+                        <th>{% trans "Variant" %}</th>
+                        <th class="text-center">{% trans "Correct" %}</th>
+                        <th class="text-center">{% trans "Wrong" %}</th>
+                        <th class="text-center">{% trans "Total" %}</th>
+                        <th class="text-center">{% trans "%" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                    <tr>
+                        <td class="font-bold">#{{ forloop.counter }}</td>
+                        <td>
+                            <div class="font-bold">{{ score.result.last_name }} {{ score.result.first_name }}</div>
+                            {% if score.result.phone1 %}
+                            <div class="small text-muted">📞 {{ score.result.phone1 }}</div>
+                            {% endif %}
+                        </td>
+                        <td class="small">{{ score.result.school_name }}</td>
+                        <td><span class="badge badge-secondary">{{ score.result.variant }}</span></td>
+                        <td class="text-center text-success font-bold">{{ score.correct_count }}</td>
+                        <td class="text-center text-danger">{{ score.wrong_count }}</td>
+                        <td class="text-center text-muted">{{ score.total_questions }}</td>
+                        <td class="text-center font-bold">{{ score.percentage|stringformat:".1f" }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% elif selected_subject %}
+    <div class="card p-5 text-center">
+        <p class="text-muted h5">{% trans "No results found for this subject." %}</p>
+        <p class="text-muted small">{% trans "Make sure data has been uploaded and master answers are set." %}</p>
+    </div>
+    {% else %}
+    <div class="card p-5 text-center">
+        <p class="text-muted h5">👆 {% trans "Select a subject to see rankings" %}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Questions" %} – {{ cycle.name }} | Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'admissions:cycle_list' %}">{% trans "Admission Cycles" %}</a>
+            <span class="separator">/</span>
+            <span class="active">{{ cycle.name }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+            <h1 class="gradient-text">📋 {{ cycle.name }} — {% trans "Questions" %}</h1>
+            <div style="display:flex;gap:8px;">
+                <a href="{% url 'admissions:cycle_subject_splits' pk=cycle.pk %}" class="btn btn-outline">🔀 {% trans "Subject Splits" %}</a>
+                <a href="{% url 'admissions:cycle_add_question' pk=cycle.pk %}" class="btn btn-primary">+ {% trans "Add Question" %}</a>
+            </div>
+        </div>
+        <p class="text-secondary">{{ cycle.admission_questions.count }} {% trans "questions" %} · {{ cycle.timer_minutes }} {% trans "min" %} · {% trans "Pass" %}: {{ cycle.passing_score }}%</p>
+    </div>
+</div>
+
+<div class="glass-card animate-slide-up" style="margin-top:var(--spacing-xl);">
+    {% if questions %}
+    <div class="questions-list" style="display:grid;gap:var(--spacing-lg);">
+        {% for q in questions %}
+        <div class="glass-card" style="padding:var(--spacing-lg);border-left:4px solid var(--primary-blue);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div>
+                    <strong style="color:var(--primary-blue);">Q{{ q.order }}</strong>
+                    <span style="margin-left:8px;">{{ q.question_text }}</span>
+                    {% if q.question_image %}
+                        <div style="margin-top:8px;">
+                            <img src="{{ q.question_image.url }}" alt="Question image" style="max-width:300px;border-radius:8px;">
+                        </div>
+                    {% endif %}
+                </div>
+                <div style="display:flex;gap:6px;flex-shrink:0;">
+                    <a href="{% url 'admissions:cycle_edit_question' pk=cycle.pk question_pk=q.pk %}" class="btn btn-sm btn-outline">{% trans "Edit" %}</a>
+                    <a href="{% url 'admissions:cycle_delete_question' pk=cycle.pk question_pk=q.pk %}" class="btn btn-sm btn-outline" style="color:#dc3545;">{% trans "Delete" %}</a>
+                </div>
+            </div>
+            <div style="margin-top:var(--spacing-md);display:grid;gap:6px;">
+                {% for opt in q.options.all %}
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:8px;{% if opt.is_correct %}background:rgba(40,167,69,0.1);border:1px solid rgba(40,167,69,0.3);{% else %}background:rgba(var(--text-primary-rgb,255,255,255),0.03);{% endif %}">
+                    {% if opt.is_correct %}✅{% else %}⬜{% endif %}
+                    <span>{{ opt.text }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:var(--spacing-2xl);">
+        <p class="text-muted">{% trans "No questions yet. Click 'Add Question' to start." %}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

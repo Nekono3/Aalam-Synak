@@ -1,0 +1,400 @@
+{% extends "base.html" %}
+{% load i18n static admission_tags %}
+
+{% block title %}{{ cycle.name }} - {% trans "Admission Exam" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* CSS Variables & Theme Integration */
+:root {
+    --accent: var(--primary-blue);
+    --accent-soft: var(--bg-tertiary);
+    --border: var(--border-color);
+    --card-radius: 1.5rem;
+}
+
+/* Base Layout Overrides */
+.main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+body {
+    background-color: var(--bg-secondary);
+}
+
+.sidebar, .sidebar-toggle, .sidebar-overlay { 
+    display: none !important; 
+}
+
+/* Sticky Header */
+.exam-sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+}
+
+.header-left { flex: 1; display: flex; align-items: center; gap: 1.5rem; }
+.exam-name { font-size: 1.1rem; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+
+.visual-progress { flex: 1; max-width: 300px; }
+.progress-track { height: 6px; background: var(--bg-secondary); border-radius: 10px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.progress-pct { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-top: 4px; display: block; }
+
+.timer-box {
+    background: var(--accent-soft);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-variant-numeric: tabular-nums;
+    border: 1px solid transparent;
+}
+.timer-box.warning { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger); animation: pulse 2s infinite; }
+.timer-display { font-weight: 700; font-size: 1.1rem; }
+
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+/* Exam Container */
+.exam-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    padding-bottom: 6rem;
+}
+
+/* Question Cards */
+.question-card {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+.question-card.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.card-inner {
+    padding: 2.5rem;
+    background: var(--bg-card);
+    border-radius: var(--card-radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+}
+
+.q-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.q-meta { display: flex; align-items: center; gap: 10px; }
+.q-count { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
+.subject-tag { background: var(--accent-soft); color: var(--accent); padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
+
+.status-badge { font-size: 0.75rem; display: flex; align-items: center; gap: 6px; font-weight: 600; min-height: 20px; }
+.status-badge.saving { color: var(--warning); }
+.status-badge.saved { color: var(--success); }
+
+.question-body h2 { font-size: 1.35rem; line-height: 1.5; margin-bottom: 2rem; font-weight: 500; color: var(--text-primary); }
+
+.q-image-box { margin-bottom: 2rem; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-secondary); text-align: center; }
+.q-image-box img { max-width: 100%; max-height: 450px; object-fit: contain; }
+
+/* Options Styling */
+.options-grid { display: grid; gap: 12px; }
+
+.option-item {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.option-item:hover { border-color: var(--accent); background: var(--bg-secondary); }
+.option-item.selected { border-color: var(--accent); background: var(--accent-soft); }
+
+.marker {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--text-muted);
+    border-radius: 50%;
+    margin-right: 15px;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.option-item.selected .marker { border-color: var(--accent); background: var(--accent); }
+.option-item.selected .marker::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+
+.opt-text { font-size: 1rem; font-weight: 500; color: var(--text-primary); flex: 1; }
+
+/* Navigation Footer */
+.exam-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1001;
+    box-shadow: 0 -4px 6px rgba(0,0,0,0.05);
+}
+
+.footer-btn { 
+    min-width: 120px; 
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.q-indicator { font-weight: 700; color: var(--text-muted); font-size: 0.95rem; }
+
+/* Mobile Specific Responsive */
+@media (max-width: 600px) {
+    .visual-progress { display: none; }
+    .exam-name { max-width: 140px; }
+    .exam-footer { padding: 0.75rem 1rem; }
+    .footer-btn { min-width: 80px; padding: 10px 12px; font-size: 0.8rem; height: 40px; }
+    .header-left { gap: 1rem; }
+    .question-body h2 { font-size: 1.1rem; }
+    .option-item { padding: 0.875rem 1rem; }
+    .card-inner { padding: 1.5rem; border-radius: 1rem; }
+    .exam-container { margin: 1rem auto; padding: 0 1rem; }
+}
+
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'admissions:cycle_exam_submit' attempt_pk=attempt.pk %}" id="submit-form">
+    {% csrf_token %}
+    <input type="hidden" name="tab_warning" id="id_tab_warning" value="">
+    
+    <header class="exam-sticky-header">
+        <div class="header-left">
+            <h1 class="exam-name" title="{{ cycle.name }}">{{ cycle.name }}</h1>
+            <div class="visual-progress">
+                <div class="progress-track">
+                    <div class="progress-fill" id="p-bar"></div>
+                </div>
+                <span class="progress-pct" id="p-text">0%</span>
+            </div>
+        </div>
+        
+        <div class="timer-box" id="t-box">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <div class="timer-display" id="timer">--:--</div>
+        </div>
+    </header>
+
+    <div class="exam-container">
+        {% for q in questions %}
+        <div class="question-card {% if forloop.first %}active{% endif %}" data-idx="{{ forloop.counter0 }}" id="q-{{ forloop.counter0 }}">
+            <div class="card-inner">
+                <div class="q-header">
+                    <div class="q-meta">
+                        <span class="q-count">{% trans "Question" %} {{ forloop.counter }}/{{ questions|length }}</span>
+                        {% if q.subject_name %}
+                            <span class="subject-tag">{{ q.subject_name }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="status-badge" id="status-{{ q.id }}"></div>
+                </div>
+
+                <div class="question-body">
+                    <h2>{{ q.question_text|linebreaksbr }}</h2>
+                    
+                    {% if q.question_image %}
+                    <div class="q-image-box">
+                        <img src="{{ q.question_image.url }}" alt="{% trans 'Question image' %}">
+                    </div>
+                    {% endif %}
+
+                    <div class="options-grid">
+                        {% for opt in q.shuffled_opts_list %}
+                        {% with saved_opt=existing_answers|get_item:q.id %}
+                        <label class="option-item {% if saved_opt == opt.pk|stringformat:'s' %}selected{% endif %}" 
+                               onclick="selectAndSave(this, '{{ q.id }}', '{{ opt.pk }}', {{ forloop.parentloop.counter0 }})">
+                            <input type="radio" name="q_{{ q.id }}" value="{{ opt.pk }}" 
+                                   {% if saved_opt == opt.pk|stringformat:'s' %}checked{% endif %} style="display: none;">
+                            <div class="marker"></div>
+                            <span class="opt-text">{{ opt.text }}</span>
+                        </label>
+                        {% endwith %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer class="exam-footer">
+        <button type="button" class="btn btn-outline footer-btn" id="prev-btn" onclick="goTo(current - 1)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            {% trans "Back" %}
+        </button>
+        
+        <div class="q-indicator">
+            <span id="curr-q">1</span> / {{ questions|length }}
+        </div>
+
+        <button type="button" class="btn btn-primary footer-btn" id="next-btn" onclick="goTo(current + 1)">
+            {% trans "Next" %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        
+        <button type="button" class="btn btn-success footer-btn" id="finish-btn" style="display: none;" onclick="this.disabled=true; document.getElementById('submit-form').submit();">
+            {% trans "Finish" %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </button>
+    </footer>
+</form>
+
+<script>
+const TOTAL = {{ questions|length }};
+const SAVE_URL = "{% url 'admissions:save_answer_ajax' attempt_pk=attempt.pk %}";
+let current = 0;
+let timeLeft = {{ attempt.time_remaining }};
+let isDone = false;
+
+// Timer logic
+function runTimer() {
+    if (isDone) return;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    document.getElementById('timer').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    
+    if (timeLeft <= 300) document.getElementById('t-box').classList.add('warning');
+    if (timeLeft <= 0) {
+        isDone = true;
+        document.getElementById('submit-form').submit();
+        return;
+    }
+    timeLeft--;
+}
+setInterval(runTimer, 1000);
+runTimer();
+
+// Navigation logic
+function goTo(idx) {
+    if (idx < 0 || idx >= TOTAL) return;
+    
+    document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
+    document.getElementById(`q-${idx}`).classList.add('active');
+    
+    current = idx;
+    document.getElementById('curr-q').textContent = idx + 1;
+    
+    document.getElementById('prev-btn').disabled = (idx === 0);
+    const isLast = (idx === TOTAL - 1);
+    document.getElementById('next-btn').style.display = isLast ? 'none' : 'flex';
+    document.getElementById('finish-btn').style.display = isLast ? 'flex' : 'none';
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// AJAX answer saving
+function selectAndSave(el, qId, optId, qIdx) {
+    const card = el.closest('.question-card');
+    card.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+    
+    el.classList.add('selected');
+    const radio = el.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+    
+    const statusBox = document.getElementById(`status-${qId}`);
+    if (statusBox) {
+        statusBox.className = 'status-badge saving';
+        statusBox.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> {% trans "Saving..." %}';
+    }
+    
+    const formData = new FormData();
+    formData.append('question_id', qId);
+    formData.append('option_id', optId);
+    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    
+    fetch(SAVE_URL, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success' && statusBox) {
+            statusBox.className = 'status-badge saved';
+            statusBox.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> {% trans "Saved" %}';
+            updateProgress();
+        }
+    })
+    .catch(err => {
+        console.error('Save failed:', err);
+        if (statusBox) {
+            statusBox.className = 'status-badge error';
+            statusBox.textContent = '{% trans "Error saving" %}';
+        }
+    });
+}
+
+function updateProgress() {
+    const answeredCount = document.querySelectorAll('.option-item input[type="radio"]:checked').length;
+    const pct = Math.round((answeredCount / TOTAL) * 100);
+    const pbar = document.getElementById('p-bar');
+    const ptext = document.getElementById('p-text');
+    if (pbar) pbar.style.width = pct + '%';
+    if (ptext) ptext.textContent = pct + '%';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initial restoration check
+    document.querySelectorAll('.option-item input[type="radio"]:checked').forEach(radio => {
+        radio.closest('.option-item').classList.add('selected');
+    });
+    updateProgress();
+    goTo(0);
+});
+
+// Proctoring: Tab Switch
+if ({% if cycle.max_tab_switches %}true{% else %}false{% endif %}) {
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && !isDone) {
+            isDone = true;
+            document.getElementById('id_tab_warning').value = 'banned';
+            document.getElementById('submit-form').submit();
+        }
+    });
+}
+</script>
+{% endblock %}

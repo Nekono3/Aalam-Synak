@@ -476,8 +476,8 @@ msgstr "Кош келиңиз"
 msgid "Welcome Back"
 msgstr "Кош келиңиз"
 
-msgid "Sign in to your AIMS EXAM account"
-msgstr "AIMS EXAM аккаунтуңузга кириңиз"
+msgid "Sign in to your Aalam Synak account"
+msgstr "Aalam Synak аккаунтуңузга кириңиз"
 
 msgid "Sign In"
 msgstr "Кирүү"
@@ -501,8 +501,8 @@ msgid "Create Account"
 msgstr "Аккаунт түзүү"
 
 # --- Registration Form ---
-msgid "Register as a student to access AIMS EXAM"
-msgstr "AIMS EXAM системасына кирүү үчүн окуучу катары катталыңыз"
+msgid "Register as a student to access Aalam Synak"
+msgstr "Aalam Synak системасына кирүү үчүн окуучу катары катталыңыз"
 
 msgid "Register as Student"
 msgstr "Окуучу катталуусу"
@@ -542,3 +542,249 @@ msgstr "Email дарегиңизди киргизиңиз"
 
 msgid "Enter your password"
 msgstr "Сырсөзүңүздү киргизиңиз"
+
+# --- Admission Module ---
+msgid "Admission"
+msgstr "Кабыл алуу"
+
+msgid "Admissions"
+msgstr "Кабыл алуу"
+
+msgid "Admission Dashboard"
+msgstr "Кабыл алуу тактасы"
+
+msgid "Admission Registration"
+msgstr "Кабыл алууга катталуу"
+
+msgid "Admission Registrations"
+msgstr "Кабыл алуу катталуулары"
+
+msgid "Admission Analytics"
+msgstr "Кабыл алуу аналитикасы"
+
+msgid "Admission Cycle"
+msgstr "Кабыл алуу цикли"
+
+msgid "Admission Type"
+msgstr "Кабыл алуу түрү"
+
+msgid "XLSX File"
+msgstr "XLSX файл"
+
+msgid "Upload New File"
+msgstr "Жаңы файл жүктөө"
+
+msgid "Master Answers"
+msgstr "Жоопторнун ачкычтары"
+
+msgid "Subject Rankings"
+msgstr "Сабак боюнча рейтинг"
+
+msgid "Export Results"
+msgstr "Жыйынтыктарды экспорттоо"
+
+msgid "Top Schools"
+msgstr "Мыкты мектептер"
+
+msgid "Upload Sessions"
+msgstr "Жүктөлгөн сессиялар"
+
+msgid "All Regions"
+msgstr "Бардык региондор"
+
+msgid "Combined"
+msgstr "Бириктирилген"
+
+msgid "Only Online"
+msgstr "Онлайн гана"
+
+msgid "Only Offline"
+msgstr "Оффлайн гана"
+
+msgid "Passing Threshold"
+msgstr "Өтүү босогосу"
+
+msgid "See overall statistics and rankings for this admission session"
+msgstr "Бул кабыл алуу сессиясынын жалпы статистикасы жана рейтинги"
+
+msgid "Region"
+msgstr "Регион"
+
+msgid "Type"
+msgstr "Түрү"
+
+msgid "Passed"
+msgstr "Өттү"
+
+msgid "Failed"
+msgstr "Өтпөдү"
+
+msgid "Medal"
+msgstr "Медаль"
+
+msgid "Gold"
+msgstr "Алтын"
+
+msgid "Silver"
+msgstr "Күмүш"
+
+msgid "Bronze"
+msgstr "Коло"
+
+msgid "Passed / Failed"
+msgstr "Өткөн / Өтпөгөн"
+
+msgid "Rate"
+msgstr "Пайыз"
+
+msgid "Total"
+msgstr "Жалпы"
+
+# --- Registration Form ---
+msgid "Student Registration"
+msgstr "Окуучу катталуусу"
+
+msgid "Fill in the details below to register for the admission exam"
+msgstr "Кабыл алуу экзаменине катталуу үчүн төмөнкү маалыматтарды толтуруңуз"
+
+msgid "Register for the admission process"
+msgstr "Кабыл алуу процессине катталуу"
+
+msgid "Full Name (ФИО)"
+msgstr "Толук аты-жөнү (ФИО)"
+
+msgid "Gender"
+msgstr "Жынысы"
+
+msgid "Exam Variant"
+msgstr "Экзамен варианты"
+
+msgid "Phone Number 1"
+msgstr "Телефон номери 1"
+
+msgid "Phone Number 2"
+msgstr "Телефон номери 2"
+
+msgid "Register for Admission"
+msgstr "Кабыл алууга катталуу"
+
+msgid "Registration Successful!"
+msgstr "Катталуу ийгиликтүү болду!"
+
+msgid "You have been registered for the admission process. Your details have been saved."
+msgstr "Кабыл алуу процессине каттадыңыз. Маалыматтарыңыз сакталды."
+
+msgid "Register Another Student"
+msgstr "Башка окуучуну каттоо"
+
+msgid "Name"
+msgstr "Аты"
+
+msgid "Variant"
+msgstr "Вариант"
+
+msgid "No Active Admission Cycle"
+msgstr "Активдүү кабыл алуу цикли жок"
+
+msgid "There is currently no active admission cycle. Please check back later."
+msgstr "Учурда активдүү кабыл алуу цикли жок. Кийинчерээк текшериңиз."
+
+msgid "Type the full name of your school."
+msgstr "Мектебиңиздин толук атын жазыңыз."
+
+msgid "Optional"
+msgstr "Милдеттүү эмес"
+
+msgid "Please fix the following errors:"
+msgstr "Төмөнкү каталарды оңдоңуз:"
+
+# --- Registration Form Placeholders ---
+msgid "Напр: Иванов Иван Иванович"
+msgstr "Мис: Иванов Иван Иванович"
+
+msgid "Напр: №15 мектеп, Бишкек"
+msgstr "Мис: №15 мектеп, Бишкек"
+
+msgid "Напр: Баткен, Ош, Бишкек"
+msgstr "Мис: Баткен, Ош, Бишкек"
+
+msgid "Напр: 0555 123 456"
+msgstr "Мис: 0555 123 456"
+
+msgid "Необязательно"
+msgstr "Милдеттүү эмес"
+
+msgid "-- Выберите --"
+msgstr "-- Тандаңыз --"
+
+msgid "Бала (Male)"
+msgstr "Бала (Эркек)"
+
+msgid "Кыз (Female)"
+msgstr "Кыз (Аял)"
+
+msgid "e.g. Баткен, Ош, Бишкек..."
+msgstr "мис. Баткен, Ош, Бишкек..."
+
+# --- Upload Form ---
+msgid "Analyze Admission Data"
+msgstr "Кабыл алуу маалыматын талдоо"
+
+msgid "Upload your XLSX result files to generate rankings and analytics"
+msgstr "Рейтинг жана аналитика түзүү үчүн XLSX файлдарды жүктөңүз"
+
+msgid "Back to Dashboard"
+msgstr "Тактага кайтуу"
+
+msgid "Target Region"
+msgstr "Регион"
+
+msgid "Type the region name or select from suggestions."
+msgstr "Региондун атын жазыңыз же сунуштардан тандаңыз."
+
+msgid "Process & Analyze"
+msgstr "Иштетүү жана талдоо"
+
+msgid "Standard Format"
+msgstr "Стандарттык формат"
+
+msgid "Duplicate Protection"
+msgstr "Кайталоодон коргоо"
+
+msgid "Automated Registry"
+msgstr "Автоматтык реестр"
+
+msgid "Instructions & Requirements"
+msgstr "Нускамалар жана талаптар"
+
+msgid "The system will automatically process the uploaded XLSX file, identify schools, calculate scores, and assign medals based on the active cycle's passing score."
+msgstr "Система жүктөлгөн XLSX файлды автоматтык түрдө иштетет, мектептерди аныктайт, баллдарды эсептейт жана медалдарды тагайындайт."
+
+# --- Dashboard Analytics ---
+msgid "Top Scoring Students"
+msgstr "Эң мыкты окуучулар"
+
+msgid "Ranked list of best performing students"
+msgstr "Мыкты окуучулардын рейтинги"
+
+msgid "Rank"
+msgstr "Орун"
+
+msgid "Incorrect %"
+msgstr "Ката %"
+
+msgid "Registration Form"
+msgstr "Катталуу формасы"
+
+msgid "Total Registrations"
+msgstr "Жалпы катталуулар"
+
+msgid "students"
+msgstr "окуучу"
+
+msgid "Registered"
+msgstr "Катталган"
+
+msgid "No registrations yet."
+msgstr "Катталуулар жок."
+

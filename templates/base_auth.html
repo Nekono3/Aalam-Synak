@@ -4,8 +4,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}AIMS EXAM{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Aalam Synak{% endblock %}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png">
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,9 +29,9 @@
     <div class="auth-wrapper">
         <div class="auth-card slide-up">
             <div class="auth-header">
-                <img src="{% static 'images/logo.png' %}" alt="AIMS EXAM" class="auth-logo"
+                <img src="{% static 'images/logo.png' %}" alt="Aalam Synak" class="auth-logo"
                     onerror="this.style.display='none'">
-                <h1 class="auth-title">{% block auth_title %}AIMS EXAM{% endblock %}</h1>
+                <h1 class="auth-title">{% block auth_title %}Aalam Synak{% endblock %}</h1>
                 <p class="auth-subtitle">{% block auth_subtitle %}{% endblock %}</p>
             </div>
 

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Subject Splits" %} – {{ cycle.name }} | Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'admissions:cycle_list' %}">{% trans "Admission Cycles" %}</a>
+            <span class="separator">/</span>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}">{{ cycle.name }}</a>
+            <span class="separator">/</span>
+            <span class="active">{% trans "Subject Splits" %}</span>
+        </div>
+        <h1 class="gradient-text">🔀 {% trans "Subject Splits" %} — {{ cycle.name }}</h1>
+        <p class="text-secondary">{% trans "Define which question ranges belong to which subject. Example: Q1-20 → Math, Q21-30 → Biology" %}</p>
+        <p class="text-secondary">{% trans "Total questions" %}: <strong>{{ cycle.admission_questions.count }}</strong></p>
+    </div>
+</div>
+
+<div class="glass-card animate-slide-up" style="margin-top:var(--spacing-xl);max-width:800px;">
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        
+        {% if formset.non_form_errors %}
+        <div class="alert alert-danger" style="margin-bottom:var(--spacing-lg);">
+            {% for error in formset.non_form_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div id="splits-container" style="display:grid;gap:var(--spacing-md);">
+            {% for split_form in formset %}
+            <div class="split-row glass-card" style="padding:var(--spacing-md);display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:var(--spacing-sm);align-items:end;">
+                {% if split_form.instance.pk %}
+                    <input type="hidden" name="{{ split_form.prefix }}-id" value="{{ split_form.instance.pk }}">
+                {% endif %}
+                <div class="form-group" style="margin:0;">
+                    <label class="form-label" style="font-size:0.8rem;">{% trans "Subject Name" %}</label>
+                    {{ split_form.subject_name }}
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label class="form-label" style="font-size:0.8rem;">{% trans "From Q#" %}</label>
+                    {{ split_form.start_question }}
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label class="form-label" style="font-size:0.8rem;">{% trans "To Q#" %}</label>
+                    {{ split_form.end_question }}
+                </div>
+                <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#dc3545;padding-bottom:8px;">
+                    {{ split_form.DELETE }}
+                    <span style="font-size:0.8rem;">🗑</span>
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <button type="button" id="add-split-btn" class="btn btn-secondary" style="margin-top:var(--spacing-md);display:flex;align-items:center;gap:8px;">
+            <span>➕</span> {% trans "Add Another Subject Split" %}
+        </button>
+
+        <div style="display:none;" id="empty-form-template">
+            <div class="split-row glass-card" style="padding:var(--spacing-md);display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:var(--spacing-sm);align-items:end;margin-top:var(--spacing-md);">
+                <div class="form-group" style="margin:0;">
+                    <label class="form-label" style="font-size:0.8rem;">{% trans "Subject Name" %}</label>
+                    {{ formset.empty_form.subject_name }}
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label class="form-label" style="font-size:0.8rem;">{% trans "From Q#" %}</label>
+                    {{ formset.empty_form.start_question }}
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label class="form-label" style="font-size:0.8rem;">{% trans "To Q#" %}</label>
+                    {{ formset.empty_form.end_question }}
+                </div>
+                <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#dc3545;padding-bottom:8px;">
+                    {{ formset.empty_form.DELETE }}
+                    <span style="font-size:0.8rem;">🗑</span>
+                </label>
+            </div>
+        </div>
+        
+        <hr style="margin:var(--spacing-xl) 0; border:none; border-top:1px solid rgba(0,0,0,0.1);">
+        <div style="display:flex; gap:10px; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary">{% trans "Save Subject Splits" %}</button>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}" class="btn btn-outline">{% trans "Back to Questions" %}</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addBtn = document.getElementById('add-split-btn');
+    const container = document.getElementById('splits-container');
+    const totalForms = document.getElementById('id_{{ formset.prefix }}-TOTAL_FORMS');
+    
+    addBtn.addEventListener('click', function() {
+        let currentFormCount = parseInt(totalForms.value);
+        let template = document.getElementById('empty-form-template').innerHTML;
+        
+        let newFormHtml = template.replace(/__prefix__/g, currentFormCount);
+        container.insertAdjacentHTML('beforeend', newFormHtml);
+        
+        totalForms.value = currentFormCount + 1;
+    });
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Management" %} - Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <h1 class="topbar-title">{% trans "Exam Management" %}</h1>
+</div>
+
+{% include 'partials/messages.html' %}
+
+<!-- Search -->
+<div class="card" style="margin-bottom: var(--spacing-xl);">
+    <form method="get" style="display: flex; flex-wrap: wrap; gap: var(--spacing-md); align-items: flex-end;">
+        <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+            <label class="form-label">{% trans "Search" %}</label>
+            <input type="text" name="search" value="{{ search }}" class="form-input"
+                placeholder="{% trans 'Search exams...' %}">
+        </div>
+        {% if schools %}
+        <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+            <label class="form-label">{% trans "School" %}</label>
+            <select name="school" class="form-select">
+                <option value="">{% trans "All Schools" %}</option>
+                {% for s in schools %}
+                <option value="{{ s.pk }}">{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+        <button type="submit" class="btn btn-secondary">{% trans "Filter" %}</button>
+        <a href="{% url 'exams:teacher_exam_list' %}" class="btn btn-outline">{% trans "Clear" %}</a>
+    </form>
+</div>
+
+<!-- Exams List -->
+<div class="exams-grid">
+    {% for exam in exams %}
+    <div class="card exam-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-sm);">
+            <h3 style="margin: 0; font-size: 1.0625rem;">{{ exam.title }}</h3>
+            <span class="badge {% if exam.is_active %}badge-success{% else %}badge-muted{% endif %}">
+                {% if exam.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}
+            </span>
+        </div>
+        {% if exam.school %}
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: var(--spacing-sm);">{{ exam.school.name }}</p>
+        {% endif %}
+        <div style="display: flex; gap: var(--spacing-lg); margin-bottom: var(--spacing-md); font-size: 0.875rem; color: var(--text-secondary);">
+            <span>📝 {{ exam.questions.count }} {% trans "questions" %}</span>
+            <span>⏱️ {{ exam.duration_minutes }} {% trans "min" %}</span>
+        </div>
+        <a href="{% url 'exams:teacher_exam_results' exam.pk %}" class="btn btn-sm btn-outline">
+            {% trans "View Results" %}
+        </a>
+    </div>
+    {% empty %}
+    <div class="card" style="grid-column: 1 / -1; text-align: center; padding: var(--spacing-xl);">
+        <p class="text-muted">{% trans "No exams found." %}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .exams-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: var(--spacing-lg);
+    }
+    .exam-card { display: flex; flex-direction: column; }
+    .badge {
+        padding: 2px 8px;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .badge-muted { background: var(--bg-secondary); color: var(--text-muted); }
+</style>
+{% endblock %}

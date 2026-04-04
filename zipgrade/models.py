@@ -68,6 +68,9 @@ class ZipGradeExam(models.Model):
     total_students = models.PositiveIntegerField(default=0, verbose_name=_('Total Students'))
     unknown_students = models.PositiveIntegerField(default=0, verbose_name=_('Unknown Students'))
     
+    # Answer key for calculating correct/incorrect (JSON: {"1": "A", "2": "B", ...})
+    answer_key = models.TextField(blank=True, verbose_name=_('Answer Key (JSON)'))
+    
     # Optional folder organization
     folder = models.ForeignKey(
         ExamFolder,
@@ -102,6 +105,12 @@ class ZipGradeExam(models.Model):
 class SubjectSplit(models.Model):
     """Defines how questions are split by subject in a ZipGrade exam."""
     
+    CLASS_TYPE_CHOICES = [
+        ('all', _('All Classes')),
+        ('ru', _('RU Classes Only')),
+        ('kg', _('KG Classes Only')),
+    ]
+    
     exam = models.ForeignKey(
         ZipGradeExam,
         on_delete=models.CASCADE,
@@ -127,14 +136,26 @@ class SubjectSplit(models.Model):
         verbose_name=_('Points per Question')
     )
     
+    # Class type filter — determines which students this split applies to
+    class_type = models.CharField(
+        max_length=5,
+        choices=CLASS_TYPE_CHOICES,
+        default='all',
+        verbose_name=_('Class Type'),
+        help_text=_('Restrict this split to specific class types. "All" applies to everyone.')
+    )
+    
     class Meta:
         verbose_name = _('Subject Split')
         verbose_name_plural = _('Subject Splits')
         ordering = ['start_question']
-        unique_together = ['exam', 'subject']
+
     
     def __str__(self):
-        return f"{self.subject.name}: Q{self.start_question}-Q{self.end_question}"
+        suffix = ''
+        if self.class_type != 'all':
+            suffix = f' [{self.get_class_type_display()}]'
+        return f"{self.subject.name}: Q{self.start_question}-Q{self.end_question}{suffix}"
     
     @property
     def question_count(self):

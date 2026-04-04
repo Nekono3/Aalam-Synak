@@ -6,7 +6,7 @@ from accounts.models import User
 
 
 class Command(BaseCommand):
-    help = 'Creates the initial Super Admin user for AIMS EXAM'
+    help = 'Creates the initial Super Admin user for Aalam Synak'
     
     def handle(self, *args, **options):
         email = 'ariet5656@gmail.com'

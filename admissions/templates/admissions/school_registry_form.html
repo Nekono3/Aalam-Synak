@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Add External School" %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'admissions:dashboard' %}">{% trans "Dashboard" %}</a>
+            <span class="separator">/</span>
+            <a href="{% url 'admissions:school_registry' %}">{% trans "School Registry" %}</a>
+            <span class="separator">/</span>
+            <span class="active">{% trans "Add School" %}</span>
+        </div>
+        <h1 class="gradient-text">{% trans "Add External School" %}</h1>
+        <p class="text-secondary">{% trans "Register a new school to the external registry." %}</p>
+    </div>
+</div>
+
+<div class="form-container animate-slide-up">
+    <div class="glass-card form-card">
+        <form method="POST" class="premium-form">
+            {% csrf_token %}
+            {% include 'partials/messages.html' %}
+            
+            <div class="form-group">
+                <label for="name">{% trans "School Name" %}</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="e.g., Гагарин" required>
+                <small class="form-text text-muted">{% trans "Full name of the external school." %}</small>
+            </div>
+
+            <div class="form-group">
+                <label for="school_id">{% trans "School ID" %}</label>
+                <input type="text" name="school_id" id="school_id" class="form-control" placeholder="e.g., 101" required>
+                <small class="form-text text-muted">{% trans "Unique identifier for this school (e.g., 101, 102)." %}</small>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'admissions:school_registry' %}" class="btn btn-outline">{% trans "Cancel" %}</a>
+                <button type="submit" class="btn btn-primary">{% trans "Register School" %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.header-content { padding: var(--spacing-xl); margin-bottom: var(--spacing-xl); }
+.breadcrumb { font-size: 0.875rem; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
+
+.form-card { max-width: 600px; margin: 0 auto; padding: var(--spacing-2xl); }
+.premium-form { display: grid; gap: var(--spacing-xl); }
+
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group label { font-weight: 600; color: var(--text-primary); font-size: 0.9375rem; }
+.form-control {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-blue);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
+}
+
+.form-actions { display: flex; justify-content: flex-end; gap: var(--spacing-md); margin-top: var(--spacing-lg); }
+</style>
+{% endblock %}

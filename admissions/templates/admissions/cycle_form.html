@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% if is_edit %}{% trans "Edit Admission Cycle" %}{% else %}{% trans "Create Admission Cycle" %}{% endif %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left">
+        <h1 class="topbar-title">{% if is_edit %}{% trans "Edit Admission Cycle" %}{% else %}{% trans "Create Admission Cycle" %}{% endif %}</h1>
+    </div>
+</div>
+
+<div class="content-container" style="max-width: 800px; margin: 0 auto; padding: var(--spacing-lg) 0;">
+    <div class="card" style="border: 1px solid var(--border-color); background: var(--bg-primary); padding: var(--spacing-xl);">
+        <form method="post" class="admission-form">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label for="id_name" class="label">{% trans "Cycle Name" %}</label>
+                    <input type="text" name="name" id="id_name" class="input" required value="{{ cycle.name|default:'' }}" placeholder="e.g. Spring 2026 Admission">
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_start_date" class="label">{% trans "Start Date" %}</label>
+                    <input type="date" name="start_date" id="id_start_date" class="input" required value="{{ cycle.start_date|date:'Y-m-d'|default:'' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_end_date" class="label">{% trans "End Date" %}</label>
+                    <input type="date" name="end_date" id="id_end_date" class="input" required value="{{ cycle.end_date|date:'Y-m-d'|default:'' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_timer_minutes" class="label">{% trans "Exam Timer (minutes)" %}</label>
+                    <input type="number" name="timer_minutes" id="id_timer_minutes" class="input" required value="{{ cycle.timer_minutes|default:60 }}" min="1">
+                    <p class="text-muted small mt-1">{% trans "Duration of the online admission exam." %}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_passing_score" class="label">{% trans "Passing Score (%)" %}</label>
+                    <input type="number" name="passing_score" id="id_passing_score" class="input" required value="{{ cycle.passing_score|default:60 }}" min="0" max="100">
+                    <p class="text-muted small mt-1">{% trans "Minimum percentage required to pass for this cycle." %}</p>
+                </div>
+
+                <div class="form-group" style="grid-column: span 2; display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <input type="checkbox" name="enable_tab_warnings" id="id_enable_tab_warnings" {% if cycle.enable_tab_warnings != False %}checked{% endif %} style="width: 20px; height: 20px; cursor: pointer;">
+                    <div>
+                        <label for="id_enable_tab_warnings" style="margin: 0; font-weight: 600; cursor: pointer;">{% trans "Enable Tab Switch Warnings" %}</label>
+                        <p class="text-muted small mb-0">{% trans "Students will be warned if they switch tabs." %}</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_max_tab_switches" class="label">{% trans "Max Tab Switches" %}</label>
+                    <input type="number" name="max_tab_switches" id="id_max_tab_switches" class="input" required value="{{ cycle.max_tab_switches|default:3 }}" min="1">
+                    <p class="text-muted small mt-1">{% trans "Exam locks automatically after this many switches." %}</p>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <input type="checkbox" name="is_active" id="id_is_active" {% if cycle.is_active != False %}checked{% endif %} style="width: 20px; height: 20px; cursor: pointer;">
+                    <div>
+                        <label for="id_is_active" style="margin: 0; font-weight: 600; cursor: pointer;">{% trans "Active Cycle" %}</label>
+                        <p class="text-muted small mb-0">{% trans "Visible to candidates." %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions mt-5" style="display: flex; gap: var(--spacing-md); pt: var(--spacing-lg); border-top: 1px solid var(--border-color); padding-top: var(--spacing-xl);">
+                <button type="submit" class="btn btn-primary" style="min-width: 140px;">
+                    {% if is_edit %}{% trans "Save Changes" %}{% else %}{% trans "Create Cycle" %}{% endif %}
+                </button>
+                <a href="{% url 'admissions:cycle_list' %}" class="btn btn-outline" style="min-width: 140px; text-align: center; text-decoration: none;">
+                    {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: var(--text-primary); }
+.input { width: 100%; padding: 10px 14px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 0.9375rem; transition: border-color 0.2s; }
+.input:focus { outline: none; border-color: var(--primary-blue); }
+.content-container { animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+{% endblock %}

@@ -1,6 +1,6 @@
 """
 Django settings for aims_exam project.
-AIMS EXAM - School Network Analytics Platform
+Aalam Synak - School Network Analytics Platform
 """
 
 from pathlib import Path
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'exams',
     'zipgrade',
     'analytics',
+    'admissions',
 ]
 
 MIDDLEWARE = [
@@ -97,9 +98,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
 
+# Allow login by email or username
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailOrUsernameBackend',
+]
+
 
 # Internationalization - Multi-language support
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ky'
 
 LANGUAGES = [
     ('en', 'English'),
@@ -133,7 +139,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Login URLs
-LOGIN_URL = 'accounts:login'
+LOGIN_URL = 'accounts:register'
 LOGIN_REDIRECT_URL = 'accounts:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 

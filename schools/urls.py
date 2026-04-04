@@ -23,4 +23,15 @@ urlpatterns = [
     path('<int:school_pk>/students/add/', views.master_student_add_view, name='master_student_add'),
     path('students/<int:pk>/edit/', views.master_student_edit_view, name='master_student_edit'),
     path('students/<int:pk>/delete/', views.master_student_delete_view, name='master_student_delete'),
+    
+    # Class Management
+    path('classes/', views.class_list_view, name='class_list'),
+    path('classes/create/', views.class_create_view, name='class_create'),
+    path('classes/<int:pk>/', views.class_detail_view, name='class_detail'),
+    path('classes/<int:pk>/add-students/', views.class_student_add_view, name='class_student_add'),
+    path('classes/<int:pk>/generate-credentials/', views.generate_credentials_view, name='generate_credentials'),
+    path('classes/<int:pk>/print-credentials/', views.print_credentials_view, name='print_credentials'),
+    path('student/<int:pk>/reset-password/', views.reset_student_password_view, name='reset_student_password'),
+    path('student/<int:pk>/delete/', views.delete_student_from_class_view, name='delete_student'),
 ]
+

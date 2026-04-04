@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "School Registry" %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left">
+        <h1 class="topbar-title">{% trans "School Registry" %}</h1>
+        <p class="text-secondary">{% trans "Schools are auto-populated from student registrations and uploads." %}</p>
+    </div>
+</div>
+
+{% include 'partials/messages.html' %}
+
+<div class="card mb-4 p-3">
+    <div class="d-flex align-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="schoolSearch" class="form-input" style="border: none; padding: 0; min-height: auto;" placeholder="{% trans 'Search schools by name or ID...' %}">
+    </div>
+</div>
+
+<div class="schools-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-lg);">
+    {% for school in schools %}
+    <div class="card school-card h-100" data-school-search="{{ school.name }} {{ school.school_id }}">
+        <div class="d-flex flex-column h-100">
+            <div class="d-flex justify-between align-start mb-3">
+                <div class="d-flex align-center gap-3">
+                    <div style="width: 48px; height: 48px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--primary-blue); display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 1.25rem; font-weight: 700;">
+                        {{ school.name|slice:":1"|upper }}
+                    </div>
+                    <div>
+                        <h3 class="h5 mb-1">{{ school.name }}</h3>
+                        <small class="text-muted">ID: {{ school.school_id }}</small>
+                    </div>
+                </div>
+                <form method="post" action="{% url 'admissions:external_school_delete' school.pk %}" onsubmit='return confirm("{% trans "Are you sure you want to remove this school?" %}")'>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-icon btn-ghost-danger" title="{% trans 'Delete' %}" style="z-index: 2; position: relative;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="mt-auto pt-3" style="border-top: 1px solid var(--border-color);">
+                <div class="d-flex justify-between align-center mb-2">
+                    <span class="text-muted" style="font-size: 0.875rem;">{% trans "Results" %}</span>
+                    <span class="badge badge-primary">{{ school.student_result_count|default:"0" }}</span>
+                </div>
+                <div class="d-flex justify-between align-center">
+                    <span class="text-muted" style="font-size: 0.875rem;">{% trans "Registrations" %}</span>
+                    <span class="badge badge-secondary">{{ school.student_registration_count|default:"0" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="card text-center p-5" style="grid-column: 1 / -1;">
+        <p class="text-muted">{% trans "No schools registered yet. Schools will appear here automatically when students register." %}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+.school-card { position: relative; transition: all var(--transition-fast); }
+.school-card:hover { border-color: var(--primary-blue); transform: translateY(-2px); }
+</style>
+
+<script>
+document.getElementById('schoolSearch').addEventListener('input', function(e) {
+    const term = e.target.value.toLowerCase();
+    document.querySelectorAll('.school-card').forEach(card => {
+        const text = card.getAttribute('data-school-search').toLowerCase();
+        card.style.display = text.includes(term) ? 'block' : 'none';
+    });
+});
+</script>
+{% endblock %}

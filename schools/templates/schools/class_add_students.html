@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Add Students" %} - {{ school_class.display_name }} - Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <h1 class="topbar-title">{% trans "Add Students to" %} {{ school_class.display_name }}</h1>
+    <div class="topbar-actions">
+        <a href="{% url 'schools:class_detail' school_class.pk %}" class="btn btn-outline">{% trans "Back" %}</a>
+    </div>
+</div>
+
+{% include 'partials/messages.html' %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <!-- From Master ID -->
+    {% if available_master_students %}
+    <div class="card" style="margin-bottom: var(--spacing-lg);">
+        <h3 style="margin: 0 0 var(--spacing-md);">{% trans "Add from Master ID" %}</h3>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+            {% trans "Select students from Master ID that match grade" %} {{ school_class.grade }}{{ school_class.section }}
+        </p>
+        
+        <div style="margin-bottom: var(--spacing-md);">
+            <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer; font-size: 0.875rem; color: var(--text-secondary);">
+                <input type="checkbox" id="selectAll" onclick="toggleAll(this)">
+                {% trans "Select All" %}
+            </label>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--spacing-sm);">
+            {% for ms in available_master_students %}
+            <label class="student-checkbox" style="display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); background: var(--bg-secondary); border-radius: var(--radius-md); cursor: pointer;">
+                <input type="checkbox" name="master_student_ids" value="{{ ms.pk }}" class="ms-checkbox">
+                <span>{{ ms.surname }} {{ ms.name }}</span>
+                <span style="color: var(--text-muted); font-size: 0.75rem; margin-left: auto;">ID: {{ ms.student_id }}</span>
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="card" style="margin-bottom: var(--spacing-lg); text-align: center; padding: var(--spacing-lg);">
+        <p class="text-muted">{% trans "No Master ID students found matching this class grade/section." %}</p>
+    </div>
+    {% endif %}
+
+    <!-- Manual Add -->
+    <div class="card" style="margin-bottom: var(--spacing-lg);">
+        <h3 style="margin: 0 0 var(--spacing-md);">{% trans "Add Manually" %}</h3>
+        <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap;">
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                <label class="form-label">{% trans "First Name" %}</label>
+                <input type="text" name="manual_name" class="form-input" placeholder="{% trans 'First name' %}">
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                <label class="form-label">{% trans "Last Name" %}</label>
+                <input type="text" name="manual_surname" class="form-input" placeholder="{% trans 'Last name' %}">
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: var(--spacing-md);">
+        <button type="submit" class="btn btn-primary">{% trans "Add Students" %}</button>
+        <a href="{% url 'schools:class_detail' school_class.pk %}" class="btn btn-outline">{% trans "Cancel" %}</a>
+    </div>
+</form>
+
+<script>
+function toggleAll(source) {
+    const checkboxes = document.querySelectorAll('.ms-checkbox');
+    checkboxes.forEach(cb => cb.checked = source.checked);
+}
+</script>
+{% endblock %}

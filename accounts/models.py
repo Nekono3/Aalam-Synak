@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     """
-    Custom User model for AIMS EXAM platform.
+    Custom User model for Aalam Synak platform.
     Uses email as the primary login field.
     """
     
@@ -32,6 +32,11 @@ class User(AbstractUser):
         ('super_admin', _('Super Admin')),
         ('teacher', _('Teacher')),
         ('student', _('Student')),
+    ]
+    
+    STUDENT_TYPE_CHOICES = [
+        ('internal', _('Student Aalam')),
+        ('applicant', _('Admission Student')),
     ]
     
     LANGUAGE_CHOICES = [
@@ -52,6 +57,15 @@ class User(AbstractUser):
         verbose_name=_('Role')
     )
     
+    # Student type differentiation
+    student_type = models.CharField(
+        max_length=20,
+        choices=STUDENT_TYPE_CHOICES,
+        default='internal',
+        verbose_name=_('Student Type'),
+        help_text=_('Internal = class-managed school student, Applicant = admission registrant')
+    )
+    
     # Contact information
     phone = models.CharField(max_length=20, blank=True, verbose_name=_('Phone'))
     mother_phone = models.CharField(max_length=20, blank=True, verbose_name=_("Mother's Phone"))
@@ -65,6 +79,24 @@ class User(AbstractUser):
         blank=True,
         related_name='users',
         verbose_name=_('Primary School')
+    )
+    
+    # Class assignment (for students)
+    school_class = models.ForeignKey(
+        'schools.SchoolClass',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='students',
+        verbose_name=_('Class')
+    )
+    
+    # Temporary plain password storage for credential printing
+    plain_password = models.CharField(
+        max_length=50,
+        blank=True,
+        default='',
+        verbose_name=_('Generated Password')
     )
     
     # Preferences

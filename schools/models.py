@@ -125,3 +125,60 @@ class MasterStudent(models.Model):
     @property
     def class_name(self):
         return f"{self.grade}{self.section}"
+
+
+class SchoolClass(models.Model):
+    """
+    Represents a class within a school (e.g. 7A, 7B, 8A).
+    Used for student management and credential generation.
+    """
+    
+    GRADE_CHOICES = [
+        ('7', '7'),
+        ('8', '8'),
+        ('9', '9'),
+        ('10', '10'),
+        ('11', '11'),
+    ]
+    
+    SECTION_CHOICES = [
+        ('A', 'A'),
+        ('B', 'B'),
+    ]
+    
+    school = models.ForeignKey(
+        School,
+        on_delete=models.CASCADE,
+        related_name='classes',
+        verbose_name=_('School')
+    )
+    grade = models.CharField(
+        max_length=10,
+        choices=GRADE_CHOICES,
+        verbose_name=_('Grade')
+    )
+    section = models.CharField(
+        max_length=10,
+        choices=SECTION_CHOICES,
+        verbose_name=_('Section')
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('Class')
+        verbose_name_plural = _('Classes')
+        ordering = ['grade', 'section']
+        unique_together = ['school', 'grade', 'section']
+    
+    def __str__(self):
+        return f"{self.grade}{self.section}"
+    
+    @property
+    def display_name(self):
+        return f"{self.grade}{self.section}"
+    
+    @property
+    def student_count(self):
+        return self.students.count()

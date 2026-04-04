@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Delete Question" %} | Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <h1 class="gradient-text">⚠️ {% trans "Delete Question" %}</h1>
+    </div>
+</div>
+
+<div class="glass-card animate-slide-up" style="margin-top:var(--spacing-xl);max-width:600px;">
+    <p>{% trans "Are you sure you want to delete this question?" %}</p>
+    <div class="glass-card" style="padding:var(--spacing-md);margin:var(--spacing-lg) 0;border-left:4px solid #dc3545;">
+        <strong>Q{{ question.order }}:</strong> {{ question.question_text }}
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div style="display:flex;gap:var(--spacing-md);">
+            <button type="submit" class="btn btn-primary" style="background:#dc3545;">{% trans "Yes, Delete" %}</button>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}" class="btn btn-outline">{% trans "Cancel" %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

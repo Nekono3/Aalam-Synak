@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% if edit_mode %}{% trans "Edit Candidate" %}{% else %}{% trans "Add Candidate" %}{% endif %} | AIMS{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left">
+        <h1 class="topbar-title">{% if edit_mode %}{% trans "Edit Candidate" %}{% else %}{% trans "New Candidate" %}{% endif %}</h1>
+        <p class="text-secondary">
+            {% if school %}{% trans "For School" %}: {{ school.name }}{% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="form-container animate-slide-up">
+    <div class="glass-card form-card">
+        <form method="post" class="admission-form">
+            {% csrf_token %}
+            
+            <div class="form-section">
+                <h3 class="section-title">{% trans "Personal Information" %}</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="id_last_name">{% trans "Last Name" %}</label>
+                        <input type="text" name="last_name" id="id_last_name" required value="{{ candidate.last_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_first_name">{% trans "First Name" %}</label>
+                        <input type="text" name="first_name" id="id_first_name" required value="{{ candidate.first_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_middle_name">{% trans "Middle Name" %}</label>
+                        <input type="text" name="middle_name" id="id_middle_name" value="{{ candidate.middle_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_birth_date">{% trans "Birth Date" %}</label>
+                        <input type="date" name="birth_date" id="id_birth_date" required value="{{ candidate.birth_date|date:'Y-m-d' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_gender">{% trans "Gender" %}</label>
+                        <select name="gender" id="id_gender" required>
+                            <option value="M" {% if candidate.gender == 'M' %}selected{% endif %}>{% trans "Male" %}</option>
+                            <option value="F" {% if candidate.gender == 'F' %}selected{% endif %}>{% trans "Female" %}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="section-title">{% trans "Contact & Background" %}</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="id_phone">{% trans "Phone" %}</label>
+                        <input type="text" name="phone" id="id_phone" required value="{{ candidate.phone }}" placeholder="+996 ...">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_email">{% trans "Email" %}</label>
+                        <input type="email" name="email" id="id_email" value="{{ candidate.email }}">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="id_address">{% trans "Address" %}</label>
+                        <textarea name="address" id="id_address" rows="2" required>{{ candidate.address }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_previous_school">{% trans "Previous School" %}</label>
+                        <input type="text" name="previous_school" id="id_previous_school" required value="{{ candidate.previous_school }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_grade_applying_for">{% trans "Grade Applying For" %}</label>
+                        <input type="text" name="grade_applying_for" id="id_grade_applying_for" required value="{{ candidate.grade_applying_for }}" placeholder="e.g. 7, 8, 9">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% if edit_mode %}{% trans "Save Changes" %}{% else %}{% trans "Register Candidate" %}{% endif %}
+                </button>
+                <a href="{% if school %}{% url 'admissions:registration_by_school' school.pk %}{% else %}{% url 'admissions:school_registry' %}{% endif %}" class="btn btn-outline btn-lg">
+                    {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.form-card { padding: var(--spacing-2xl); }
+.admission-form { display: grid; gap: var(--spacing-2xl); }
+
+.section-title { 
+    font-size: 1.125rem; 
+    font-weight: 700; 
+    margin-bottom: var(--spacing-lg); 
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: rgba(0, 0, 0, 0.05); }
+
+.form-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: var(--spacing-lg); 
+}
+.full-width { grid-column: 1 / -1; }
+
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: var(--text-secondary); }
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
+    outline: none;
+}
+
+.form-actions { 
+    display: flex; 
+    gap: var(--spacing-md); 
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+</style>
+{% endblock %}

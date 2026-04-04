@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Master Answers" %} | AIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .variant-card {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .variant-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .variant-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #fff;
+    }
+    .variant-1A { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .variant-1B { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .variant-2A { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+    .variant-2B { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+    .answer-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        min-height: 60px;
+        resize: vertical;
+    }
+    .answer-input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .char-count {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+    .char-count.valid { color: #22c55e; }
+    .char-count.invalid { color: #ef4444; }
+    .split-table {
+        width: 100%;
+        font-size: 0.8rem;
+        margin-top: 0.75rem;
+    }
+    .split-table td, .split-table th {
+        padding: 0.35rem 0.5rem;
+    }
+    .split-table th {
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-between align-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">🔑 {% trans "Master Answers" %}</h1>
+            <p class="text-muted mb-0">{{ cycle.name }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'admissions:admission_analytics_dashboard' %}" class="btn btn-secondary">← {% trans "Dashboard" %}</a>
+            <a href="{% url 'admissions:recalculate_results' %}" class="btn btn-primary" onclick="return confirm('{% trans "This will recalculate ALL results using current master answers. Continue?" %}')">
+                🔄 {% trans "Recalculate All Results" %}
+            </a>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for v in variant_data %}
+        <div class="variant-card">
+            <div class="variant-header">
+                <div class="variant-badge variant-{{ v.code }}">{{ v.code }}</div>
+                <div>
+                    <h3 class="h5 mb-0">{% trans "Variant" %} {{ v.code }}</h3>
+                    <span class="text-muted small">
+                        {% if v.answer_count > 0 %}
+                            ✅ {{ v.answer_count }} {% trans "answers defined" %}
+                        {% else %}
+                            ⚠️ {% trans "No answers defined yet" %}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            
+            <label class="small font-bold text-muted mb-1 d-block">{% trans "Answer Key (70 characters)" %}</label>
+            <textarea name="answers_{{ v.code }}" class="answer-input" 
+                      id="input_{{ v.code }}"
+                      placeholder="{% trans 'Paste or type 70 answers (spaces will be auto-removed): АДАСДББСАС...' %}"
+                      oninput="cleanAndUpdate(this, '{{ v.code }}')"
+                      onpaste="setTimeout(function(){ cleanAndUpdate(document.getElementById('input_{{ v.code }}'), '{{ v.code }}'); }, 50)"
+            >{{ v.answers }}</textarea>
+            <div class="char-count" id="count_{{ v.code }}">
+                {% if v.answer_count > 0 %}
+                    <span class="valid">✅ {{ v.answer_count }}/70 characters</span>
+                {% else %}
+                    0/70 characters
+                {% endif %}
+            </div>
+            
+            {% if v.splits %}
+            <table class="split-table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Subject" %}</th>
+                        <th>{% trans "Questions" %}</th>
+                        <th>{% trans "Count" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in v.splits %}
+                    <tr>
+                        <td class="font-bold">{{ s.subject_name }}</td>
+                        <td>Q{{ s.start_question }}–Q{{ s.end_question }}</td>
+                        <td>{{ s.question_count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <div class="d-flex justify-end gap-2 mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">💾 {% trans "Save All Master Answers" %}</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function cleanAndUpdate(el, code) {
+    // Strip ALL whitespace (spaces, tabs, newlines) — critical for table-copied data
+    var cleaned = el.value.replace(/\s+/g, '');
+    if (cleaned !== el.value) {
+        el.value = cleaned;
+    }
+    
+    var count = cleaned.length;
+    var label = document.getElementById('count_' + code);
+    
+    if (count === 70) {
+        label.innerHTML = '<span class="valid">✅ ' + count + '/70 characters</span>';
+        label.className = 'char-count valid';
+    } else if (count > 70) {
+        label.innerHTML = '⚠️ ' + count + '/70 — <strong>too many!</strong> Only first 70 will be used.';
+        label.className = 'char-count invalid';
+    } else {
+        label.innerHTML = count + '/70 characters — <em>' + (70 - count) + ' more needed</em>';
+        label.className = 'char-count';
+    }
+}
+
+// Initialize counts on page load
+document.addEventListener('DOMContentLoaded', function() {
+    ['1A', '1B', '2A', '2B'].forEach(function(code) {
+        var el = document.getElementById('input_' + code);
+        if (el && el.value.trim()) {
+            cleanAndUpdate(el, code);
+        }
+    });
+});
+</script>
+{% endblock %}
+

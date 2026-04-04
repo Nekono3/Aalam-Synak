@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "School Subject Analytics" %} | AIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .school-rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 0.8rem;
+        color: #fff;
+    }
+    .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); }
+    .rank-2 { background: linear-gradient(135deg, #C0C0C0, #A8A8A8); }
+    .rank-3 { background: linear-gradient(135deg, #CD7F32, #B8692C); }
+    .rank-other { background: var(--bg-secondary); color: var(--text-muted); }
+    .avg-bar {
+        height: 8px;
+        border-radius: 4px;
+        background: var(--bg-secondary);
+        overflow: hidden;
+    }
+    .avg-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #3b82f6, #22c55e);
+        transition: width 0.5s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-between align-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">🏫 {% trans "School Subject Analytics" %}</h1>
+            <p class="text-muted mb-0">{% if active_cycle %}{{ active_cycle.name }}{% endif %}</p>
+        </div>
+        <a href="{% url 'admissions:admission_analytics_dashboard' %}" class="btn btn-secondary">← {% trans "Dashboard" %}</a>
+    </div>
+
+    <!-- Subject Selector -->
+    <div class="card p-4 mb-4">
+        <form method="get" class="d-flex gap-3 align-center">
+            <label class="font-bold">{% trans "Select Subject" %}:</label>
+            <select name="subject" class="form-select" style="max-width: 300px;" onchange="this.form.submit()">
+                <option value="">-- {% trans "Choose a subject" %} --</option>
+                {% for subj in subjects %}
+                <option value="{{ subj }}" {% if subj == selected_subject %}selected{% endif %}>{{ subj }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    {% if selected_subject and school_data %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="h5 mb-1">📈 {% trans "School Rankings" %} — {{ selected_subject }}</h3>
+            <p class="text-muted small mb-0">{% trans "Average correct/wrong answers per school" %}</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Rank" %}</th>
+                        <th>{% trans "School" %}</th>
+                        <th class="text-center">{% trans "Students" %}</th>
+                        <th class="text-center">{% trans "Avg Correct" %}</th>
+                        <th class="text-center">{% trans "Avg Wrong" %}</th>
+                        <th class="text-center">{% trans "Max" %}</th>
+                        <th style="width: 200px;">{% trans "Performance" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for school in school_data %}
+                    <tr>
+                        <td>
+                            <span class="school-rank-badge {% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% else %}rank-other{% endif %}">
+                                {{ forloop.counter }}
+                            </span>
+                        </td>
+                        <td class="font-bold">{{ school.result__school_name }}</td>
+                        <td class="text-center">{{ school.student_count }}</td>
+                        <td class="text-center text-success font-bold">{{ school.avg_correct|stringformat:".1f" }}</td>
+                        <td class="text-center text-danger">{{ school.avg_wrong|stringformat:".1f" }}</td>
+                        <td class="text-center text-muted">{{ school.total_q }}</td>
+                        <td>
+                            {% if school.total_q > 0 %}
+                            <div class="avg-bar">
+                                <div class="avg-bar-fill" style="width: {% widthratio school.avg_correct school.total_q 100 %}%"></div>
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% elif selected_subject %}
+    <div class="card p-5 text-center">
+        <p class="text-muted h5">{% trans "No school data found for this subject." %}</p>
+        <p class="text-muted small">{% trans "Upload results and set master answers first." %}</p>
+    </div>
+    {% else %}
+    <div class="card p-5 text-center">
+        <p class="text-muted h5">👆 {% trans "Select a subject to see school analytics" %}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

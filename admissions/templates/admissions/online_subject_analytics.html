@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Online Subject Analytics" %} | AIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .nav-tabs { border-bottom: 1px solid var(--border-color); display: flex; gap: 2rem; margin-bottom: 2rem; }
+    .nav-link { padding: 1rem 0; color: var(--text-muted); text-decoration: none; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s; }
+    .nav-link:hover { color: var(--text-primary); }
+    .nav-link.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+    
+    .subject-card { height: 100%; border-left: 4px solid var(--primary-blue); }
+    .percentage-badge { font-size: 1.25rem; font-weight: 700; padding: 0.5rem 1rem; border-radius: 8px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="h2">{% trans "Online Subject Analytics" %}</h1>
+    <p class="text-muted">{% trans "Average scores and performance breakdown per subject split" %}</p>
+</div>
+
+<div class="nav-tabs">
+    <a href="{% url 'admissions:online_analytics_dashboard' %}" class="nav-link">{% trans "Overview" %}</a>
+    <a href="{% url 'admissions:online_subject_analytics' %}" class="nav-link active">{% trans "Subject Analysis" %}</a>
+    <a href="{% url 'admissions:online_school_analytics' %}" class="nav-link">{% trans "School Analysis" %}</a>
+    <a href="{% url 'admissions:online_top_students' %}" class="nav-link">{% trans "Top Performers" %}</a>
+</div>
+
+<div class="grid grid-cols-3 gap-4 mb-5">
+    {% for stat in subject_stats %}
+    <div class="card p-4 subject-card">
+        <div class="d-flex justify-between align-start mb-3">
+            <div>
+                <h3 class="h6 mb-0 text-muted text-uppercase">{% trans "Subject" %}</h3>
+                <div class="font-bold h4">{{ stat.name }}</div>
+            </div>
+            <div class="percentage-badge {% if stat.avg_percentage >= 50 %}bg-success-light text-success{% else %}bg-danger-light text-danger{% endif %}">
+                {{ stat.avg_percentage|floatformat:1 }}%
+            </div>
+        </div>
+        <div class="small text-muted mb-4">
+            <div>{% trans "Total Students" %}: <strong>{{ stat.count }}</strong></div>
+            <div>{% trans "Avg Score" %}: <strong>{{ stat.correct_sum|floatformat:0 }} / {{ stat.total_qs|floatformat:0 }}</strong></div>
+        </div>
+        <div class="progress-bar-container" style="height: 8px;">
+            <div class="progress-bar {% if stat.avg_percentage >= 50 %}bg-success{% else %}bg-danger{% endif %}" style="width: {{ stat.avg_percentage }}%"></div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-3 card p-5 text-center text-muted">
+        {% trans "No subject splits defined for this cycle." %}
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="h5 mb-0">{% trans "Subject Performance Table" %}</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{% trans "Subject Name" %}</th>
+                    <th class="text-center">{% trans "Applicants" %}</th>
+                    <th class="text-center">{% trans "Total Correct" %}</th>
+                    <th class="text-center">{% trans "Total Possible" %}</th>
+                    <th class="text-right">{% trans "Avg Percentage" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in subject_stats %}
+                <tr>
+                    <td class="font-bold">{{ stat.name }}</td>
+                    <td class="text-center">{{ stat.count }}</td>
+                    <td class="text-center text-success font-bold">{{ stat.correct_sum|floatformat:0 }}</td>
+                    <td class="text-center text-muted">{{ stat.total_qs|floatformat:0 }}</td>
+                    <td class="text-right font-bold text-primary">{{ stat.avg_percentage|floatformat:1 }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

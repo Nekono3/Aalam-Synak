@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% if is_edit %}{% trans "Edit Question" %}{% else %}{% trans "Add Question" %}{% endif %} | Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'admissions:cycle_list' %}">{% trans "Admission Cycles" %}</a>
+            <span class="separator">/</span>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}">{{ cycle.name }}</a>
+            <span class="separator">/</span>
+            <span class="active">{% if is_edit %}{% trans "Edit Question" %}{% else %}{% trans "Add Question" %}{% endif %}</span>
+        </div>
+        <h1 class="gradient-text">{% if is_edit %}✏️ {% trans "Edit Question" %}{% else %}➕ {% trans "Add Question" %}{% endif %}</h1>
+    </div>
+</div>
+
+<div class="glass-card animate-slide-up" style="margin-top:var(--spacing-xl);max-width:800px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {% if form.errors or formset.errors %}
+        <div class="alert alert-danger" style="margin-bottom:var(--spacing-lg);">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+            {% for error in formset.non_form_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div style="display:grid;gap:var(--spacing-lg);">
+            <div class="form-group">
+                <label class="form-label">{% trans "Question Text" %} *</label>
+                {{ form.question_text }}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">{% trans "Question Image" %} ({% trans "optional" %})</label>
+                {{ form.question_image }}
+            </div>
+            
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-md);">
+                <div class="form-group">
+                    <label class="form-label">{% trans "Points" %}</label>
+                    {{ form.points }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{% trans "Order" %}</label>
+                    {{ form.order }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Answer Options -->
+        <div style="margin-top:var(--spacing-xl);">
+            <h3 style="margin-bottom:var(--spacing-md);">📝 {% trans "Answer Options" %}</h3>
+            <p class="text-muted" style="margin-bottom:var(--spacing-md);">{% trans "Add at least 2 options. Check the box for the correct answer." %}</p>
+            
+            {{ formset.management_form }}
+            
+            <div id="options-container" style="display:grid;gap:var(--spacing-md);">
+                {% for option_form in formset %}
+                <div class="option-row glass-card" style="padding:var(--spacing-md);display:grid;grid-template-columns:1fr auto auto;gap:var(--spacing-sm);align-items:center;">
+                    {% if option_form.instance.pk %}
+                        <input type="hidden" name="{{ option_form.prefix }}-id" value="{{ option_form.instance.pk }}">
+                    {% endif %}
+                    {{ option_form.text }}
+                    <label style="display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap;">
+                        {{ option_form.is_correct }}
+                        <span style="font-size:0.85rem;">{% trans "Correct" %}</span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap;color:#dc3545;">
+                        {{ option_form.DELETE }}
+                        <span style="font-size:0.85rem;">{% trans "Delete" %}</span>
+                    </label>
+                    {{ option_form.order.as_hidden }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div style="margin-top:var(--spacing-xl);display:flex;gap:var(--spacing-md);">
+            <button type="submit" class="btn btn-primary">{% if is_edit %}{% trans "Save Changes" %}{% else %}{% trans "Add Question" %}{% endif %}</button>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}" class="btn btn-outline">{% trans "Cancel" %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

@@ -1,10 +1,10 @@
 {% extends 'base_auth.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Login" %} - AIMS EXAM{% endblock %}
+{% block title %}{% trans "Login" %} - Aalam Synak{% endblock %}
 
-{% block auth_title %}{% trans "Welcome Back" %}{% endblock %}
-{% block auth_subtitle %}{% trans "Sign in to your AIMS EXAM account" %}{% endblock %}
+{% block auth_title %}Сайтка кирүү{% endblock %}
+{% block auth_subtitle %}Аалам Сынак аккаунтуңузга кириңиз{% endblock %}
 
 {% block auth_content %}
 <form method="post" class="auth-form" data-validate>
@@ -17,10 +17,10 @@
     {% endif %}
 
     <div class="form-group">
-        <label for="id_email" class="form-label">{{ form.email.label }}</label>
-        {{ form.email }}
-        {% if form.email.errors %}
-        <span class="form-error">{{ form.email.errors.0 }}</span>
+        <label for="id_login" class="form-label">{{ form.login.label }}</label>
+        {{ form.login }}
+        {% if form.login.errors %}
+        <span class="form-error">{{ form.login.errors.0 }}</span>
         {% endif %}
     </div>
 
@@ -40,14 +40,14 @@
     </div>
 
     <button type="submit" class="btn btn-primary btn-block btn-lg">
-        {% trans "Sign In" %}
+        Кирүү
     </button>
 </form>
 {% endblock %}
 
 {% block auth_footer %}
-<p style="color: var(--text-muted); font-size: 0.875rem;">
-    {% trans "Don't have an account?" %}
-    <a href="{% url 'accounts:register' %}">{% trans "Register as Student" %}</a>
+<p style="color: var(--text-muted); font-size: 0.95rem; text-align: center; margin-top: 1rem;">
+    Аккаунтуңуз жокпу?
+    <a href="{% url 'accounts:register' %}" style="font-weight: 600; color: var(--primary-blue);">Катталуу</a>
 </p>
 {% endblock %}
