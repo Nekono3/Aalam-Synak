@@ -1220,7 +1220,8 @@ def cycle_exam_submit(request, attempt_pk):
         reg = AdmissionRegistration.objects.filter(user=request.user, cycle=attempt.cycle).first()
         variant = reg.variant if reg else '1A'
 
-        region = reg.region if reg else (candidate.region if candidate and hasattr(candidate, 'region') else None)
+        region = reg.region if reg else (candidate.region if candidate and hasattr(candidate, 'region') else '')
+        region = region or ''
         
         school_name = ''
         if reg and getattr(reg, 'school_name', None):
@@ -1247,7 +1248,7 @@ def cycle_exam_submit(request, attempt_pk):
                 'wrong_count': int(max_score - total_score),
                 'percentage': float(percentage),
                 'is_passed': is_passed,
-                'region': region,
+                'region': str(region),
                 'school_name': str(school_name),
                 'phone1': phone1,
                 'phone2': phone2,
