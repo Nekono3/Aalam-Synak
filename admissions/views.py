@@ -410,27 +410,34 @@ def student_admission_view(request):
     except AdmissionCandidate.DoesNotExist:
         pass
         
-    active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
+    active_cycles = AdmissionCycle.objects.filter(is_active=True).order_by('-start_date', '-created_at')
     
-    has_online_exam = False
-    admission_attempt = None
-    admission_result = None
-    if active_cycle and active_cycle.admission_questions.exists():
-        has_online_exam = True
-        from .models import OnlineAttempt, AdmissionResult
-        admission_attempt = OnlineAttempt.objects.filter(
-            cycle=active_cycle, student=user
-        ).first()
-        admission_result = AdmissionResult.objects.filter(
-            cycle=active_cycle, candidate__user=user
-        ).first()
+    cycles_data = []
+    for active_cycle in active_cycles:
+        has_online_exam = False
+        admission_attempt = None
+        admission_result = None
+        
+        if active_cycle.admission_questions.exists():
+            has_online_exam = True
+            from .models import OnlineAttempt, AdmissionResult
+            admission_attempt = OnlineAttempt.objects.filter(
+                cycle=active_cycle, student=user
+            ).first()
+            admission_result = AdmissionResult.objects.filter(
+                cycle=active_cycle, candidate__user=user
+            ).first()
+            
+        cycles_data.append({
+            'cycle': active_cycle,
+            'has_online_exam': has_online_exam,
+            'admission_attempt': admission_attempt,
+            'admission_result': admission_result,
+        })
         
     context = {
         'candidate': candidate,
-        'active_cycle': active_cycle,
-        'has_online_exam': has_online_exam,
-        'admission_attempt': admission_attempt,
-        'admission_result': admission_result,
+        'cycles_data': cycles_data,
     }
     return render(request, 'admissions/student_admission.html', context)
 

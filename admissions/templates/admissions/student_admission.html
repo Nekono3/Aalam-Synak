@@ -12,21 +12,22 @@
 </div>
 
 <div class="admission-status-grid animate-slide-up">
-    <!-- Status Card -->
-    <div class="glass-card status-card">
+    <!-- Status Header -->
+    <div class="glass-card status-card" style="grid-column: 1 / -1;">
         <div class="card-header">
             <h3>{% trans "Admission Status" %}</h3>
             <span class="status-badge status-active">{% trans "Candidate" %}</span>
         </div>
         <div class="status-info">
-            <div class="info-item">
-                <span class="label">Окуу жылы:</span>
-                <span class="value">{{ active_cycle.name|default:"N/A" }}</span>
-            </div>
+            <p class="text-secondary" style="font-size: 1.1rem;">Сизде төмөнкү экзамендер жеткиликтүү:</p>
         </div>
     </div>
+</div>
 
-    <!-- Admission Exam Card (NEW SYSTEM) -->
+<div class="admission-status-grid animate-slide-up" style="margin-top: 1rem;">
+    {% for item in cycles_data %}
+        {% with active_cycle=item.cycle has_online_exam=item.has_online_exam admission_attempt=item.admission_attempt admission_result=item.admission_result %}
+        <!-- Admission Exam Card (NEW SYSTEM) -->
     <div class="glass-card exam-card">
         <div class="card-header">
             <h3>📝 {% trans "Admission Exam" %}</h3>
@@ -104,6 +105,12 @@
             </div>
         {% endif %}
     </div>
+    {% endwith %}
+    {% empty %}
+    <div class="glass-card exam-card" style="grid-column: 1 / -1;">
+        <p class="text-center text-muted p-4">Азырынча активдүү экзамендер жок.</p>
+    </div>
+    {% endfor %}
 </div>
 
 <style>
