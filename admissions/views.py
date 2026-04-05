@@ -368,7 +368,15 @@ def candidate_list(request):
         )
     
     if cycle_id:
-        candidates = candidates.filter(cycle_id=cycle_id)
+        from .models import AdmissionRegistration
+        from exams.models import OnlineAttempt
+        registered_user_ids = AdmissionRegistration.objects.filter(cycle_id=cycle_id).values_list('user_id', flat=True)
+        attempt_user_ids = OnlineAttempt.objects.filter(cycle_id=cycle_id).values_list('student_id', flat=True)
+        candidates = candidates.filter(
+            Q(cycle_id=cycle_id) | 
+            Q(user_id__in=registered_user_ids) | 
+            Q(user_id__in=attempt_user_ids)
+        ).distinct()
     
     # Efficiently fetch online attempts and results
     student_ids = [c.user_id for c in candidates]
@@ -1218,6 +1226,8 @@ def cycle_exam_submit(request, attempt_pk):
         # Save to AdmissionResult for analytics dashboard
         candidate = getattr(request.user, 'admission_profile', None)
         reg = AdmissionRegistration.objects.filter(user=request.user, cycle=attempt.cycle).first()
+        if not reg:
+            reg = AdmissionRegistration.objects.filter(user=request.user).order_by('-created_at').first()
         variant = reg.variant if reg else '1A'
 
         region = reg.region if reg else (candidate.region if candidate and hasattr(candidate, 'region') else '')
@@ -1230,8 +1240,8 @@ def cycle_exam_submit(request, attempt_pk):
             school_name = candidate.previous_school.name
 
         # Find common phone numbers from registrations
-        phone1 = reg.phone1 if reg else None
-        phone2 = reg.phone2 if reg else None
+        phone1 = reg.phone1 if reg else getattr(request.user, 'phone', '')
+        phone2 = reg.phone2 if reg else getattr(request.user, 'father_phone', '')
 
         result, created = AdmissionResult.objects.update_or_create(
             exam_attempt=attempt,

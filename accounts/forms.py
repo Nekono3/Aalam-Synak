@@ -175,7 +175,8 @@ class StudentRegistrationForm(forms.ModelForm):
             
             # Create the AdmissionCandidate profile
             from admissions.models import AdmissionCandidate, AdmissionCycle
-            active_cycle = AdmissionCycle.objects.filter(is_active=True).first()
+            active_cycles = AdmissionCycle.objects.filter(is_active=True)
+            active_cycle = active_cycles.first()
             
             AdmissionCandidate.objects.create(
                 user=user,
@@ -190,18 +191,19 @@ class StudentRegistrationForm(forms.ModelForm):
             # Also create AdmissionRegistration so the school data
             # is available for export and analytics
             from admissions.models import AdmissionRegistration
-            if active_cycle and school_name:
-                AdmissionRegistration.objects.create(
-                    cycle=active_cycle,
-                    full_name=f"{user.first_name} {user.last_name}",
-                    gender=self.cleaned_data['gender'],
-                    school_name=school_name,
-                    region=self.cleaned_data.get('address', ''),
-                    phone1=user.phone or '',
-                    phone2='',
-                    variant='',
-                    user=user,
-                )
+            if school_name:
+                for cycle in active_cycles:
+                    AdmissionRegistration.objects.create(
+                        cycle=cycle,
+                        full_name=f"{user.first_name} {user.last_name}",
+                        gender=self.cleaned_data['gender'],
+                        school_name=school_name,
+                        region=self.cleaned_data.get('address', ''),
+                        phone1=user.phone or '',
+                        phone2=user.father_phone or '',
+                        variant='',
+                        user=user,
+                    )
         return user
 
 
