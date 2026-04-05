@@ -428,6 +428,19 @@ def student_admission_view(request):
         
     active_cycles = AdmissionCycle.objects.filter(is_active=True).order_by('-start_date', '-created_at')
     
+    # Restrict to only the cycle(s) the student has already participated in, if any
+    participated_cycle_ids = set(
+        OnlineAttempt.objects.filter(student=user, cycle__in=active_cycles).values_list('cycle_id', flat=True)
+    )
+    if candidate:
+        result_cycle_ids = set(
+            AdmissionResult.objects.filter(candidate=candidate, cycle__in=active_cycles).values_list('cycle_id', flat=True)
+        )
+        participated_cycle_ids.update(result_cycle_ids)
+        
+    if participated_cycle_ids:
+        active_cycles = [c for c in active_cycles if c.id in participated_cycle_ids]
+    
     cycles_data = []
     for active_cycle in active_cycles:
         has_online_exam = False
@@ -436,7 +449,6 @@ def student_admission_view(request):
         
         if active_cycle.admission_questions.exists():
             has_online_exam = True
-            from .models import OnlineAttempt, AdmissionResult
             admission_attempt = OnlineAttempt.objects.filter(
                 cycle=active_cycle, student=user
             ).first()
@@ -1075,6 +1087,21 @@ def cycle_exam_start(request, pk):
     cycle = get_object_or_404(AdmissionCycle, pk=pk, is_active=True)
     if not cycle.admission_questions.exists():
         messages.error(request, _('No questions available for this cycle.'))
+        return redirect('admissions:student_admission')
+        
+    # Check if they have already started/finished ANY OTHER active cycle
+    active_cycles = AdmissionCycle.objects.filter(is_active=True).exclude(pk=cycle.pk)
+    has_other_attempts = OnlineAttempt.objects.filter(student=request.user, cycle__in=active_cycles).exists()
+    
+    has_other_results = False
+    try:
+        candidate = request.user.admission_profile
+        has_other_results = AdmissionResult.objects.filter(candidate=candidate, cycle__in=active_cycles).exists()
+    except AdmissionCandidate.DoesNotExist:
+        pass
+        
+    if has_other_attempts or has_other_results:
+        messages.error(request, _('You have already participated in another admission exam. You cannot take multiple exams.'))
         return redirect('admissions:student_admission')
         
     attempt, created = OnlineAttempt.objects.get_or_create(
