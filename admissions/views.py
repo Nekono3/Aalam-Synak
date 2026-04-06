@@ -426,20 +426,22 @@ def student_admission_view(request):
     except AdmissionCandidate.DoesNotExist:
         pass
         
-    active_cycles = AdmissionCycle.objects.filter(is_active=True).order_by('-start_date', '-created_at')
-    
-    # Restrict to only the cycle(s) the student has already participated in, if any
+    # Find all cycles the student has already participated in (active or inactive)
     participated_cycle_ids = set(
-        OnlineAttempt.objects.filter(student=user, cycle__in=active_cycles).values_list('cycle_id', flat=True)
+        OnlineAttempt.objects.filter(student=user).values_list('cycle_id', flat=True)
     )
     if candidate:
         result_cycle_ids = set(
-            AdmissionResult.objects.filter(candidate=candidate, cycle__in=active_cycles).values_list('cycle_id', flat=True)
+            AdmissionResult.objects.filter(candidate=candidate).values_list('cycle_id', flat=True)
         )
         participated_cycle_ids.update(result_cycle_ids)
         
     if participated_cycle_ids:
-        active_cycles = [c for c in active_cycles if c.id in participated_cycle_ids]
+        # If they participated in anything, show ONLY those cycles, regardless of is_active
+        active_cycles = list(AdmissionCycle.objects.filter(id__in=participated_cycle_ids).order_by('-start_date', '-created_at'))
+    else:
+        # Otherwise, show currently active cycles
+        active_cycles = list(AdmissionCycle.objects.filter(is_active=True).order_by('-start_date', '-created_at'))
     
     cycles_data = []
     for active_cycle in active_cycles:

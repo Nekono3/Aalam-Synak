@@ -44,34 +44,59 @@
                 {% if admission_attempt %}
                     <div class="attempt-status">
                         {% if admission_attempt.status == 'completed' %}
-                            <div class="alert alert-success">
                                 {% if admission_result %}
                                     {% if admission_result.is_passed %}
-                                        Экзамен аяктады. Жыйынтык: {{ admission_result.percentage|floatformat:1 }}% — <strong>ӨТТҮҢҮЗ ✅</strong>
+                                        <div class="alert alert-success" style="padding: 1.5rem; border-radius: 12px;">
+                                            <h4 style="margin-bottom: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                                <span>🎉</span> Куттуктайбыз!
+                                            </h4>
+                                            <p style="margin-bottom: 1rem; line-height: 1.6; font-size: 1.05rem;">
+                                                Сиз <strong>AIMS — Aalam International Magnet School</strong> мектебине кабыл алуу сынагынын <strong>2-туруна өттүңүз</strong>.<br>
+                                                Жыйынтыгыңыз: <strong>{{ admission_result.percentage|floatformat:1 }}%</strong>
+                                            </p>
+                                            <p style="margin-bottom: 1rem; line-height: 1.6; font-size: 1.05rem;">
+                                                Кийинки этап боюнча маалыматтарды жана жарыяларды топтордон күтүңүздөр.<br>
+                                                Ийгилик каалайбыз! 📚✨
+                                            </p>
                                         
                                         {% if candidate.gender == 'F' or candidate.gender == 'M' %}
-                                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1);">
-                                            <h4 style="margin-bottom: 0.5rem; font-weight: 700; color: #166534;">Сиз экзаменден өттүңүз!</h4>
-                                            <p style="margin-bottom: 1rem; color: #15803d;">Группага кирүү үчүн төмөнкү баскычты басыңыз.</p>
+                                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(128,128,128,0.2);">
+                                            <p style="margin-bottom: 1rem; font-weight: 600;">Группага кирүү үчүн төмөнкү баскычты басыңыз:</p>
                                             
                                             {% if candidate.gender == 'F' %}
-                                            <a href="https://chat.whatsapp.com/IAWWKBMsykhJbfN19vJnnv?mode=gi_t" target="_blank" class="btn btn-block" style="background-color: #25D366; color: white; padding: 12px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.4);">
+                                            <a href="https://chat.whatsapp.com/IAWWKBMsykhJbfN19vJnnv?mode=gi_t" target="_blank" class="btn btn-primary btn-block" style="padding: 12px; font-weight: bold; border-radius: 8px;">
                                                 💬 Группага кирүү
                                             </a>
                                             {% elif candidate.gender == 'M' %}
-                                            <a href="https://chat.whatsapp.com/BY6HMyveevl9vLnu0HVomZ?mode=gi_t" target="_blank" class="btn btn-block" style="background-color: #25D366; color: white; padding: 12px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.4);">
+                                            <a href="https://chat.whatsapp.com/BY6HMyveevl9vLnu0HVomZ?mode=gi_t" target="_blank" class="btn btn-primary btn-block" style="padding: 12px; font-weight: bold; border-radius: 8px;">
                                                 💬 Группага кирүү
                                             </a>
                                             {% endif %}
                                         </div>
                                         {% endif %}
+                                        </div>
                                     {% else %}
-                                        Экзамен аяктады. Жыйынтык: {{ admission_result.percentage|floatformat:1 }}% — <strong style="color: #dc2626;">ӨТПӨДҮҢҮЗ ❌</strong>
+                                        <div class="alert alert-danger" style="padding: 1.5rem; border-radius: 12px;">
+                                            <h4 style="margin-bottom: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                                <span>📢</span> Урматтуу талапкер!
+                                            </h4>
+                                            <p style="margin-bottom: 1rem; line-height: 1.6; font-size: 1.05rem;">
+                                                Тилекке каршы, бул жолу сиз <strong>AIMS — Aalam International Magnet School</strong> мектебинин кабыл алуу сынагынын <strong>2-туруна өтпөй калдыңыз</strong>.<br>
+                                                Жыйынтыгыңыз: <strong>{{ admission_result.percentage|floatformat:1 }}%</strong>
+                                            </p>
+                                            <p style="margin-bottom: 1rem; line-height: 1.6; font-size: 1.05rem;">
+                                                Көрсөткөн аракетиңиз жана катышканыңыз үчүн ыраазычылык билдиребиз. Сизге мындан аркы окуу жолуңузда чоң ийгиликтерди каалайбыз.
+                                            </p>
+                                            <p style="margin-bottom: 0; line-height: 1.6; font-size: 1.05rem;">
+                                                Алдыңкы мүмкүнчүлүктөр дагы сөзсүз болот. Ишенимди жоготпоңуз жана мындан ары да аракет кыла бериңиз. 🌟
+                                            </p>
+                                        </div>
                                     {% endif %}
                                 {% else %}
-                                    {% trans "Exam completed. Calculating results..." %}
+                                    <div class="alert alert-info" style="border-radius: 12px;">
+                                        {% trans "Exam completed. Calculating results..." %}
+                                    </div>
                                 {% endif %}
-                            </div>
                         {% elif admission_attempt.status == 'locked' %}
                             <div class="alert alert-danger">
                                 ⚠️ {% trans "Your exam was locked." %}
