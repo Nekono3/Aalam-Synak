@@ -46,7 +46,7 @@
                         {% if admission_attempt.status == 'completed' %}
                                 {% if admission_result %}
                                     {% if admission_result.is_passed %}
-                                        <div class="alert alert-success" style="padding: 1.5rem; border-radius: 12px;">
+                                        <div class="alert alert-success" style="padding: 1.5rem; border-radius: 12px; display: block;">
                                             <h4 style="margin-bottom: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
                                                 <span>🎉</span> Куттуктайбыз!
                                             </h4>
@@ -60,15 +60,15 @@
                                             </p>
                                         
                                         {% if candidate.gender == 'F' or candidate.gender == 'M' %}
-                                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(128,128,128,0.2);">
+                                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(128,128,128,0.2); display: block;">
                                             <p style="margin-bottom: 1rem; font-weight: 600;">Группага кирүү үчүн төмөнкү баскычты басыңыз:</p>
                                             
                                             {% if candidate.gender == 'F' %}
-                                            <a href="https://chat.whatsapp.com/IAWWKBMsykhJbfN19vJnnv?mode=gi_t" target="_blank" class="btn btn-primary btn-block" style="padding: 12px; font-weight: bold; border-radius: 8px;">
+                                            <a href="https://chat.whatsapp.com/IAWWKBMsykhJbfN19vJnnv?mode=gi_t" target="_blank" class="btn btn-primary btn-block" style="padding: 12px; font-weight: bold; border-radius: 8px; display: inline-block; width: 100%; text-align: center;">
                                                 💬 Группага кирүү
                                             </a>
                                             {% elif candidate.gender == 'M' %}
-                                            <a href="https://chat.whatsapp.com/BY6HMyveevl9vLnu0HVomZ?mode=gi_t" target="_blank" class="btn btn-primary btn-block" style="padding: 12px; font-weight: bold; border-radius: 8px;">
+                                            <a href="https://chat.whatsapp.com/BY6HMyveevl9vLnu0HVomZ?mode=gi_t" target="_blank" class="btn btn-primary btn-block" style="padding: 12px; font-weight: bold; border-radius: 8px; display: inline-block; width: 100%; text-align: center;">
                                                 💬 Группага кирүү
                                             </a>
                                             {% endif %}
@@ -76,7 +76,7 @@
                                         {% endif %}
                                         </div>
                                     {% else %}
-                                        <div class="alert alert-danger" style="padding: 1.5rem; border-radius: 12px;">
+                                        <div class="alert alert-danger" style="padding: 1.5rem; border-radius: 12px; display: block;">
                                             <h4 style="margin-bottom: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
                                                 <span>📢</span> Урматтуу талапкер!
                                             </h4>
