@@ -195,6 +195,32 @@
 /* Empty */
 .rr-empty { text-align: center; padding: 4rem 2rem; }
 .rr-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+/* === Mobile student card layout === */
+.rr-cards { display: none; }
+.rr-card-item {
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg); padding: 0.85rem; margin-bottom: 0.6rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+}
+.rr-card-item .rr-ci-top {
+    display: flex; align-items: center; gap: 0.5rem;
+}
+.rr-card-item .rr-ci-rank {
+    width: 26px; height: 26px; border-radius: 50%; font-size: 0.72rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    background: var(--bg-secondary); color: var(--text-muted);
+}
+.rr-card-item .rr-ci-name { font-weight: 700; font-size: 0.88rem; flex: 1; }
+.rr-card-item .rr-ci-school {
+    font-size: 0.78rem; color: var(--text-muted); padding-left: 36px; margin-top: -2px;
+}
+.rr-card-item .rr-ci-row {
+    display: flex; align-items: center; gap: 0.5rem; padding-left: 36px; flex-wrap: wrap;
+}
+.rr-card-item .rr-ci-score {
+    font-weight: 800; font-size: 1rem; color: var(--primary-blue);
+}
+.rr-card-item .rr-ci-pct { font-size: 0.82rem; color: var(--text-muted); }
 
 /* Responsive */
 @media (max-width: 640px) {
@@ -216,12 +242,13 @@
     .rr-sval { font-size: 0.78rem; }
     .rr-search-bar { flex-direction: column; margin-bottom: 0.75rem; }
     .rr-search-bar input, .rr-search-bar select { width: 100%; min-width: 0; font-size: 0.88rem; }
-    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -0.5rem; padding: 0 0.5rem; }
-    .rr-table th, .rr-table td { padding: 0.45rem 0.4rem; font-size: 0.75rem; white-space: nowrap; }
-    .rr-table th:nth-child(3), .rr-table td:nth-child(3) { max-width: 80px; white-space: normal; word-break: break-word; }
+    .rr-results-info { flex-direction: column; gap: 0.25rem; font-size: 0.78rem; text-align: center; }
     .rr-pag button { padding: 5px 10px; font-size: 0.78rem; }
-    .rr-results-info { flex-direction: column; gap: 0.25rem; font-size: 0.78rem; }
-    .st-pass, .st-fail, .medal-candidate, .medal-gold, .medal-silver, .medal-bronze { font-size: 0.68rem; padding: 2px 7px; }
+    .rr-search-section { padding: 1rem !important; }
+    .rr-search-section h2 { font-size: 1rem !important; }
+    /* Hide table, show cards on mobile */
+    .table-responsive { display: none !important; }
+    .rr-cards { display: block; }
 }
 </style>
 {% endblock %}
@@ -327,6 +354,9 @@
         </table>
     </div>
 
+    <!-- Mobile card layout (hidden on desktop, shown on mobile via CSS) -->
+    <div class="rr-cards" id="resultsCards"></div>
+
     <div class="rr-pag" id="pagination"></div>
 </div>
 
@@ -340,6 +370,7 @@
     const SEARCH_URL = "{% url 'admissions:round_results_search_ajax' %}";
     const input = document.getElementById('searchInput');
     const body = document.getElementById('resultsBody');
+    const cards = document.getElementById('resultsCards');
     const pag = document.getElementById('pagination');
     const countEl = document.getElementById('resultsCount');
     const pageEl = document.getElementById('pageInfo');
@@ -368,6 +399,7 @@
         const url = `${SEARCH_URL}?search=${encodeURIComponent(q)}&page=${currentPage}`;
 
         body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1.5rem;color:var(--text-muted)">⏳</td></tr>';
+        cards.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted)">⏳</div>';
 
         fetch(url)
             .then(r => {
@@ -389,26 +421,46 @@
     function renderResults(data) {
         if (!data.results.length) {
             body.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted)">${TXT.noResults}</td></tr>`;
+            cards.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-muted)">${TXT.noResults}</div>`;
             return;
         }
-        let html = '';
+        let tableHtml = '';
+        let cardHtml = '';
         data.results.forEach(r => {
             const medalHtml = getMedalBadge(r.medal);
             const statusHtml = r.status === 'accepted'
                 ? `<span class="st-pass">✓ ${TXT.passed}</span>`
                 : `<span class="st-fail">✗ ${TXT.notPassed}</span>`;
+            const q = input.value.trim();
 
-            html += `<tr>
+            // Table row (desktop)
+            tableHtml += `<tr>
                 <td style="color:var(--text-muted)">${r.rank}</td>
-                <td style="font-weight:600">${highlightMatch(r.full_name, input.value.trim())}</td>
+                <td style="font-weight:600">${highlightMatch(r.full_name, q)}</td>
                 <td style="color:var(--text-muted);font-size:0.85rem">${r.school}</td>
                 <td style="text-align:center;font-weight:700">${r.total_score}</td>
                 <td style="text-align:center">${r.total_pct}%</td>
                 <td style="text-align:center">${medalHtml}</td>
                 <td style="text-align:center">${statusHtml}</td>
             </tr>`;
+
+            // Card (mobile)
+            cardHtml += `<div class="rr-card-item">
+                <div class="rr-ci-top">
+                    <span class="rr-ci-rank">${r.rank}</span>
+                    <span class="rr-ci-name">${highlightMatch(r.full_name, q)}</span>
+                </div>
+                <div class="rr-ci-school">${r.school || '—'}</div>
+                <div class="rr-ci-row">
+                    <span class="rr-ci-score">${r.total_score}</span>
+                    <span class="rr-ci-pct">(${r.total_pct}%)</span>
+                    ${medalHtml}
+                    ${statusHtml}
+                </div>
+            </div>`;
         });
-        body.innerHTML = html;
+        body.innerHTML = tableHtml;
+        cards.innerHTML = cardHtml;
     }
 
     function getMedalBadge(medal) {
