@@ -112,15 +112,17 @@
 .rr-top-list li:last-child { border-bottom: none; }
 
 .rr-rank-num {
-    width: 24px; height: 24px; border-radius: 50%;
+    width: 28px; height: 28px; border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
-    font-size: 0.72rem; font-weight: 700; margin-right: 10px; flex-shrink: 0;
+    font-size: 0.78rem; font-weight: 700; margin-right: 12px; flex-shrink: 0;
     background: var(--bg-secondary); color: var(--text-muted);
 }
 .rr-rank-num.r1 { background: linear-gradient(135deg,#FFD700,#FFA500); color: #fff; }
 .rr-rank-num.r2 { background: linear-gradient(135deg,#C0C0C0,#A0A0A0); color: #fff; }
 .rr-rank-num.r3 { background: linear-gradient(135deg,#CD7F32,#B5651D); color: #fff; }
-.rr-sname { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rr-sname-container { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.rr-sname { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.9rem; }
+.rr-subinfo { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rr-sval { font-weight: 700; margin-left: 8px; white-space: nowrap; font-size: 0.85rem; color: var(--text-primary); }
 
 /* ===== Search Section ===== */
@@ -206,7 +208,7 @@
     display: flex; align-items: center; gap: 0.5rem;
 }
 .rr-card-item .rr-ci-rank {
-    width: 26px; height: 26px; border-radius: 50%; font-size: 0.72rem; font-weight: 700;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 0.78rem; font-weight: 700;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     background: var(--bg-secondary); color: var(--text-muted);
 }
@@ -339,17 +341,16 @@
         <table class="rr-table">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>{% trans "Full name" %}</th>
-                    <th>{% trans "School" %}</th>
-                    <th style="text-align:center">{% trans "Score" %}</th>
-                    <th style="text-align:center">{% trans "Percentage" %}</th>
-                    <th style="text-align:center">{% trans "Medal" %}</th>
-                    <th style="text-align:center">{% trans "Status" %}</th>
+                    <th style="width: 50px;">#</th>
+                    <th>{% trans "Name" %} / {% trans "School" %}</th>
+                    <th style="text-align:center; width: 80px;">{% trans "Score" %}</th>
+                    <th style="text-align:center; width: 100px;">{% trans "Percentage" %}</th>
+                    <th style="text-align:center; width: 120px;">{% trans "Medal" %}</th>
+                    <th style="text-align:center; width: 120px;">{% trans "Status" %}</th>
                 </tr>
             </thead>
             <tbody id="resultsBody">
-                <tr><td colspan="7" class="rr-loading">{% trans "Loading..." %}</td></tr>
+                <tr><td colspan="6" class="rr-loading">{% trans "Loading..." %}</td></tr>
             </tbody>
         </table>
     </div>
@@ -398,7 +399,7 @@
         // Show ALL students
         const url = `${SEARCH_URL}?search=${encodeURIComponent(q)}&page=${currentPage}`;
 
-        body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1.5rem;color:var(--text-muted)">⏳</td></tr>';
+        body.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--text-muted)">⏳</td></tr>';
         cards.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted)">⏳</div>';
 
         fetch(url)
@@ -414,13 +415,13 @@
             })
             .catch(err => {
                 console.error('Search error:', err);
-                body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1.5rem;color:#EF4444">Error loading results</td></tr>';
+                body.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:#EF4444">Error loading results</td></tr>';
             });
     }
 
     function renderResults(data) {
         if (!data.results.length) {
-            body.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted)">${TXT.noResults}</td></tr>`;
+            body.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">${TXT.noResults}</td></tr>`;
             cards.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-muted)">${TXT.noResults}</div>`;
             return;
         }
@@ -436,8 +437,10 @@
             // Table row (desktop)
             tableHtml += `<tr>
                 <td style="color:var(--text-muted)">${r.rank}</td>
-                <td style="font-weight:600">${highlightMatch(r.full_name, q)}</td>
-                <td style="color:var(--text-muted);font-size:0.85rem">${r.school}</td>
+                <td>
+                    <div style="font-weight:600">${highlightMatch(r.full_name, q)}</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted)">${r.district ? r.district + ', ' : ''}${r.school}</div>
+                </td>
                 <td style="text-align:center;font-weight:700">${r.total_score}</td>
                 <td style="text-align:center">${r.total_pct}%</td>
                 <td style="text-align:center">${medalHtml}</td>
@@ -448,9 +451,11 @@
             cardHtml += `<div class="rr-card-item">
                 <div class="rr-ci-top">
                     <span class="rr-ci-rank">${r.rank}</span>
-                    <span class="rr-ci-name">${highlightMatch(r.full_name, q)}</span>
+                    <div class="rr-ci-info">
+                        <div class="rr-ci-name">${highlightMatch(r.full_name, q)}</div>
+                        <div class="rr-ci-school">${r.district ? r.district + ', ' : ''}${r.school || '—'}</div>
+                    </div>
                 </div>
-                <div class="rr-ci-school">${r.school || '—'}</div>
                 <div class="rr-ci-row">
                     <span class="rr-ci-score">${r.total_score}</span>
                     <span class="rr-ci-pct">(${r.total_pct}%)</span>

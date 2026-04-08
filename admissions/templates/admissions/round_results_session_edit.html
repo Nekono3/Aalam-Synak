@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Редактор: {{ session.title }} | AIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .edit-input {
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        padding: 4px 8px;
+        width: 100%;
+        color: var(--text-primary);
+        transition: all 0.2s;
+    }
+    .edit-input:hover {
+        background: rgba(255,255,255,0.05);
+        border-color: var(--glass-border);
+    }
+    .edit-input:focus {
+        background: var(--bg-secondary);
+        border-color: var(--primary-blue);
+        outline: none;
+    }
+    .save-indicator {
+        font-size: 12px;
+        display: none;
+        margin-left: 8px;
+    }
+    .save-success { color: #10B981; }
+    .save-error { color: #EF4444; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="d-flex justify-between align-center">
+        <div>
+            <h1 class="h2">✏️ {{ session.title }} — Редактор</h1>
+            <p class="text-muted">Окуучулардын атын жана мектебин түздөн-түз өзгөртө аласыз.</p>
+        </div>
+        <a href="{% url 'admissions:round_results_admin' %}" class="btn btn-secondary">Артка</a>
+    </div>
+</div>
+
+<div class="card mt-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="60">#</th>
+                    <th>ФИО</th>
+                    <th>Мектеби</th>
+                    <th class="text-center">Упай</th>
+                    <th class="text-center">Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in results %}
+                <tr>
+                    <td class="text-muted">{{ forloop.counter }}</td>
+                    <td>
+                        <div class="d-flex align-center">
+                            <input type="text" class="edit-input" value="{{ r.full_name }}" 
+                                   onchange="updateField({{ r.pk }}, 'name', this)">
+                            <span id="save-name-{{ r.pk }}" class="save-indicator"></span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-center">
+                            <input type="text" class="edit-input" value="{{ r.school }}" 
+                                   onchange="updateField({{ r.pk }}, 'school', this)">
+                            <span id="save-school-{{ r.pk }}" class="save-indicator"></span>
+                        </div>
+                    </td>
+                    <td class="text-center font-bold">{{ r.total_score }}</td>
+                    <td class="text-center">
+                        {% if r.status == 'accepted' %}
+                            <span class="badge badge-success">Өттү</span>
+                        {% else %}
+                            <span class="badge badge-danger">Өтпөдү</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateField(pk, field, inputEl) {
+    const value = inputEl.value;
+    const indicator = document.getElementById(`save-${field}-${pk}`);
+    
+    indicator.style.display = 'inline-block';
+    indicator.innerHTML = '⏳';
+    indicator.className = 'save-indicator';
+
+    const formData = new FormData();
+    formData.append('field', field);
+    formData.append('value', value);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    fetch(`/admissions/round-results/update-ajax/${pk}/`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            indicator.innerHTML = '✅';
+            indicator.classList.add('save-success');
+            setTimeout(() => { indicator.style.display = 'none'; }, 2000);
+        } else {
+            indicator.innerHTML = '❌';
+            indicator.classList.add('save-error');
+        }
+    })
+    .catch(error => {
+        indicator.innerHTML = '❌';
+        indicator.classList.add('save-error');
+        console.error('Error:', error);
+    });
+}
+</script>
+{% endblock %}

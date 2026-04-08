@@ -56,6 +56,8 @@ urlpatterns = [
     # Round Results (Admin)
     path('round-results/', views.round_results_admin, name='round_results_admin'),
     path('round-results/upload/', views.round_results_upload, name='round_results_upload'),
+    path('round-results/<int:pk>/edit/', views.round_results_session_edit, name='round_results_session_edit'),
+    path('round-results/update-ajax/<int:pk>/', views.round_result_update_ajax, name='round_result_update_ajax'),
     path('round-results/<int:pk>/toggle/', views.round_results_toggle_publish, name='round_results_toggle_publish'),
     path('round-results/<int:pk>/delete/', views.round_results_delete, name='round_results_delete'),
 

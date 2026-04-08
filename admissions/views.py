@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse, JsonResponse
@@ -2012,11 +2013,18 @@ def round_results_admin(request):
 
 @login_required
 @user_passes_test(is_super_admin)
+@login_required
+@user_passes_test(is_super_admin)
 def round_results_upload(request):
     """Upload Excel and import round results."""
     if request.method == 'POST':
         title = request.POST.get('title', '1-тур жыйынтыгы')
         excel_file = request.FILES.get('file')
+        try:
+            passing_score = float(request.POST.get('passing_score', 24.0))
+        except (ValueError, TypeError):
+            passing_score = 24.0
+
         if not excel_file:
             messages.error(request, 'Excel файл тандалган жок.')
             return redirect('admissions:round_results_upload')
@@ -2025,6 +2033,7 @@ def round_results_upload(request):
             title=title,
             file=excel_file,
             uploaded_by=request.user,
+            passing_score=passing_score,
         )
 
         import re
@@ -2072,13 +2081,6 @@ def round_results_upload(request):
                 messages.warning(request, 'Excel файлда маалымат жок.')
                 return redirect('admissions:round_results_admin')
 
-            # Fixed column mapping based on actual file:
-            # 0=ФИО, 1=Жыныс, 2=Район, 3=Мектеби, 4=Тел1, 5=Тел2,
-            # 6=Общий балл, 7=Процент,
-            # 8=Математика, 9=Кыргыз тил, 10=Биология,
-            # 11=География, 12=Тарых, 13=Англис тил, 14=Орус тил,
-            # 15=Медаль, 16=Файл
-
             count = 0
             for row in rows[1:]:
                 if len(row) < 8:
@@ -2109,12 +2111,17 @@ def round_results_upload(request):
                 # Medal
                 medal_raw = safe_str(row[15]) if len(row) > 15 else ''
 
-                # Status: if has a medal → accepted
+                # Status logic: Score threshold OR medal
                 status = 'rejected'
+                passed_by_score = (total_score_val is not None and total_score_val >= passing_score)
+                has_medal = False
                 if medal_raw:
                     medal_lower = medal_raw.lower()
                     if any(k in medal_lower for k in ['gold', 'silver', 'bronze', 'алтын', 'күмүш', 'коло']):
-                        status = 'accepted'
+                        has_medal = True
+                
+                if passed_by_score or has_medal:
+                    status = 'accepted'
 
                 RoundResult.objects.create(
                     session=session,
@@ -2175,6 +2182,40 @@ def round_results_delete(request, pk):
     session.delete()
     messages.success(request, f'"{title}" өчүрүлдү.')
     return redirect('admissions:round_results_admin')
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def round_results_session_edit(request, pk):
+    """Page to edit names and schools of students in a session."""
+    session = get_object_or_404(RoundResultSession, pk=pk)
+    results = session.results.all().order_by('rank', 'full_name')
+    context = {
+        'session': session,
+        'results': results,
+    }
+    return render(request, 'admissions/round_results_session_edit.html', context)
+
+
+@login_required
+@user_passes_test(is_super_admin)
+@require_POST
+def round_result_update_ajax(request, pk):
+    """AJAX endpoint to update student name or school."""
+    result = get_object_or_404(RoundResult, pk=pk)
+    field = request.POST.get('field')
+    value = request.POST.get('value', '').strip()
+
+    if field == 'name':
+        result.full_name = value
+        result.save()
+        return JsonResponse({'status': 'ok'})
+    elif field == 'school':
+        result.school = value
+        result.save()
+        return JsonResponse({'status': 'ok'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid field'}, status=400)
 
 
 def round_results_student(request):
@@ -2271,7 +2312,7 @@ def round_results_search_ajax(request):
             'rank': start + i,
             'full_name': r.full_name or '',
             'school': r.school or '',
-            'district': r.district or '',
+            'district': r.short_district or '',
             'total_score': float(r.total_score) if r.total_score else 0,
             'total_pct': float(r.total_pct) if r.total_pct else 0,
             'medal': r.medal if r.medal and r.medal.lower() != 'none' else '',

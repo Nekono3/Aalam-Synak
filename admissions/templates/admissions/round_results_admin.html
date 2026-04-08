@@ -32,26 +32,32 @@
             <tbody>
                 {% for s in sessions %}
                 <tr>
-                    <td class="font-bold">{{ s.title }}</td>
-                    <td>{{ s.results.count }}</td>
-                    <td class="text-muted small">{{ s.uploaded_at|date:"d.m.Y H:i" }}</td>
-                    <td>
-                        {% if s.is_published %}
-                            <span class="badge badge-success">Жарыяланган</span>
-                        {% else %}
-                            <span class="badge badge-secondary">Жашырылган</span>
-                        {% endif %}
-                    </td>
-                    <td class="text-right">
-                        <div class="d-flex gap-1 justify-end">
-                            <a href="{% url 'admissions:round_results_toggle_publish' s.pk %}" class="btn btn-sm {% if s.is_published %}btn-secondary{% else %}btn-primary{% endif %}">
-                                {% if s.is_published %}Жашыруу{% else %}Жарыялоо{% endif %}
-                            </a>
-                            <a href="{% url 'admissions:round_results_delete' s.pk %}" class="btn btn-sm btn-ghost-danger" onclick="return confirm('Чын эле өчүрөсүзбү?')">
-                                Өчүрүү
-                            </a>
-                        </div>
-                    </td>
+                        <td class="font-bold">
+                            {{ s.title }}
+                            <div class="text-muted small">Pass threshold: <span class="badge badge-secondary">{{ s.passing_score }}</span></div>
+                        </td>
+                        <td>{{ s.results.count }}</td>
+                        <td class="text-muted small">{{ s.uploaded_at|date:"d.m.Y H:i" }}</td>
+                        <td>
+                            {% if s.is_published %}
+                                <span class="badge badge-success">Жарыяланган</span>
+                            {% else %}
+                                <span class="badge badge-secondary">Жашырылган</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-right">
+                            <div class="d-flex gap-1 justify-end">
+                                <a href="{% url 'admissions:round_results_session_edit' s.pk %}" class="btn btn-sm btn-outline-primary">
+                                    Редактор
+                                </a>
+                                <a href="{% url 'admissions:round_results_toggle_publish' s.pk %}" class="btn btn-sm {% if s.is_published %}btn-secondary{% else %}btn-primary{% endif %}">
+                                    {% if s.is_published %}Жашыруу{% else %}Жарыялоо{% endif %}
+                                </a>
+                                <a href="{% url 'admissions:round_results_delete' s.pk %}" class="btn btn-sm btn-ghost-danger" onclick="return confirm('Чын эле өчүрөсүзбү?')">
+                                    Өчүрүү
+                                </a>
+                            </div>
+                        </td>
                 </tr>
                 {% empty %}
                 <tr>
