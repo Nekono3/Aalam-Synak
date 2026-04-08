@@ -1,0 +1,47 @@
+<!-- Top 10 Card Partial — used by round_results_student.html -->
+<!-- Collapsible accordion card for top 10 students per subject -->
+<div class="rr-top-card">
+    <div class="rr-card-hdr {{ css_class }}" onclick="this.parentElement.classList.toggle('rr-open')" style="cursor:pointer;">
+        {% if css_class == "math" %}📐{% endif %}
+        {% if css_class == "kyrgyz" %}📖{% endif %}
+        {% if css_class == "bio" %}🧬{% endif %}
+        {% if css_class == "geo" %}🌍{% endif %}
+        {% if css_class == "hist" %}📜{% endif %}
+        {% if css_class == "eng" %}🇬🇧{% endif %}
+        {% if css_class == "rus" %}🇷🇺{% endif %}
+        {% if css_class == "total" %}⭐{% endif %}
+        <span style="flex:1">{{ title_text }} — {{ top10_text }}</span>
+        <span class="rr-card-toggle">▸</span>
+    </div>
+    <div class="rr-card-body">
+        <!-- Column headers -->
+        <div class="rr-col-hdr">
+            <span class="ch-name">{{ name_text }}</span>
+            <span class="ch-val">{{ score_text }} / {{ max_score }}</span>
+        </div>
+        <ul class="rr-top-list">
+            {% for r in items %}
+            <li>
+                <span class="rr-rank-num {% if forloop.counter == 1 %}r1{% elif forloop.counter == 2 %}r2{% elif forloop.counter == 3 %}r3{% endif %}">{{ forloop.counter }}</span>
+                <span class="rr-sname">{{ r.full_name }}</span>
+                {% if is_total %}
+                <span class="rr-sval">{{ r.total_score|floatformat:0 }} ({{ r.total_pct|floatformat:0 }}%)</span>
+                {% else %}
+                <span class="rr-sval">
+                    {% if css_class == "math" %}{{ r.math_score|floatformat:0 }}{% if r.math_pct %} ({{ r.math_pct|floatformat:0 }}%){% endif %}
+                    {% elif css_class == "kyrgyz" %}{{ r.kyrgyz_score|floatformat:0 }}{% if r.kyrgyz_pct %} ({{ r.kyrgyz_pct|floatformat:0 }}%){% endif %}
+                    {% elif css_class == "bio" %}{{ r.biology_score|floatformat:0 }}{% if r.biology_pct %} ({{ r.biology_pct|floatformat:0 }}%){% endif %}
+                    {% elif css_class == "geo" %}{{ r.geography_score|floatformat:0 }}{% if r.geography_pct %} ({{ r.geography_pct|floatformat:0 }}%){% endif %}
+                    {% elif css_class == "hist" %}{{ r.history_score|floatformat:0 }}{% if r.history_pct %} ({{ r.history_pct|floatformat:0 }}%){% endif %}
+                    {% elif css_class == "eng" %}{{ r.english_score|floatformat:0 }}{% if r.english_pct %} ({{ r.english_pct|floatformat:0 }}%){% endif %}
+                    {% elif css_class == "rus" %}{{ r.russian_score|floatformat:0 }}{% if r.russian_pct %} ({{ r.russian_pct|floatformat:0 }}%){% endif %}
+                    {% endif %}
+                </span>
+                {% endif %}
+            </li>
+            {% empty %}
+            <li style="justify-content:center;color:var(--text-muted);font-size:0.85rem">—</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

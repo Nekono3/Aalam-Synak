@@ -128,13 +128,16 @@
                 <span>{% trans "Admission Analytics" %}</span>
             </a>
 
-            <a href="{% url 'admissions:online_analytics_dashboard' %}"
-                class="nav-item {% if 'admissions/online-analytics' in request.path %}active{% endif %}">
+            <a href="{% url 'admissions:round_results_admin' %}"
+                class="nav-item {% if 'admissions/round-results' in request.path %}active{% endif %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
                 </svg>
-                <span>{% trans "Online Analytics" %}</span>
+                <span>1-тур жыйынтыгы</span>
             </a>
         </div>
 
@@ -275,7 +278,7 @@
             <span class="nav-section-title">Менин кабыл алуум</span>
 
             <a href="{% url 'admissions:student_admission' %}"
-                class="nav-item {% if 'admissions' in request.path %}active{% endif %}">
+                class="nav-item {% if request.resolver_match.view_name == 'admissions:student_admission' %}active{% endif %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -283,6 +286,18 @@
                     <polyline points="16 11 18 13 22 9"></polyline>
                 </svg>
                 <span>Кабыл алуу сынагы – ААЛАМ</span>
+            </a>
+
+            <a href="{% url 'admissions:round_results_student' %}"
+                class="nav-item {% if request.resolver_match.view_name == 'admissions:round_results_student' %}active{% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                <span>1-турдун жыйынтыгы</span>
             </a>
         </div>
         {% endif %}

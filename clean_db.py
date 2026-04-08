@@ -5,8 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aims_exam.settings')
 django.setup()
 
 from accounts.models import User
-from admissions.models import ExternalSchool, AdmissionCandidate, AdmissionRegistration, AdmissionResult, AdmissionSession
-from exams.models import OnlineAttempt
+from admissions.models import ExternalSchool, AdmissionCandidate, AdmissionRegistration, AdmissionResult, AdmissionUploadSession, OnlineAttempt
 
 print("Starting deep clean...")
 
@@ -24,7 +23,7 @@ print(f"Deleted extra registrations: {reg_del}")
 res_del, _ = AdmissionResult.objects.all().delete()
 print(f"Deleted extra results: {res_del}")
 
-sess_del, _ = AdmissionSession.objects.all().delete()
+sess_del, _ = AdmissionUploadSession.objects.all().delete()
 print(f"Deleted admission upload sessions: {sess_del}")
 
 # 3. Delete exam attempts

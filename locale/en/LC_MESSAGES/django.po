@@ -1,11 +1,22 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: AIMS\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-08 13:00+0600\n"
+"POT-Creation-Date: 2026-04-08 09:24+0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: accounts/decorators.py:14 accounts/decorators.py:27
 #: accounts/decorators.py:54
@@ -48,19 +59,19 @@ msgstr ""
 #: schools/templates/schools/class_detail.html:65
 #: schools/templates/schools/credentials_print.html:80
 msgid "Password"
-msgstr "Пароль"
+msgstr ""
 
 #: accounts/forms.py:62
 msgid "Create a password"
-msgstr "Создайте пароль"
+msgstr ""
 
 #: accounts/forms.py:66 accounts/forms.py:368
 msgid "Confirm Password"
-msgstr "Подтвердите пароль"
+msgstr ""
 
 #: accounts/forms.py:69
 msgid "Confirm your password"
-msgstr "Подтвердите ваш пароль"
+msgstr ""
 
 #: accounts/forms.py:75 admissions/forms.py:67 admissions/models.py:86
 #: admissions/models.py:322 admissions/models.py:532
@@ -69,11 +80,11 @@ msgstr "Подтвердите ваш пароль"
 #: admissions/templates/admissions/candidate_detail.html:31
 #: admissions/templates/admissions/candidate_form.html:41
 msgid "Gender"
-msgstr "Пол"
+msgstr ""
 
 #: accounts/forms.py:76 admissions/forms.py:45 admissions/forms.py:50
 msgid "-- Выберите --"
-msgstr "-- Выберите --"
+msgstr ""
 
 #: accounts/forms.py:76
 msgid "Эркек"
@@ -84,10 +95,8 @@ msgid "Кыз"
 msgstr ""
 
 #: accounts/forms.py:81 admissions/forms.py:15 admissions/forms.py:79
-#, fuzzy
-#| msgid "-- Выберите --"
 msgid "-- Выберите регион --"
-msgstr "-- Выберите --"
+msgstr ""
 
 #: accounts/forms.py:91
 msgid "Дарек"
@@ -98,16 +107,12 @@ msgid "Мектебиңиз"
 msgstr ""
 
 #: accounts/forms.py:99
-#, fuzzy
-#| msgid "Напр: №15 мектеп, Бишкек"
 msgid "Мисалы: №15 мектеп, Бишкек"
-msgstr "Напр: №15 мектеп, Бишкек"
+msgstr ""
 
 #: accounts/forms.py:106 accounts/forms.py:113
-#, fuzzy
-#| msgid "Напр: 0555 123 456"
 msgid "Мисалы: 0555 123 456"
-msgstr "Напр: 0555 123 456"
+msgstr ""
 
 #: accounts/forms.py:121 accounts/forms.py:132
 msgid "Аты"
@@ -125,15 +130,15 @@ msgstr ""
 #: accounts/templates/accounts/users_list.html:56
 #: admissions/templates/admissions/candidate_form.html:58 schools/models.py:15
 msgid "Email"
-msgstr "Email"
+msgstr ""
 
 #: accounts/forms.py:151
 msgid "This email is already registered."
-msgstr "Этот email уже зарегистрирован."
+msgstr ""
 
 #: accounts/forms.py:160 accounts/forms.py:381
 msgid "Passwords do not match."
-msgstr "Пароли не совпадают."
+msgstr ""
 
 #: accounts/forms.py:218 accounts/forms.py:272
 msgid "Leave empty to keep current"
@@ -144,65 +149,50 @@ msgid "Leave empty to keep current password (when editing)."
 msgstr ""
 
 #: accounts/forms.py:250
-#, fuzzy
-#| msgid "This email is already registered."
 msgid "This email is already in use."
-msgstr "Этот email уже зарегистрирован."
+msgstr ""
 
 #: accounts/forms.py:335
-#, fuzzy
-#| msgid "Create a password"
 msgid "Current Password"
-msgstr "Создайте пароль"
+msgstr ""
 
 #: accounts/forms.py:338
-#, fuzzy
-#| msgid "Enter your password"
 msgid "Enter current password"
-msgstr "Введите ваш пароль"
+msgstr ""
 
 #: accounts/forms.py:342 accounts/forms.py:361
 #: schools/templates/schools/reset_password.html:37
-#, fuzzy
-#| msgid "Password"
 msgid "New Password"
-msgstr "Пароль"
+msgstr ""
 
 #: accounts/forms.py:345 accounts/forms.py:364
-#, fuzzy
-#| msgid "Enter your password"
 msgid "Enter new password"
-msgstr "Введите ваш пароль"
+msgstr ""
 
 #: accounts/forms.py:349
-#, fuzzy
-#| msgid "Confirm Password"
 msgid "Confirm New Password"
-msgstr "Подтвердите пароль"
+msgstr ""
 
 #: accounts/forms.py:352 accounts/forms.py:371
-#, fuzzy
-#| msgid "Confirm Password"
 msgid "Confirm new password"
-msgstr "Подтвердите пароль"
+msgstr ""
 
-# --- Users / Accounts ---
 #: accounts/models.py:11
 msgid "Email is required"
-msgstr "Email обязателен"
+msgstr ""
 
 #: accounts/models.py:32 accounts/templates/accounts/profile.html:59
 #: accounts/templates/accounts/users_list.html:39
 #: templates/partials/sidebar.html:401
 msgid "Super Admin"
-msgstr "Супер Админ"
+msgstr ""
 
 #: accounts/models.py:33 accounts/templates/accounts/profile.html:60
 #: accounts/templates/accounts/users_list.html:40
 #: accounts/templates/accounts/users_list.html:73
 #: templates/partials/sidebar.html:402
 msgid "Teacher"
-msgstr "Учитель"
+msgstr ""
 
 #: accounts/models.py:34 accounts/templates/accounts/profile.html:61
 #: accounts/templates/accounts/users_list.html:41
@@ -216,35 +206,29 @@ msgstr "Учитель"
 #: schools/templates/schools/credentials_print.html:77
 #: templates/partials/sidebar.html:403 zipgrade/models.py:186
 msgid "Student"
-msgstr "Ученик"
+msgstr ""
 
 #: accounts/models.py:38
-#, fuzzy
-#| msgid "Student Analytics"
 msgid "Student Aalam"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: accounts/models.py:39
-#, fuzzy
-#| msgid "Admission Type"
 msgid "Admission Student"
-msgstr "Тип приёма"
+msgstr ""
 
 #: accounts/models.py:50
 msgid "email address"
-msgstr "email адрес"
+msgstr ""
 
 #: accounts/models.py:57 accounts/templates/accounts/profile.html:57
 #: accounts/templates/accounts/users_list.html:36
 #: accounts/templates/accounts/users_list.html:57
 msgid "Role"
-msgstr "Роль"
+msgstr ""
 
 #: accounts/models.py:65
-#, fuzzy
-#| msgid "Student"
 msgid "Student Type"
-msgstr "Ученик"
+msgstr ""
 
 #: accounts/models.py:66
 msgid "Internal = class-managed school student, Applicant = admission registrant"
@@ -254,19 +238,19 @@ msgstr ""
 #: admissions/templates/admissions/registration_by_school.html:30
 #: schools/models.py:14
 msgid "Phone"
-msgstr "Телефон"
+msgstr ""
 
 #: accounts/models.py:71
 msgid "Mother's Phone"
-msgstr "Телефон матери"
+msgstr ""
 
 #: accounts/models.py:72
 msgid "Father's Phone"
-msgstr "Телефон отца"
+msgstr ""
 
 #: accounts/models.py:81
 msgid "Primary School"
-msgstr "Основная школа"
+msgstr ""
 
 #: accounts/models.py:91 analytics/templates/analytics/class_heatmap.html:27
 #: analytics/templates/analytics/rankings.html:91
@@ -285,23 +269,21 @@ msgid "Class"
 msgstr ""
 
 #: accounts/models.py:99
-#, fuzzy
-#| msgid "Create a password"
 msgid "Generated Password"
-msgstr "Создайте пароль"
+msgstr ""
 
 #: accounts/models.py:107
 msgid "Preferred Language"
-msgstr "Предпочитаемый язык"
+msgstr ""
 
 #: accounts/models.py:120 admissions/models.py:82
 msgid "User"
-msgstr "Пользователь"
+msgstr ""
 
 #: accounts/models.py:121 accounts/templates/accounts/users_list.html:4
 #: templates/partials/sidebar.html:69
 msgid "Users"
-msgstr "Пользователи"
+msgstr ""
 
 #: accounts/templates/accounts/admin_reset_password.html:4
 #: accounts/templates/accounts/admin_reset_password.html:8
@@ -311,10 +293,8 @@ msgstr "Пользователи"
 #: schools/templates/schools/reset_password.html:4
 #: schools/templates/schools/reset_password.html:8
 #: schools/templates/schools/reset_password.html:42
-#, fuzzy
-#| msgid "Password"
 msgid "Reset Password"
-msgstr "Пароль"
+msgstr ""
 
 #: accounts/templates/accounts/admin_reset_password.html:16
 msgid "Resetting password for:"
@@ -348,7 +328,7 @@ msgstr ""
 #: zipgrade/templates/zipgrade/subject_split_confirm_delete.html:33
 #: zipgrade/templates/zipgrade/subject_split_form.html:43
 msgid "Cancel"
-msgstr "Отмена"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:4
 #: accounts/templates/accounts/dashboard.html:8
@@ -359,7 +339,7 @@ msgstr "Отмена"
 #: admissions/templates/admissions/subject_rankings.html:13
 #: templates/partials/sidebar.html:39 test_i18n.py:24 test_i18n.py:34
 msgid "Dashboard"
-msgstr "Дашборд"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:31
 #: analytics/templates/analytics/rankings.html:38 schools/models.py:32
@@ -367,14 +347,12 @@ msgstr "Дашборд"
 #: schools/templates/schools/school_list.html:8
 #: templates/partials/sidebar.html:58
 msgid "Schools"
-msgstr "Школы"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:47
 #: schools/templates/schools/school_list.html:73
-#, fuzzy
-#| msgid "Teacher"
 msgid "Teachers"
-msgstr "Учитель"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:61
 #: admissions/templates/admissions/analytics_dashboard.html:298
@@ -389,58 +367,43 @@ msgstr "Учитель"
 #: zipgrade/templates/zipgrade/exam_detail.html:48
 #: zipgrade/templates/zipgrade/preview.html:18
 #: zipgrade/templates/zipgrade/results.html:78
-#, fuzzy
-#| msgid "Student"
 msgid "Students"
-msgstr "Ученик"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:74
-#, fuzzy
-#| msgid "Admissions"
 msgid "Admins"
-msgstr "Приём"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:82
 #: accounts/templates/accounts/dashboard.html:153
 #: admissions/templates/admissions/online_analytics_dashboard.html:89
-#, fuzzy
-#| msgid "Actions"
 msgid "Quick Actions"
-msgstr "Действия"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:90
-#, fuzzy
-#| msgid "Schools"
 msgid "Manage Schools"
-msgstr "Школы"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:98
 msgid "Manage Users"
 msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:107
-#, fuzzy
-#| msgid "Teacher"
 msgid "Add New Teacher"
-msgstr "Учитель"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:114
-#, fuzzy
-#| msgid "Status"
 msgid "System Status"
-msgstr "Статус"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:118
 msgid "Database"
 msgstr ""
 
-# --- Exams ---
 #: accounts/templates/accounts/dashboard.html:119 admissions/models.py:125
 #: admissions/models.py:148
-#, fuzzy
-#| msgid "Online Exam"
 msgid "Online"
-msgstr "Онлайн Экзамен"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:122
 msgid "Platform"
@@ -456,34 +419,28 @@ msgstr ""
 #: schools/models.py:54 schools/templates/schools/school_list.html:36
 #: schools/templates/schools/school_list.html:81
 msgid "Active"
-msgstr "Активен"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:126
 msgid "Version"
 msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:145
-#, fuzzy
-#| msgid "Top Schools"
 msgid "Your School"
-msgstr "Топ школ"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:163
 #: zipgrade/templates/zipgrade/upload.html:8
 msgid "Upload ZipGrade Results"
-msgstr "Загрузить результаты ZipGrade"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:172
-#, fuzzy
-#| msgid "Create Exam"
 msgid "Create New Exam"
-msgstr "Создать Экзамен"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:181
-#, fuzzy
-#| msgid "Analytics"
 msgid "View Analytics"
-msgstr "Аналитика"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:191
 #: exams/templates/exams/my_exams.html:4 exams/templates/exams/my_exams.html:8
@@ -491,7 +448,7 @@ msgstr "Аналитика"
 #: exams/templates/exams/student_exams.html:8
 #: templates/partials/sidebar.html:310 templates/partials/sidebar.html:321
 msgid "My Exams"
-msgstr "Мои Экзамены"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:199
 #: analytics/templates/analytics/schools.html:173
@@ -500,10 +457,8 @@ msgstr "Мои Экзамены"
 #: exams/templates/exams/student_exams.html:18 zipgrade/models.py:118
 #: zipgrade/models.py:176 zipgrade/templates/zipgrade/results.html:75
 #: zipgrade/templates/zipgrade/subject_split_form.html:15
-#, fuzzy
-#| msgid "Exams"
 msgid "Exam"
-msgstr "Экзамены"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:200
 #: admissions/templates/admissions/master_answer_setup.html:129
@@ -516,7 +471,7 @@ msgstr "Экзамены"
 #: exams/templates/exams/student_exams.html:19 schools/models.py:60
 #: zipgrade/models.py:124 zipgrade/templates/zipgrade/preview.html:217
 msgid "Subject"
-msgstr "Предмет"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:201
 #: admissions/templates/admissions/analytics_dashboard.html:345
@@ -527,7 +482,7 @@ msgstr "Предмет"
 #: zipgrade/templates/zipgrade/preview.html:51
 #: zipgrade/templates/zipgrade/results.html:77
 msgid "Date"
-msgstr "Дата"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:202
 #: accounts/templates/accounts/users_list.html:59 admissions/models.py:435
@@ -539,7 +494,7 @@ msgstr "Дата"
 #: admissions/templates/admissions/cycle_list.html:28
 #: admissions/templates/admissions/online_top_students.html:47
 #: admissions/templates/admissions/registration_by_school.html:32
-#: admissions/templates/admissions/round_results_student.html:306
+#: admissions/templates/admissions/round_results_student.html:245
 #: analytics/templates/analytics/students.html:275 exams/models.py:303
 #: exams/templates/exams/attempt_answers.html:32
 #: exams/templates/exams/exam_list.html:64
@@ -551,7 +506,7 @@ msgstr "Дата"
 #: zipgrade/templates/zipgrade/exam_detail.html:144
 #: zipgrade/templates/zipgrade/preview.html:86
 msgid "Status"
-msgstr "Статус"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:213
 #: exams/templates/exams/exam_list.html:36
@@ -561,10 +516,8 @@ msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:216
 #: exams/templates/exams/student_exams.html:37
-#, fuzzy
-#| msgid "Start Time"
 msgid "Start"
-msgstr "Время начала"
+msgstr ""
 
 #: accounts/templates/accounts/dashboard.html:230
 msgid "No upcoming exams at the moment."
@@ -572,32 +525,26 @@ msgstr ""
 
 #: accounts/templates/accounts/login.html:4
 msgid "Login"
-msgstr "Войти"
+msgstr ""
 
 #: accounts/templates/accounts/password_change.html:4
 #: accounts/templates/accounts/password_change.html:8
 #: accounts/templates/accounts/password_change.html:49
 #: accounts/templates/accounts/profile.html:85
-#, fuzzy
-#| msgid "Confirm Password"
 msgid "Change Password"
-msgstr "Подтвердите пароль"
+msgstr ""
 
 #: accounts/templates/accounts/profile.html:4
 msgid "Profile"
-msgstr "Профиль"
+msgstr ""
 
 #: accounts/templates/accounts/profile.html:8
-#, fuzzy
-#| msgid "Profile"
 msgid "My Profile"
-msgstr "Профиль"
+msgstr ""
 
 #: accounts/templates/accounts/profile.html:17
-#, fuzzy
-#| msgid "File Format"
 msgid "Profile Information"
-msgstr "Формат файла"
+msgstr ""
 
 #: accounts/templates/accounts/profile.html:37 accounts/views.py:231
 #: accounts/views.py:279 admissions/templates/admissions/candidate_form.html:78
@@ -614,7 +561,6 @@ msgstr ""
 msgid "Account Details"
 msgstr ""
 
-# --- Schools ---
 #: accounts/templates/accounts/profile.html:67
 #: accounts/templates/accounts/users_list.html:58 admissions/models.py:534
 #: admissions/templates/admissions/admission_register.html:85
@@ -623,7 +569,7 @@ msgstr ""
 #: admissions/templates/admissions/analytics_dashboard.html:228
 #: admissions/templates/admissions/candidate_list.html:51
 #: admissions/templates/admissions/online_top_students.html:43
-#: admissions/templates/admissions/round_results_student.html:302
+#: admissions/templates/admissions/round_results_student.html:241
 #: admissions/templates/admissions/school_subject_analytics.html:72
 #: admissions/templates/admissions/subject_rankings.html:41
 #: analytics/templates/analytics/rankings.html:92
@@ -645,24 +591,20 @@ msgstr ""
 #: zipgrade/templates/zipgrade/results.html:54
 #: zipgrade/templates/zipgrade/results.html:76
 msgid "School"
-msgstr "Школа"
+msgstr ""
 
 #: accounts/templates/accounts/profile.html:75
-#, fuzzy
-#| msgid "Remember me"
 msgid "Member Since"
-msgstr "Запомнить меня"
+msgstr ""
 
 #: accounts/templates/accounts/register.html:4
 msgid "Register"
-msgstr "Регистрация"
+msgstr ""
 
 #: accounts/templates/accounts/user_confirm_delete.html:4
 #: accounts/templates/accounts/user_confirm_delete.html:8
-#, fuzzy
-#| msgid "Delete"
 msgid "Delete User"
-msgstr "Удалить"
+msgstr ""
 
 #: accounts/templates/accounts/user_confirm_delete.html:20
 #: schools/templates/schools/school_confirm_delete.html:20
@@ -691,16 +633,12 @@ msgid "User Management"
 msgstr ""
 
 #: accounts/templates/accounts/users_list.html:17 accounts/views.py:208
-#, fuzzy
-#| msgid "Teacher"
 msgid "Add Teacher"
-msgstr "Учитель"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:20 accounts/views.py:251
-#, fuzzy
-#| msgid "Super Admin"
 msgid "Add Admin"
-msgstr "Супер Админ"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:30
 #: analytics/templates/analytics/students.html:83
@@ -711,7 +649,7 @@ msgstr "Супер Админ"
 #: zipgrade/templates/zipgrade/exam_detail.html:106
 #: zipgrade/templates/zipgrade/results.html:38
 msgid "Search"
-msgstr "Поиск"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:32
 #: admissions/templates/admissions/candidate_list.html:28
@@ -721,10 +659,8 @@ msgid "Search by name or email..."
 msgstr ""
 
 #: accounts/templates/accounts/users_list.html:38
-#, fuzzy
-#| msgid "All Regions"
 msgid "All Roles"
-msgstr "Все регионы"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:45
 #: admissions/templates/admissions/candidate_list.html:37
@@ -738,7 +674,7 @@ msgstr "Все регионы"
 #: schools/templates/schools/subject_list.html:42
 #: zipgrade/templates/zipgrade/results.html:65
 msgid "Filter"
-msgstr "Фильтр"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:46
 #: analytics/templates/analytics/students.html:98
@@ -752,30 +688,24 @@ msgstr "Фильтр"
 #: venv/lib/python3.14/site-packages/django/forms/widgets.py:528
 #: zipgrade/templates/zipgrade/results.html:66
 msgid "Clear"
-msgstr "Очистить"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:55
 #: admissions/templates/admissions/admission_register.html:83
-#: admissions/templates/admissions/round_results_student.html:269
 #: analytics/templates/analytics/rankings.html:90
 #: schools/templates/schools/school_detail.html:104
 #: schools/templates/schools/subject_list.html:52
 #: zipgrade/templates/zipgrade/exam_detail.html:146
 msgid "Name"
-msgstr "Имя"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:60
-#, fuzzy
-#| msgid "Created By"
 msgid "Created"
-msgstr "Создал(а)"
+msgstr ""
 
-# --- Admission Module ---
 #: accounts/templates/accounts/users_list.html:71
-#, fuzzy
-#| msgid "Admission"
 msgid "Admin"
-msgstr "Приёмная комиссия"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:83
 #: admissions/templates/admissions/cycle_list.html:48
@@ -783,10 +713,8 @@ msgstr "Приёмная комиссия"
 #: exams/templates/exams/teacher_exam_list.html:44
 #: schools/templates/schools/school_list.html:37
 #: schools/templates/schools/school_list.html:81
-#, fuzzy
-#| msgid "Active"
 msgid "Inactive"
-msgstr "Активен"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:90
 #: accounts/templates/accounts/users_list.html:97
@@ -802,7 +730,7 @@ msgstr "Активен"
 #: zipgrade/templates/zipgrade/exam_detail.html:93
 #: zipgrade/templates/zipgrade/exam_detail.html:184
 msgid "Edit"
-msgstr "Изменить"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:111
 #: admissions/templates/admissions/analytics_dashboard.html:362
@@ -820,60 +748,54 @@ msgstr "Изменить"
 #: zipgrade/templates/zipgrade/exam_detail.html:37
 #: zipgrade/templates/zipgrade/results.html:120
 msgid "Delete"
-msgstr "Удалить"
+msgstr ""
 
-# --- Analytics / UI Specific ---
 #: accounts/templates/accounts/users_list.html:124
-#, fuzzy
-#| msgid "No school found"
 msgid "No users found."
-msgstr "Школа не найдена"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:135
-#: admissions/templates/admissions/round_results_student.html:342
+#: admissions/templates/admissions/round_results_student.html:281
 #: exams/templates/exams/take_exam.html:438
 #: schools/templates/schools/school_detail.html:147
 msgid "Previous"
-msgstr "Назад"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:138
-#: admissions/templates/admissions/round_results_student.html:340
+#: admissions/templates/admissions/round_results_student.html:279
 #: zipgrade/templates/zipgrade/exam_detail.html:211
 #: zipgrade/templates/zipgrade/results.html:145
 msgid "Page"
-msgstr "Страница"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:138
-#: admissions/templates/admissions/round_results_student.html:338
+#: admissions/templates/admissions/round_results_student.html:277
 #: schools/templates/schools/school_detail.html:150
 #: zipgrade/templates/zipgrade/exam_detail.html:211
 #: zipgrade/templates/zipgrade/results.html:145
 msgid "of"
-msgstr "из"
+msgstr ""
 
 #: accounts/templates/accounts/users_list.html:141
 #: admissions/templates/admissions/cycle_exam_take.html:275
-#: admissions/templates/admissions/round_results_student.html:343
+#: admissions/templates/admissions/round_results_student.html:282
 #: exams/templates/exams/take_exam.html:449
 #: schools/templates/schools/school_detail.html:154
 msgid "Next"
-msgstr "Далее"
+msgstr ""
 
 #: accounts/views.py:43
-#, fuzzy, python-format
-#| msgid "Welcome back"
+#, python-format
 msgid "Welcome back, %(name)s!"
-msgstr "С возвращением"
+msgstr ""
 
 #: accounts/views.py:56
 msgid "You have been logged out."
 msgstr ""
 
 #: accounts/views.py:76
-#, fuzzy
-#| msgid "Registration Successful!"
 msgid "Registration successful! Welcome to Aalam Synak."
-msgstr "Регистрация прошла успешно!"
+msgstr ""
 
 #: accounts/views.py:136
 msgid "Profile updated successfully."
@@ -889,20 +811,16 @@ msgid "Teacher \"%(name)s\" created successfully."
 msgstr ""
 
 #: accounts/views.py:209
-#, fuzzy
-#| msgid "Teacher"
 msgid "Create Teacher"
-msgstr "Учитель"
+msgstr ""
 
 #: accounts/views.py:223
 msgid "Teacher updated successfully."
 msgstr ""
 
 #: accounts/views.py:230
-#, fuzzy
-#| msgid "Teacher"
 msgid "Edit Teacher"
-msgstr "Учитель"
+msgstr ""
 
 #: accounts/views.py:244
 #, python-format
@@ -910,10 +828,8 @@ msgid "Admin \"%(name)s\" created successfully."
 msgstr ""
 
 #: accounts/views.py:252
-#, fuzzy
-#| msgid "Create Exam"
 msgid "Create Admin"
-msgstr "Создать Экзамен"
+msgstr ""
 
 #: accounts/views.py:264
 msgid "Use the profile page to edit your own account."
@@ -951,10 +867,8 @@ msgstr ""
 
 #: admissions/admission_exam_views.py:109 admissions/views.py:203
 #: exams/views.py:173 exams/views.py:216
-#, fuzzy
-#| msgid "Registration Successful!"
 msgid "Question added successfully."
-msgstr "Регистрация прошла успешно!"
+msgstr ""
 
 #: admissions/admission_exam_views.py:134 admissions/views.py:228
 #: exams/views.py:256 exams/views.py:261 exams/views.py:266 exams/views.py:271
@@ -963,10 +877,8 @@ msgstr ""
 
 #: admissions/admission_exam_views.py:155 admissions/views.py:249
 #: exams/views.py:299
-#, fuzzy
-#| msgid "Question Type"
 msgid "Question deleted."
-msgstr "Тип вопроса"
+msgstr ""
 
 #: admissions/admission_exam_views.py:173 admissions/views.py:275
 msgid "Subject splits saved successfully."
@@ -994,7 +906,7 @@ msgstr ""
 #: admissions/models.py:360 admissions/models.py:422
 #: admissions/templates/admissions/analytics_upload.html:48
 msgid "Admission Cycle"
-msgstr "Цикл приёма"
+msgstr ""
 
 #: admissions/forms.py:16 admissions/forms.py:80
 msgid "Баткен"
@@ -1041,34 +953,33 @@ msgstr ""
 #: admissions/templates/admissions/analytics_dashboard.html:346
 #: admissions/templates/admissions/candidate_detail.html:74
 msgid "Region"
-msgstr "Регион"
+msgstr ""
 
 #: admissions/forms.py:33 admissions/models.py:131 admissions/models.py:185
 #: admissions/templates/admissions/analytics_upload.html:72
 msgid "Admission Type"
-msgstr "Тип приёма"
+msgstr ""
 
 #: admissions/forms.py:37 admissions/models.py:132
 msgid "XLSX File"
-msgstr "XLSX файл"
+msgstr ""
 
 #: admissions/forms.py:46
 msgid "Бала (Male)"
-msgstr "Бала (Мальчик)"
+msgstr ""
 
 #: admissions/forms.py:47
 msgid "Кыз (Female)"
-msgstr "Кыз (Девочка)"
+msgstr ""
 
 #: admissions/forms.py:59 admissions/models.py:321
 #: admissions/templates/admissions/admission_register.html:133
 msgid "Full Name (ФИО)"
-msgstr "ФИО (Фамилия Имя Отчество)"
+msgstr ""
 
-# --- Registration Form Placeholders ---
 #: admissions/forms.py:62
 msgid "Напр: Иванов Иван Иванович"
-msgstr "Напр: Иванов Иван Иванович"
+msgstr ""
 
 #: admissions/forms.py:72 admissions/models.py:55 admissions/models.py:165
 #: admissions/models.py:323
@@ -1079,20 +990,20 @@ msgstr "Напр: Иванов Иван Иванович"
 #: admissions/templates/admissions/school_registry_form.html:28
 #: schools/models.py:11
 msgid "School Name"
-msgstr "Название школы"
+msgstr ""
 
 #: admissions/forms.py:75
 msgid "Напр: №15 мектеп, Бишкек"
-msgstr "Напр: №15 мектеп, Бишкек"
+msgstr ""
 
 #: admissions/forms.py:100 admissions/forms.py:109
 msgid "Напр: 0555 123 456"
-msgstr "Напр: 0555 123 456"
+msgstr ""
 
 #: admissions/forms.py:114
 #: admissions/templates/admissions/admission_register.html:143
 msgid "Exam Variant"
-msgstr "Вариант экзамена"
+msgstr ""
 
 #: admissions/forms.py:162
 msgid "e.g. Math, Biology, English"
@@ -1108,36 +1019,26 @@ msgstr ""
 
 #: admissions/models.py:10 admissions/templates/admissions/cycle_form.html:20
 #: admissions/templates/admissions/cycle_list.html:24
-#, fuzzy
-#| msgid "School Name"
 msgid "Cycle Name"
-msgstr "Название школы"
+msgstr ""
 
 #: admissions/models.py:11 admissions/templates/admissions/cycle_form.html:25
 #: admissions/templates/admissions/cycle_list.html:25
-#, fuzzy
-#| msgid "Start Time"
 msgid "Start Date"
-msgstr "Время начала"
+msgstr ""
 
 #: admissions/models.py:12 admissions/templates/admissions/cycle_form.html:30
 #: admissions/templates/admissions/cycle_list.html:26
-#, fuzzy
-#| msgid "Exam Date"
 msgid "End Date"
-msgstr "Дата экзамена"
+msgstr ""
 
 #: admissions/models.py:13
-#, fuzzy
-#| msgid "Active"
 msgid "Is Active"
-msgstr "Активен"
+msgstr ""
 
 #: admissions/models.py:17
-#, fuzzy
-#| msgid "Duration (minutes)"
 msgid "Timer (minutes)"
-msgstr "Длительность (мин)"
+msgstr ""
 
 #: admissions/models.py:18 admissions/templates/admissions/cycle_form.html:37
 msgid "Duration of the online admission exam."
@@ -1154,11 +1055,11 @@ msgstr ""
 #: admissions/models.py:29 exams/models.py:67
 #: exams/templates/exams/exam_form.html:67
 msgid "Max Tab Switches Before Lock"
-msgstr "Макс. переключений вкладок до блокировки"
+msgstr ""
 
 #: admissions/models.py:34 exams/models.py:43
 msgid "Passing Score (%)"
-msgstr "Проходной балл (%)"
+msgstr ""
 
 #: admissions/models.py:35 admissions/templates/admissions/cycle_form.html:43
 msgid "Minimum percentage required to pass for this cycle."
@@ -1170,30 +1071,21 @@ msgstr ""
 #: admissions/templates/admissions/cycle_questions.html:10
 #: admissions/templates/admissions/cycle_subject_splits.html:10
 #: admissions/templates/admissions/dashboard.html:49
-#, fuzzy
-#| msgid "Admission Cycle"
 msgid "Admission Cycles"
-msgstr "Цикл приёма"
+msgstr ""
 
-# --- Schools ---
 #: admissions/models.py:56
 #: admissions/templates/admissions/school_registry_form.html:34
-#, fuzzy
-#| msgid "School"
 msgid "School ID"
-msgstr "Школа"
+msgstr ""
 
 #: admissions/models.py:61
-#, fuzzy
-#| msgid "Primary School"
 msgid "External School"
-msgstr "Основная школа"
+msgstr ""
 
 #: admissions/models.py:62
-#, fuzzy
-#| msgid "Schools"
 msgid "External Schools"
-msgstr "Школы"
+msgstr ""
 
 #: admissions/models.py:74 admissions/models.py:310
 #: admissions/templates/admissions/candidate_form.html:43
@@ -1215,15 +1107,13 @@ msgstr ""
 #: admissions/templates/admissions/candidate_detail.html:39
 #: admissions/templates/admissions/candidate_form.html:62 schools/models.py:13
 msgid "Address"
-msgstr "Адрес"
+msgstr ""
 
 #: admissions/models.py:96
 #: admissions/templates/admissions/candidate_detail.html:47
 #: admissions/templates/admissions/candidate_form.html:66
-#, fuzzy
-#| msgid "Primary School"
 msgid "Previous School"
-msgstr "Основная школа"
+msgstr ""
 
 #: admissions/models.py:98
 #: admissions/templates/admissions/candidate_detail.html:43
@@ -1232,35 +1122,25 @@ msgid "Grade Applying For"
 msgstr ""
 
 #: admissions/models.py:114
-#, fuzzy
-#| msgid "Admission Cycle"
 msgid "Admission Candidate"
-msgstr "Цикл приёма"
+msgstr ""
 
 #: admissions/models.py:115
 #: admissions/templates/admissions/candidate_list.html:9
-#, fuzzy
-#| msgid "Admission Analytics"
 msgid "Admission Candidates"
-msgstr "Аналитика приёма"
+msgstr ""
 
 #: admissions/models.py:126 admissions/models.py:149
-#, fuzzy
-#| msgid "Only Offline"
 msgid "Offline"
-msgstr "Только оффлайн"
+msgstr ""
 
 #: admissions/models.py:137
-#, fuzzy
-#| msgid "Upload Sessions"
 msgid "Admission Upload Session"
-msgstr "Загруженные сессии"
+msgstr ""
 
 #: admissions/models.py:138
-#, fuzzy
-#| msgid "Upload Sessions"
 msgid "Admission Upload Sessions"
-msgstr "Загруженные сессии"
+msgstr ""
 
 #: admissions/models.py:163
 #: admissions/templates/admissions/candidate_form.html:29 schools/models.py:87
@@ -1268,14 +1148,14 @@ msgstr "Загруженные сессии"
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:40
 #: zipgrade/templates/zipgrade/generate_answersheets.html:160
 msgid "First Name"
-msgstr "Имя"
+msgstr ""
 
 #: admissions/models.py:164
 #: admissions/templates/admissions/candidate_form.html:25 schools/models.py:88
 #: schools/templates/schools/class_add_students.html:59
 #: zipgrade/templates/zipgrade/generate_answersheets.html:165
 msgid "Last Name"
-msgstr "Фамилия"
+msgstr ""
 
 #: admissions/models.py:169 admissions/models.py:234 admissions/models.py:264
 #: admissions/models.py:327
@@ -1284,7 +1164,7 @@ msgstr "Фамилия"
 #: admissions/templates/admissions/master_answer_setup.html:99
 #: admissions/templates/admissions/subject_rankings.html:42
 msgid "Variant"
-msgstr "Вариант"
+msgstr ""
 
 #: admissions/models.py:170
 msgid "Raw Answer String"
@@ -1294,8 +1174,7 @@ msgstr ""
 #: admissions/templates/admissions/analytics_dashboard.html:229
 #: admissions/templates/admissions/candidate_detail.html:98
 #: admissions/templates/admissions/online_top_students.html:44
-#: admissions/templates/admissions/round_results_student.html:270
-#: admissions/templates/admissions/round_results_student.html:303
+#: admissions/templates/admissions/round_results_student.html:242
 #: analytics/templates/analytics/student_advanced.html:158
 #: analytics/templates/analytics/students.html:322
 #: analytics/templates/analytics/students.html:378
@@ -1308,73 +1187,59 @@ msgstr ""
 #: zipgrade/templates/zipgrade/exam_detail.html:148
 #: zipgrade/templates/zipgrade/preview.html:90
 msgid "Score"
-msgstr "Балл"
+msgstr ""
 
 #: admissions/models.py:173 admissions/models.py:288 zipgrade/models.py:67
 #: zipgrade/templates/zipgrade/answer_key_form.html:16
 #: zipgrade/templates/zipgrade/subject_split_form.html:16
 msgid "Total Questions"
-msgstr "Всего вопросов"
+msgstr ""
 
 #: admissions/models.py:174 admissions/templates/admissions/analytics.html:118
 #: admissions/templates/admissions/candidate_detail.html:99
 #: admissions/templates/admissions/online_top_students.html:45
-#: admissions/templates/admissions/round_results_student.html:304
+#: admissions/templates/admissions/round_results_student.html:243
 #: analytics/templates/analytics/item_analysis.html:139 exams/models.py:331
 #: exams/templates/exams/teacher_exam_results.html:51 zipgrade/models.py:197
 #: zipgrade/models.py:253 zipgrade/templates/zipgrade/exam_detail.html:149
 #: zipgrade/templates/zipgrade/preview.html:91
 msgid "Percentage"
-msgstr "Процент"
+msgstr ""
 
 #: admissions/models.py:177 admissions/models.py:286 exams/models.py:169
 #: exams/templates/exams/attempt_answers.html:92
 #: exams/templates/exams/exam_questions.html:79
 #: exams/templates/exams/question_form.html:73
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Correct Answers"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: admissions/models.py:178 admissions/models.py:287
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Wrong Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: admissions/models.py:180 admissions/models.py:325 admissions/models.py:535
 #: admissions/templates/admissions/admission_registrations_list.html:100
 #: admissions/templates/admissions/candidate_detail.html:66
-#, fuzzy
-#| msgid "Phone"
 msgid "Phone 1"
-msgstr "Телефон"
+msgstr ""
 
 #: admissions/models.py:181 admissions/models.py:326 admissions/models.py:536
 #: admissions/templates/admissions/admission_registrations_list.html:101
 #: admissions/templates/admissions/candidate_detail.html:70
-#, fuzzy
-#| msgid "Phone"
 msgid "Phone 2"
-msgstr "Телефон"
+msgstr ""
 
 #: admissions/models.py:183
-#, fuzzy
-#| msgid "Passed"
 msgid "Is Passed"
-msgstr "Прошли"
+msgstr ""
 
 #: admissions/models.py:194
-#, fuzzy
-#| msgid "Admissions"
 msgid "Admission Result"
-msgstr "Приём"
+msgstr ""
 
 #: admissions/models.py:195
-#, fuzzy
-#| msgid "Admission Registrations"
 msgid "Admission Results"
-msgstr "Регистрации на приём"
+msgstr ""
 
 #: admissions/models.py:235
 #: admissions/templates/admissions/master_answer_setup.html:110
@@ -1386,17 +1251,15 @@ msgid "Enter the 70-character answer key string. E.g. АБВГАБВГ..."
 msgstr ""
 
 #: admissions/models.py:242
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Master Answer"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: admissions/models.py:243
 #: admissions/templates/admissions/analytics_dashboard.html:55
 #: admissions/templates/admissions/master_answer_setup.html:4
 #: admissions/templates/admissions/master_answer_setup.html:80
 msgid "Master Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: admissions/models.py:265 admissions/models.py:285
 #: admissions/templates/admissions/cycle_subject_splits.html:42
@@ -1404,13 +1267,11 @@ msgstr "Ключи ответов"
 #: admissions/templates/admissions/online_subject_analytics.html:66
 #: schools/models.py:42
 msgid "Subject Name"
-msgstr "Название предмета"
+msgstr ""
 
 #: admissions/models.py:266
-#, fuzzy
-#| msgid "Start Question"
 msgid "Start Question (1-indexed)"
-msgstr "Начальный вопрос"
+msgstr ""
 
 #: admissions/models.py:267
 msgid "End Question (1-indexed, inclusive)"
@@ -1418,7 +1279,7 @@ msgstr ""
 
 #: admissions/models.py:270 zipgrade/models.py:149 zipgrade/models.py:248
 msgid "Subject Split"
-msgstr "Разделение по предметам"
+msgstr ""
 
 #: admissions/models.py:271
 #: admissions/templates/admissions/cycle_questions.html:17
@@ -1427,54 +1288,44 @@ msgstr "Разделение по предметам"
 #: admissions/templates/admissions/cycle_subject_splits.html:16
 #: zipgrade/models.py:150 zipgrade/templates/zipgrade/exam_detail.html:79
 #: zipgrade/templates/zipgrade/preview.html:131
-#, fuzzy
-#| msgid "Subject Split"
 msgid "Subject Splits"
-msgstr "Разделение по предметам"
+msgstr ""
 
 #: admissions/models.py:291
-#, fuzzy
-#| msgid "Subject Code"
 msgid "Subject Score"
-msgstr "Код предмета"
+msgstr ""
 
 #: admissions/models.py:292
-#, fuzzy
-#| msgid "Subject Code"
 msgid "Subject Scores"
-msgstr "Код предмета"
+msgstr ""
 
 #: admissions/models.py:335
-#, fuzzy
-#| msgid "Create Account"
 msgid "User Account"
-msgstr "Создать аккаунт"
+msgstr ""
 
 #: admissions/models.py:341
 #: admissions/templates/admissions/admission_register.html:4
 #: admissions/templates/admissions/admission_register.html:67
 msgid "Admission Registration"
-msgstr "Регистрация на приём"
+msgstr ""
 
 #: admissions/models.py:342
 #: admissions/templates/admissions/admission_registrations_list.html:4
 #: admissions/templates/admissions/admission_registrations_list.html:46
 msgid "Admission Registrations"
-msgstr "Регистрации на приём"
+msgstr ""
 
 #: admissions/models.py:363
 #: admissions/templates/admissions/cycle_question_form.html:37
 #: exams/templates/exams/question_form.html:42
-#, fuzzy
-#| msgid "Question Type"
 msgid "Question Text"
-msgstr "Тип вопроса"
+msgstr ""
 
 #: admissions/models.py:367
 #: admissions/templates/admissions/cycle_question_form.html:42
 #: exams/models.py:143
 msgid "Question Image"
-msgstr "Изображение вопроса"
+msgstr ""
 
 #: admissions/models.py:370 admissions/models.py:396
 #: admissions/templates/admissions/cycle_question_form.html:52
@@ -1483,26 +1334,22 @@ msgstr "Изображение вопроса"
 #: venv/lib/python3.14/site-packages/django/forms/formsets.py:484
 #: venv/lib/python3.14/site-packages/django/forms/formsets.py:491
 msgid "Order"
-msgstr "Порядок"
+msgstr ""
 
 #: admissions/models.py:371
 #: admissions/templates/admissions/cycle_question_form.html:48
 #: exams/models.py:154 exams/templates/exams/exam_result.html:32
 #: exams/templates/exams/question_form.html:56
 msgid "Points"
-msgstr "Баллы"
+msgstr ""
 
 #: admissions/models.py:376
-#, fuzzy
-#| msgid "Admission Registration"
 msgid "Admission Question"
-msgstr "Регистрация на приём"
+msgstr ""
 
 #: admissions/models.py:377
-#, fuzzy
-#| msgid "Admission Registrations"
 msgid "Admission Questions"
-msgstr "Регистрации на приём"
+msgstr ""
 
 #: admissions/models.py:391 admissions/models.py:474
 #: admissions/templates/admissions/cycle_exam_take.html:228
@@ -1513,11 +1360,11 @@ msgstr "Регистрации на приём"
 #: exams/templates/exams/take_exam.html:324
 #: exams/templates/exams/take_exam.html:494
 msgid "Question"
-msgstr "Вопрос"
+msgstr ""
 
 #: admissions/models.py:394 exams/models.py:257
 msgid "Option Text"
-msgstr "Текст ответа"
+msgstr ""
 
 #: admissions/models.py:395 exams/models.py:258
 #: exams/templates/exams/attempt_answers.html:189
@@ -1525,19 +1372,15 @@ msgstr "Текст ответа"
 #: exams/templates/exams/exam_result.html:207
 #: exams/templates/exams/question_form.html:198
 msgid "Correct Answer"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: admissions/models.py:399
-#, fuzzy
-#| msgid "Question Option"
 msgid "Admission Question Option"
-msgstr "Вариант ответа"
+msgstr ""
 
 #: admissions/models.py:400
-#, fuzzy
-#| msgid "Admission Registrations"
 msgid "Admission Question Options"
-msgstr "Регистрации на приём"
+msgstr ""
 
 #: admissions/models.py:412
 #: admissions/templates/admissions/candidate_list.html:100 exams/models.py:276
@@ -1545,7 +1388,7 @@ msgstr "Регистрации на приём"
 #: exams/templates/exams/exam_results.html:95
 #: exams/templates/exams/student_exams.html:52
 msgid "In Progress"
-msgstr "В процессе"
+msgstr ""
 
 #: admissions/models.py:413
 #: admissions/templates/admissions/candidate_detail.html:108
@@ -1556,7 +1399,7 @@ msgstr "В процессе"
 #: exams/templates/exams/student_exams.html:43
 #: exams/templates/exams/teacher_exam_results.html:20
 msgid "Completed"
-msgstr "Завершено"
+msgstr ""
 
 #: admissions/models.py:414
 #: admissions/templates/admissions/candidate_list.html:98 exams/models.py:278
@@ -1564,54 +1407,44 @@ msgstr "Завершено"
 #: exams/templates/exams/exam_results.html:90
 #: exams/templates/exams/student_exams.html:50
 msgid "Locked"
-msgstr "Заблокировано"
+msgstr ""
 
 #: admissions/models.py:415 exams/models.py:279
 msgid "Timed Out"
-msgstr "Время вышло"
+msgstr ""
 
 #: admissions/models.py:431 exams/models.py:296
 msgid "Started At"
-msgstr "Начато в"
+msgstr ""
 
 #: admissions/models.py:439 exams/models.py:309
 msgid "Tab Switch Count"
-msgstr "Кол-во переключений вкладки"
+msgstr ""
 
 #: admissions/models.py:440 exams/models.py:312
 #: exams/templates/exams/unlock_confirm.html:37
 msgid "Lock Reason"
-msgstr "Причина блокировки"
+msgstr ""
 
 #: admissions/models.py:443
-#, fuzzy
-#| msgid "Exam Attempt"
 msgid "Online Exam Attempt"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: admissions/models.py:444
-#, fuzzy
-#| msgid "Exam Attempt"
 msgid "Online Exam Attempts"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: admissions/models.py:468 exams/models.py:383 exams/models.py:529
-#, fuzzy
-#| msgid "Exam Attempt"
 msgid "Attempt"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: admissions/models.py:481 exams/models.py:399
-#, fuzzy
-#| msgid "Shuffle Options"
 msgid "Selected Option"
-msgstr "Перемешать варианты"
+msgstr ""
 
 #: admissions/models.py:484 exams/models.py:426
-#, fuzzy
-#| msgid "Finished At"
 msgid "Answered At"
-msgstr "Завершено в"
+msgstr ""
 
 #: admissions/models.py:487
 msgid "Online Attempt Answer"
@@ -1627,7 +1460,7 @@ msgstr ""
 #: exams/templates/exams/exam_list.html:59
 #: zipgrade/templates/zipgrade/preview.html:47
 msgid "Title"
-msgstr "Название"
+msgstr ""
 
 #: admissions/models.py:499
 msgid "Excel File"
@@ -1638,34 +1471,28 @@ msgid "Published"
 msgstr ""
 
 #: admissions/models.py:506 zipgrade/models.py:59
-#, fuzzy
-#| msgid "Upload File"
 msgid "Uploaded By"
-msgstr "Загрузить файл"
+msgstr ""
 
 #: admissions/models.py:510
 msgid "Round Result Session"
 msgstr ""
 
 #: admissions/models.py:511
-#, fuzzy
-#| msgid "Upload Sessions"
 msgid "Round Result Sessions"
-msgstr "Загруженные сессии"
+msgstr ""
 
 #: admissions/models.py:521
-msgid "Өттү"
-msgstr "Прошли"
+msgid "кабыл алынган"
+msgstr ""
 
 #: admissions/models.py:522
-msgid "Өтпөдү"
-msgstr "Не прошли"
+msgid "кабыл алынбаган"
+msgstr ""
 
 #: admissions/models.py:529
-#, fuzzy
-#| msgid "Upload Sessions"
 msgid "Session"
-msgstr "Загруженные сессии"
+msgstr ""
 
 #: admissions/models.py:531
 #: admissions/templates/admissions/admission_registrations_list.html:95
@@ -1673,118 +1500,95 @@ msgstr "Загруженные сессии"
 #: schools/templates/schools/class_detail.html:63
 #: schools/templates/schools/master_student_list.html:51
 msgid "Full Name"
-msgstr "ФИО"
+msgstr ""
 
 #: admissions/models.py:533
 msgid "District"
 msgstr ""
 
 #: admissions/models.py:539
-#, fuzzy
-#| msgid "Score"
 msgid "Math Score"
-msgstr "Балл"
+msgstr ""
 
 #: admissions/models.py:540
 msgid "Math %"
 msgstr ""
 
 #: admissions/models.py:541
-#, fuzzy
-#| msgid "Average Score"
 msgid "Kyrgyz Score"
-msgstr "Средний балл"
+msgstr ""
 
 #: admissions/models.py:542
 msgid "Kyrgyz %"
 msgstr ""
 
 #: admissions/models.py:543
-#, fuzzy
-#| msgid "Highest Score"
 msgid "Biology Score"
-msgstr "Высший балл"
+msgstr ""
 
 #: admissions/models.py:544
 msgid "Biology %"
 msgstr ""
 
 #: admissions/models.py:545
-#, fuzzy
-#| msgid "Average Score"
 msgid "Geography Score"
-msgstr "Средний балл"
+msgstr ""
 
 #: admissions/models.py:546
 msgid "Geography %"
 msgstr ""
 
 #: admissions/models.py:547
-#, fuzzy
-#| msgid "Highest Score"
 msgid "History Score"
-msgstr "Высший балл"
+msgstr ""
 
 #: admissions/models.py:548
 msgid "History %"
 msgstr ""
 
 #: admissions/models.py:549
-#, fuzzy
-#| msgid "Highest Score"
 msgid "English Score"
-msgstr "Высший балл"
+msgstr ""
 
 #: admissions/models.py:550
 msgid "English %"
 msgstr ""
 
 #: admissions/models.py:551
-#, fuzzy
-#| msgid "Passing Score (%)"
 msgid "Russian Score"
-msgstr "Проходной балл (%)"
+msgstr ""
 
 #: admissions/models.py:552
 msgid "Russian %"
 msgstr ""
 
 #: admissions/models.py:555
-#: admissions/templates/admissions/round_results_student.html:267
-#, fuzzy
-#| msgid "Lowest Score"
 msgid "Total Score"
-msgstr "Низший балл"
+msgstr ""
 
 #: admissions/models.py:556
-#, fuzzy
-#| msgid "Total"
 msgid "Total %"
-msgstr "Всего"
+msgstr ""
 
 #: admissions/models.py:559
 #: admissions/templates/admissions/analytics_dashboard.html:231
 #: admissions/templates/admissions/cycle_exam_result.html:46
 #: admissions/templates/admissions/online_top_students.html:46
-#: admissions/templates/admissions/round_results_student.html:305
+#: admissions/templates/admissions/round_results_student.html:244
 msgid "Medal"
-msgstr "Медаль"
+msgstr ""
 
 #: admissions/models.py:568
-#, fuzzy
-#| msgid "Upload Results"
 msgid "Round Result"
-msgstr "Загрузить результаты"
+msgstr ""
 
 #: admissions/models.py:569
-#, fuzzy
-#| msgid "Upload Results"
 msgid "Round Results"
-msgstr "Загрузить результаты"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:68
 msgid "Register for the admission process"
-msgstr "Зарегистрируйтесь на приёмный процесс"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:72
 #: admissions/templates/admissions/cycle_exam_take.html:267
@@ -1794,41 +1598,40 @@ msgstr "Зарегистрируйтесь на приёмный процесс"
 #: schools/templates/schools/reset_password.html:11
 #: zipgrade/templates/zipgrade/generate_answersheets.html:15
 msgid "Back"
-msgstr "Назад"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:80
 msgid "Registration Successful!"
-msgstr "Регистрация прошла успешно!"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:81
 msgid "You have been registered for the admission process. Your details have been saved."
-msgstr "Вы были зарегистрированы на приём. Ваши данные сохранены."
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:92
 msgid "Register Another Student"
-msgstr "Зарегистрировать другого ученика"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:99
 msgid "No Active Admission Cycle"
-msgstr "Нет активного цикла приёма"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:100
 msgid "There is currently no active admission cycle. Please check back later."
-msgstr "На данный момент нет активного цикла приёма. Пожалуйста, проверьте позже."
+msgstr ""
 
-# --- Registration Form ---
 #: admissions/templates/admissions/admission_register.html:108
 msgid "Student Registration"
-msgstr "Регистрация ученика"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:109
 msgid "Fill in the details below to register for the admission exam"
-msgstr "Заполните данные ниже для регистрации на приёмный экзамен"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:115
 #: admissions/templates/admissions/analytics_upload.html:30
 msgid "Please fix the following errors:"
-msgstr "Пожалуйста, исправьте следующие ошибки:"
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:148
 msgid "Location & School"
@@ -1836,40 +1639,38 @@ msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:153
 msgid "Type the full name of your school."
-msgstr "Напишите полное название вашей школы."
+msgstr ""
 
 #: admissions/templates/admissions/admission_register.html:173
 msgid "Register for Admission"
-msgstr "Зарегистрироваться на приём"
+msgstr ""
 
 #: admissions/templates/admissions/admission_registrations_list.html:47
-#, fuzzy
-#| msgid "Register for the admission process"
 msgid "All students who registered for the admission process"
-msgstr "Зарегистрируйтесь на приёмный процесс"
+msgstr ""
 
 #: admissions/templates/admissions/admission_registrations_list.html:51
 msgid "Registration Form"
-msgstr "Форма регистрации"
+msgstr ""
 
 #: admissions/templates/admissions/admission_registrations_list.html:54
 #: admissions/templates/admissions/analytics_upload.html:15
 msgid "Back to Dashboard"
-msgstr "Назад к панели"
+msgstr ""
 
 #: admissions/templates/admissions/admission_registrations_list.html:64
 msgid "Total Registrations"
-msgstr "Всего регистраций"
+msgstr ""
 
 #: admissions/templates/admissions/admission_registrations_list.html:81
 #: admissions/templates/admissions/subject_rankings.html:33
 #: schools/templates/schools/class_list.html:49
 msgid "students"
-msgstr "учеников"
+msgstr ""
 
 #: admissions/templates/admissions/admission_registrations_list.html:102
 msgid "Registered"
-msgstr "Зарегистрирован"
+msgstr ""
 
 #: admissions/templates/admissions/admission_registrations_list.html:112
 msgid "M"
@@ -1881,37 +1682,29 @@ msgstr ""
 
 #: admissions/templates/admissions/admission_registrations_list.html:126
 msgid "No registrations yet."
-msgstr "Регистраций пока нет."
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:4
 #: admissions/templates/admissions/analytics.html:9
 #: templates/partials/sidebar.html:128
 msgid "Admission Analytics"
-msgstr "Аналитика приёма"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:17
-#, fuzzy
-#| msgid "Upload Results"
 msgid "Download Results (XLSX)"
-msgstr "Загрузить результаты"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:20
-#, fuzzy
-#| msgid "Status"
 msgid "Live Stats"
-msgstr "Статус"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:38
-#, fuzzy
-#| msgid "Top Schools"
 msgid "Top External Schools"
-msgstr "Топ школ"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:39
-#, fuzzy
-#| msgid "Pass Rate"
 msgid "By Pass Rate"
-msgstr "Проходимость"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:47
 #: admissions/templates/admissions/analytics_dashboard.html:181
@@ -1919,7 +1712,7 @@ msgstr "Проходимость"
 #: admissions/templates/admissions/subject_rankings.html:45
 #: exams/templates/exams/exam_results.html:47
 msgid "Total"
-msgstr "Всего"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:48
 #: admissions/templates/admissions/analytics.html:147
@@ -1927,12 +1720,10 @@ msgstr "Всего"
 #: admissions/templates/admissions/analytics_dashboard.html:269
 #: admissions/templates/admissions/online_analytics_dashboard.html:73
 #: admissions/templates/admissions/online_top_students.html:74
-#: admissions/templates/admissions/round_results_student.html:248
-#: admissions/templates/admissions/round_results_student.html:334
 #: analytics/templates/analytics/students.html:184
 #: analytics/templates/analytics/students.html:339
 msgid "Passed"
-msgstr "Прошли"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:49
 #: admissions/templates/admissions/online_school_analytics.html:43
@@ -1941,7 +1732,7 @@ msgstr "Прошли"
 #: analytics/templates/analytics/zipgrade.html:112
 #: analytics/templates/analytics/zipgrade.html:192
 msgid "Pass Rate"
-msgstr "Проходимость"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:74
 msgid "No school data available yet."
@@ -1949,24 +1740,17 @@ msgstr ""
 
 #: admissions/templates/admissions/analytics.html:84
 #: admissions/templates/admissions/cycle_exam_result.html:37
-#, fuzzy
-#| msgid "Passing Threshold"
 msgid "Pass Threshold"
-msgstr "Проходной порог"
+msgstr ""
 
-# --- Users / Accounts ---
 #: admissions/templates/admissions/analytics.html:94
-#, fuzzy
-#| msgid "Email is required"
 msgid "Minimum score required"
-msgstr "Email обязателен"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:97
 #: admissions/templates/admissions/dashboard.html:29
-#, fuzzy
-#| msgid "Total Students"
 msgid "Total Candidates"
-msgstr "Всего студентов"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:106
 msgid "Top Performing Candidates"
@@ -1983,14 +1767,13 @@ msgstr ""
 #: admissions/templates/admissions/school_subject_analytics.html:71
 #: admissions/templates/admissions/subject_rankings.html:39
 msgid "Rank"
-msgstr "Место"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:115
 #: admissions/templates/admissions/candidate_list.html:50
-#: admissions/templates/admissions/round_results_student.html:336
 #: admissions/templates/admissions/student_admission.html:19
 msgid "Candidate"
-msgstr "Кандидат"
+msgstr ""
 
 #: admissions/templates/admissions/analytics.html:149
 msgid "Not Qualified"
@@ -2005,94 +1788,88 @@ msgstr ""
 #: admissions/templates/admissions/dashboard.html:4
 #: admissions/templates/admissions/dashboard.html:9
 msgid "Admission Dashboard"
-msgstr "Панель приёмной комиссии"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:51
 msgid "See overall statistics and rankings for this admission session"
-msgstr "Общая статистика и рейтинги для этого приёма"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:58
 #: admissions/templates/admissions/subject_rankings.html:4
 #: admissions/views.py:656
 msgid "Subject Rankings"
-msgstr "Рейтинг по предметам"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:61
 #: admissions/views.py:633 analytics/templates/analytics/schools.html:4
 #: templates/partials/sidebar.html:234
 msgid "School Analytics"
-msgstr "Аналитика по Школе"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:65
 msgid "Upload Results"
-msgstr "Загрузить результаты"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:68
-#, fuzzy
-#| msgid "Analytics"
 msgid "Online Analytics"
-msgstr "Аналитика"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:73
-#, fuzzy
-#| msgid "Export Excel"
 msgid "Export Online"
-msgstr "Экспорт в Excel"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:77
-#, fuzzy
-#| msgid "Only Offline"
 msgid "Export Offline"
-msgstr "Только оффлайн"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:88
 #: admissions/templates/admissions/subject_rankings.html:32
 #: analytics/templates/analytics/zipgrade.html:221
 msgid "Top Students"
-msgstr "Топ учеников"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:89
 msgid "Top Schools"
-msgstr "Топ школ"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:90
 #: admissions/templates/admissions/analytics_dashboard.html:338
 msgid "Upload Sessions"
-msgstr "Загруженные сессии"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:101
 msgid "All Regions"
-msgstr "Все регионы"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:108
 #: admissions/templates/admissions/analytics_dashboard.html:347
 #: admissions/templates/admissions/candidate_detail.html:96
 #: exams/templates/exams/question_form.html:51
 msgid "Type"
-msgstr "Тип"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:110
 msgid "Combined"
-msgstr "Комбинированный"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:111
 msgid "Only Online"
-msgstr "Только онлайн"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:112
 msgid "Only Offline"
-msgstr "Только оффлайн"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:116
 msgid "Passing Threshold"
-msgstr "Проходной порог"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:120
 #: analytics/templates/analytics/class_heatmap.html:54
 #: analytics/templates/analytics/student_advanced.html:48
 #: zipgrade/templates/zipgrade/exam_detail.html:134
 msgid "Apply"
-msgstr "Применить"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:124
 #: analytics/templates/analytics/classes.html:106
@@ -2100,7 +1877,7 @@ msgstr "Применить"
 #: analytics/templates/analytics/zipgrade.html:104
 #: exams/templates/exams/teacher_exam_results.html:24
 msgid "Average Score"
-msgstr "Средний балл"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:135
 #: admissions/templates/admissions/analytics_dashboard.html:140
@@ -2110,13 +1887,11 @@ msgstr "Средний балл"
 #: admissions/templates/admissions/online_top_students.html:63
 #: analytics/templates/analytics/rankings.html:63
 msgid "Gold"
-msgstr "Золото"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:137
-#, fuzzy
-#| msgid "Score"
 msgid "Score 75+"
-msgstr "Балл"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:149
 #: admissions/templates/admissions/analytics_dashboard.html:154
@@ -2126,13 +1901,11 @@ msgstr "Балл"
 #: admissions/templates/admissions/online_top_students.html:65
 #: analytics/templates/analytics/rankings.html:68
 msgid "Silver"
-msgstr "Серебро"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:151
-#, fuzzy
-#| msgid "Score"
 msgid "Score 60-74"
-msgstr "Балл"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:163
 #: admissions/templates/admissions/analytics_dashboard.html:168
@@ -2142,24 +1915,22 @@ msgstr "Балл"
 #: admissions/templates/admissions/online_top_students.html:67
 #: analytics/templates/analytics/rankings.html:73
 msgid "Bronze"
-msgstr "Бронза"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:165
-#, fuzzy
-#| msgid "Score"
 msgid "Score 50-59"
-msgstr "Балл"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:177
 #: admissions/templates/admissions/analytics_dashboard.html:271
 #: admissions/templates/admissions/online_top_students.html:76
 #: analytics/templates/analytics/students.html:341
 msgid "Failed"
-msgstr "Не прошли"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:179
 msgid "Rate"
-msgstr "Процент"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:189
 #: admissions/templates/admissions/online_analytics_dashboard.html:81
@@ -2167,51 +1938,41 @@ msgid "Medal Distribution"
 msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:208
-#, fuzzy
-#| msgid "Medal"
 msgid "No Medal"
-msgstr "Медаль"
+msgstr ""
 
-# --- Dashboard Analytics ---
 #: admissions/templates/admissions/analytics_dashboard.html:219
 msgid "Top Scoring Students"
-msgstr "Лучшие ученики по баллам"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:220
 msgid "Ranked list of best performing students"
-msgstr "Рейтинг лучших учеников"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:230
-#, fuzzy, python-format
-#| msgid "Incorrect %"
+#, python-format
 msgid "Incorrect %%"
-msgstr "% ошибок"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:277
 msgid "No candidates found."
 msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:289
-#, fuzzy
-#| msgid "Top Schools"
 msgid "Top Performing Schools"
-msgstr "Топ школ"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:290
 msgid "Schools ranked by medals quality"
 msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:299
-#, fuzzy
-#| msgid "Medal"
 msgid "Medals"
-msgstr "Медаль"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:300
-#, fuzzy
-#| msgid "Description"
 msgid "Distribution"
-msgstr "Описание"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:301
 #: admissions/templates/admissions/online_subject_analytics.html:45
@@ -2224,10 +1985,8 @@ msgstr "Описание"
 #: analytics/templates/analytics/zipgrade.html:229
 #: analytics/templates/analytics/zipgrade.html:286
 #: zipgrade/templates/zipgrade/results.html:80
-#, fuzzy
-#| msgid "Average Score"
 msgid "Avg Score"
-msgstr "Средний балл"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:326
 msgid "No school data available."
@@ -2240,10 +1999,8 @@ msgstr ""
 #: admissions/templates/admissions/analytics_dashboard.html:348
 #: venv/lib/python3.14/site-packages/django/db/models/fields/files.py:244
 #: zipgrade/templates/zipgrade/preview.html:55
-#, fuzzy
-#| msgid "XLSX File"
 msgid "File"
-msgstr "XLSX файл"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:349
 #: admissions/templates/admissions/candidate_detail.html:100
@@ -2256,36 +2013,31 @@ msgstr "XLSX файл"
 #: schools/templates/schools/master_student_list.html:54
 #: zipgrade/templates/zipgrade/exam_detail.html:150
 msgid "Actions"
-msgstr "Действия"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_dashboard.html:368
-#, fuzzy
-#| msgid "Upload Sessions"
 msgid "No upload sessions found."
-msgstr "Загруженные сессии"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:4
-#, fuzzy
-#| msgid "Upload Results"
 msgid "Upload Admission Results"
-msgstr "Загрузить результаты"
+msgstr ""
 
-# --- Upload Form ---
 #: admissions/templates/admissions/analytics_upload.html:10
 msgid "Analyze Admission Data"
-msgstr "Анализ данных приёма"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:11
 msgid "Upload your XLSX result files to generate rankings and analytics"
-msgstr "Загрузите XLSX файлы с результатами для создания рейтингов и аналитики"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:23
 msgid "Upload New File"
-msgstr "Загрузить новый файл"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:25
 msgid "The system will automatically process the uploaded XLSX file, identify schools, calculate scores, and assign medals based on the active cycle's passing score."
-msgstr "Система автоматически обработает загруженный XLSX файл, определит школы, подсчитает баллы и назначит медали на основе проходного балла активного цикла."
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:51
 msgid "Select which admission cycle these results belong to."
@@ -2293,17 +2045,15 @@ msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:55
 msgid "Target Region"
-msgstr "Регион"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:68
 msgid "Type the region name or select from suggestions."
-msgstr "Введите название региона или выберите из подсказок."
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:78
-#, fuzzy
-#| msgid "XLSX File"
 msgid "XLSX Result File"
-msgstr "XLSX файл"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:81
 msgid "Ensure your file follows the standard result format (Names, School ID, Score)."
@@ -2311,15 +2061,15 @@ msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:86
 msgid "Process & Analyze"
-msgstr "Обработать и проанализировать"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:94
 msgid "Instructions & Requirements"
-msgstr "Инструкции и требования"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:99
 msgid "Standard Format"
-msgstr "Стандартный формат"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:100
 msgid "The XLSX should have columns for Student Name, School ID/Name, and Score."
@@ -2327,7 +2077,7 @@ msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:106
 msgid "Duplicate Protection"
-msgstr "Защита от дубликатов"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:107
 msgid "Uploading the same session again will append results. Use the 'Delete' action on the dashboard if you need to re-upload."
@@ -2335,7 +2085,7 @@ msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:113
 msgid "Automated Registry"
-msgstr "Автоматический реестр"
+msgstr ""
 
 #: admissions/templates/admissions/analytics_upload.html:114
 msgid "New schools found in the file will be added to the registry automatically."
@@ -2350,10 +2100,8 @@ msgid "Download Sample XLSX"
 msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:4
-#, fuzzy
-#| msgid "View Details"
 msgid "Candidate Details"
-msgstr "Подробнее"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:10
 #: admissions/templates/admissions/dashboard.html:81
@@ -2362,10 +2110,8 @@ msgid "Candidates"
 msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:12 exams/models.py:539
-#, fuzzy
-#| msgid "View Details"
 msgid "Details"
-msgstr "Подробнее"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:23
 #: admissions/templates/admissions/candidate_form.html:22
@@ -2379,22 +2125,16 @@ msgid "N/A"
 msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:56
-#, fuzzy
-#| msgid "Total Registrations"
 msgid "Contact & Registration"
-msgstr "Всего регистраций"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:81
-#, fuzzy
-#| msgid "No registrations yet."
 msgid "No registration data found."
-msgstr "Регистраций пока нет."
+msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:88
-#, fuzzy
-#| msgid "Exam Attempt"
 msgid "Exam Attempts & Results"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:95
 #: admissions/templates/admissions/candidate_list.html:52
@@ -2402,17 +2142,13 @@ msgid "Cycle"
 msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:118
-#, fuzzy
-#| msgid "Master Answers"
 msgid "View Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:134
 #: exams/templates/exams/teacher_exam_list.html:55
-#, fuzzy
-#| msgid "View All Results"
 msgid "View Results"
-msgstr "Все результаты"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_detail.html:141
 msgid "No exam attempts recorded."
@@ -2433,26 +2169,20 @@ msgid "New Candidate"
 msgstr ""
 
 #: admissions/templates/admissions/candidate_form.html:11
-#, fuzzy
-#| msgid "Top Schools"
 msgid "For School"
-msgstr "Топ школ"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_form.html:33
-#, fuzzy
-#| msgid "Full Name"
 msgid "Middle Name"
-msgstr "ФИО"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_form.html:51
 msgid "Contact & Background"
 msgstr ""
 
 #: admissions/templates/admissions/candidate_form.html:78
-#, fuzzy
-#| msgid "Register as Student"
 msgid "Register Candidate"
-msgstr "Регистрация студента"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_list.html:4
 msgid "Candidate List"
@@ -2464,7 +2194,7 @@ msgstr ""
 
 #: admissions/templates/admissions/candidate_list.html:16
 msgid "Export Results"
-msgstr "Экспорт результатов"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_list.html:32
 msgid "All Cycles"
@@ -2476,20 +2206,16 @@ msgstr ""
 #: schools/models.py:158 schools/templates/schools/class_form.html:31
 #: schools/templates/schools/master_student_list.html:52
 msgid "Grade"
-msgstr "Класс"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_list.html:54
-#, fuzzy
-#| msgid "Score"
 msgid "Exam Score"
-msgstr "Балл"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_list.html:103
 #: exams/templates/exams/student_exams.html:54
-#, fuzzy
-#| msgid "Started At"
 msgid "Not Started"
-msgstr "Начато в"
+msgstr ""
 
 #: admissions/templates/admissions/candidate_list.html:108
 msgid "Click name to manage"
@@ -2501,27 +2227,21 @@ msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_result.html:4
 #: exams/templates/exams/exam_results.html:4 zipgrade/models.py:214
-#, fuzzy
-#| msgid "Exam Result"
 msgid "Exam Results"
-msgstr "Результат экзамена"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_result.html:9
 #: exams/templates/exams/exam_result.html:4 zipgrade/models.py:213
 msgid "Exam Result"
-msgstr "Результат экзамена"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_result.html:21
-#, fuzzy
-#| msgid "Average Score"
 msgid "Overall Score"
-msgstr "Средний балл"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_result.html:27
-#, fuzzy
-#| msgid "Points"
 msgid "Points Earned"
-msgstr "Баллы"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_result.html:32
 #: exams/templates/exams/attempt_answers.html:35
@@ -2536,61 +2256,43 @@ msgstr ""
 #: admissions/templates/admissions/cycle_exam_result.html:60
 #: exams/templates/exams/exam_result.html:52
 #: exams/templates/exams/exam_results.html:59
-#, fuzzy
-#| msgid "Started At"
 msgid "Started"
-msgstr "Начато в"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_result.html:65
 #: exams/templates/exams/exam_result.html:53
 #: exams/templates/exams/exam_results.html:60
-#, fuzzy
-#| msgid "Finished At"
 msgid "Finished"
-msgstr "Завершено в"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_result.html:73
-#, fuzzy
-#| msgid "Answers (JSON)"
 msgid "Answers Summary"
-msgstr "Ответы (JSON)"
+msgstr ""
 
-# --- Admission Module ---
 #: admissions/templates/admissions/cycle_exam_result.html:91
-#, fuzzy
-#| msgid "Admission"
 msgid "Back to Admission"
-msgstr "Приёмная комиссия"
+msgstr ""
 
-# --- Admission Module ---
 #: admissions/templates/admissions/cycle_exam_take.html:4
 #: admissions/templates/admissions/student_admission.html:33
-#, fuzzy
-#| msgid "Admission"
 msgid "Admission Exam"
-msgstr "Приёмная комиссия"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_take.html:241
-#, fuzzy
-#| msgid "Question Image"
 msgid "Question image"
-msgstr "Изображение вопроса"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_take.html:280
-#, fuzzy
-#| msgid "Finished At"
 msgid "Finish"
-msgstr "Завершено в"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_take.html:341
 msgid "Saving..."
 msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_take.html:358
-#, fuzzy
-#| msgid "Save"
 msgid "Saved"
-msgstr "Сохранить"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_exam_take.html:366
 msgid "Error saving"
@@ -2598,50 +2300,39 @@ msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:4
 #: admissions/templates/admissions/cycle_form.html:9
-#, fuzzy
-#| msgid "Admission Cycle"
 msgid "Edit Admission Cycle"
-msgstr "Цикл приёма"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:4
 #: admissions/templates/admissions/cycle_form.html:9
-#, fuzzy
-#| msgid "Admission Cycle"
 msgid "Create Admission Cycle"
-msgstr "Цикл приёма"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:35
-#, fuzzy
-#| msgid "Duration (minutes)"
 msgid "Exam Timer (minutes)"
-msgstr "Длительность (мин)"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:41
 #: exams/templates/exams/exam_form.html:62
-#, fuzzy, python-format
-#| msgid "Passing Score (%)"
+#, python-format
 msgid "Passing Score (%%)"
-msgstr "Проходной балл (%)"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:50
 msgid "Students will be warned if they switch tabs."
 msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:55
-#, fuzzy
-#| msgid "Max Tab Switches Before Lock"
 msgid "Max Tab Switches"
-msgstr "Макс. переключений вкладок до блокировки"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:57
 msgid "Exam locks automatically after this many switches."
 msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:63
-#, fuzzy
-#| msgid "Active"
 msgid "Active Cycle"
-msgstr "Активен"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:64
 msgid "Visible to candidates."
@@ -2649,16 +2340,12 @@ msgstr ""
 
 #: admissions/templates/admissions/cycle_form.html:71
 #: admissions/templates/admissions/cycle_list.html:14
-#, fuzzy
-#| msgid "Created By"
 msgid "Create Cycle"
-msgstr "Создал(а)"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_list.html:27
-#, fuzzy
-#| msgid "Passing Threshold"
 msgid "Threshold"
-msgstr "Проходной порог"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_list.html:53
 #: admissions/templates/admissions/cycle_list.html:54
@@ -2672,10 +2359,8 @@ msgstr "Проходной порог"
 #: exams/templates/exams/exam_questions.html:35
 #: zipgrade/templates/zipgrade/exam_detail.html:52
 #: zipgrade/templates/zipgrade/preview.html:22
-#, fuzzy
-#| msgid "Question"
 msgid "Questions"
-msgstr "Вопрос"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_list.html:56
 #: admissions/templates/admissions/cycle_list.html:57
@@ -2688,7 +2373,7 @@ msgstr ""
 #: analytics/templates/analytics/schools.html:9
 #: templates/partials/sidebar.html:224
 msgid "Analytics"
-msgstr "Аналитика"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_list.html:71
 msgid "No admission cycles created yet."
@@ -2698,10 +2383,8 @@ msgstr ""
 #: admissions/templates/admissions/cycle_question_delete.html:9
 #: exams/templates/exams/question_confirm_delete.html:4
 #: exams/templates/exams/question_confirm_delete.html:16
-#, fuzzy
-#| msgid "Question"
 msgid "Delete Question"
-msgstr "Вопрос"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_question_delete.html:14
 msgid "Are you sure you want to delete this question?"
@@ -2712,20 +2395,16 @@ msgstr ""
 #: schools/templates/schools/subject_confirm_delete.html:29
 #: zipgrade/templates/zipgrade/exam_confirm_delete.html:32
 #: zipgrade/templates/zipgrade/subject_split_confirm_delete.html:32
-#, fuzzy
-#| msgid "Delete"
 msgid "Yes, Delete"
-msgstr "Удалить"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_question_form.html:4
 #: admissions/templates/admissions/cycle_question_form.html:14
 #: admissions/templates/admissions/cycle_question_form.html:16
 #: exams/templates/exams/question_form.html:4
 #: exams/templates/exams/question_form.html:17
-#, fuzzy
-#| msgid "End Question"
 msgid "Edit Question"
-msgstr "Конечный вопрос"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_question_form.html:4
 #: admissions/templates/admissions/cycle_question_form.html:14
@@ -2736,23 +2415,17 @@ msgstr "Конечный вопрос"
 #: exams/templates/exams/question_form.html:4
 #: exams/templates/exams/question_form.html:17
 #: exams/templates/exams/question_form.html:211
-#, fuzzy
-#| msgid "End Question"
 msgid "Add Question"
-msgstr "Конечный вопрос"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_question_form.html:42
-#, fuzzy
-#| msgid "Optional"
 msgid "optional"
-msgstr "Необязательно"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_question_form.html:60
 #: exams/templates/exams/question_form.html:87
-#, fuzzy
-#| msgid "Shuffle Options"
 msgid "Answer Options"
-msgstr "Перемешать варианты"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_question_form.html:61
 msgid "Add at least 2 options. Check the box for the correct answer."
@@ -2761,18 +2434,14 @@ msgstr ""
 #: admissions/templates/admissions/cycle_question_form.html:74
 #: admissions/templates/admissions/subject_rankings.html:43 exams/models.py:417
 #: exams/templates/exams/question_form.html:99
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Correct"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_questions.html:21
 #: exams/templates/exams/teacher_exam_list.html:51
 #: zipgrade/templates/zipgrade/results.html:92
-#, fuzzy
-#| msgid "Question"
 msgid "questions"
-msgstr "Вопрос"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_questions.html:21
 #: exams/templates/exams/exam_list.html:73
@@ -2782,10 +2451,8 @@ msgid "min"
 msgstr ""
 
 #: admissions/templates/admissions/cycle_questions.html:21
-#, fuzzy
-#| msgid "Passed"
 msgid "Pass"
-msgstr "Прошли"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_questions.html:58
 msgid "No questions yet. Click 'Add Question' to start."
@@ -2796,10 +2463,8 @@ msgid "Define which question ranges belong to which subject. Example: Q1-20 → 
 msgstr ""
 
 #: admissions/templates/admissions/cycle_subject_splits.html:18
-#, fuzzy
-#| msgid "Total Questions"
 msgid "Total questions"
-msgstr "Всего вопросов"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_subject_splits.html:46
 #: admissions/templates/admissions/cycle_subject_splits.html:72
@@ -2814,24 +2479,18 @@ msgid "To Q#"
 msgstr ""
 
 #: admissions/templates/admissions/cycle_subject_splits.html:62
-#, fuzzy
-#| msgid "Subject Split"
 msgid "Add Another Subject Split"
-msgstr "Разделение по предметам"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_subject_splits.html:88
-#, fuzzy
-#| msgid "Subject Split"
 msgid "Save Subject Splits"
-msgstr "Разделение по предметам"
+msgstr ""
 
 #: admissions/templates/admissions/cycle_subject_splits.html:89
 #: exams/templates/exams/question_confirm_delete.html:14
 #: exams/templates/exams/question_form.html:15
-#, fuzzy
-#| msgid "Start Question"
 msgid "Back to Questions"
-msgstr "Начальный вопрос"
+msgstr ""
 
 #: admissions/templates/admissions/dashboard.html:10
 msgid "Manage enrollment cycles and candidate registration."
@@ -2842,32 +2501,24 @@ msgid "New Cycle"
 msgstr ""
 
 #: admissions/templates/admissions/dashboard.html:40
-#, fuzzy
-#| msgid "No Active Admission Cycle"
 msgid "Active Cycles"
-msgstr "Нет активного цикла приёма"
+msgstr ""
 
 #: admissions/templates/admissions/dashboard.html:53
 #: admissions/templates/admissions/school_registry.html:4
 #: admissions/templates/admissions/school_registry.html:9
 #: admissions/templates/admissions/school_registry_form.html:12
 #: templates/partials/sidebar.html:117
-#, fuzzy
-#| msgid "Schools"
 msgid "School Registry"
-msgstr "Школы"
+msgstr ""
 
 #: admissions/templates/admissions/dashboard.html:59
-#, fuzzy
-#| msgid "View All Results"
 msgid "View All"
-msgstr "Все результаты"
+msgstr ""
 
 #: admissions/templates/admissions/dashboard.html:88
-#, fuzzy
-#| msgid "Admission Cycle"
 msgid "No admission cycles found."
-msgstr "Цикл приёма"
+msgstr ""
 
 #: admissions/templates/admissions/dashboard.html:89
 msgid "Create your first cycle to start accepting candidates."
@@ -2878,10 +2529,8 @@ msgid "This will recalculate ALL results using current master answers. Continue?
 msgstr ""
 
 #: admissions/templates/admissions/master_answer_setup.html:86
-#, fuzzy
-#| msgid "View All Results"
 msgid "Recalculate All Results"
-msgstr "Все результаты"
+msgstr ""
 
 #: admissions/templates/admissions/master_answer_setup.html:102
 msgid "answers defined"
@@ -2900,27 +2549,21 @@ msgid "Count"
 msgstr ""
 
 #: admissions/templates/admissions/master_answer_setup.html:149
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Save All Master Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:4
 #: admissions/templates/admissions/online_analytics_dashboard.html:29
-#, fuzzy
-#| msgid "Admission Analytics"
 msgid "Online Admission Analytics"
-msgstr "Аналитика приёма"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:30
 msgid "Dedicated results and scoring for online registered students"
 msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:34
-#, fuzzy
-#| msgid "Export Excel"
 msgid "Export Full Excel"
-msgstr "Экспорт в Excel"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:41
 #: admissions/templates/admissions/online_school_analytics.html:27
@@ -2933,19 +2576,15 @@ msgstr ""
 #: admissions/templates/admissions/online_school_analytics.html:28
 #: admissions/templates/admissions/online_subject_analytics.html:26
 #: admissions/templates/admissions/online_top_students.html:27
-#, fuzzy
-#| msgid "Student Analytics"
 msgid "Subject Analysis"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:43
 #: admissions/templates/admissions/online_school_analytics.html:29
 #: admissions/templates/admissions/online_subject_analytics.html:27
 #: admissions/templates/admissions/online_top_students.html:28
-#, fuzzy
-#| msgid "School Analytics"
 msgid "School Analysis"
-msgstr "Аналитика по Школе"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:44
 #: admissions/templates/admissions/online_school_analytics.html:30
@@ -2956,22 +2595,17 @@ msgid "Top Performers"
 msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:50
-#, fuzzy
-#| msgid "Medal"
 msgid "Gold Medals"
-msgstr "Медаль"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:52
-#, fuzzy, python-format
-#| msgid "Score"
+#, python-format
 msgid "Score 75%%+"
-msgstr "Балл"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:57
-#, fuzzy
-#| msgid "Silver"
 msgid "Silver Medals"
-msgstr "Серебро"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:59
 #, python-format
@@ -2979,10 +2613,8 @@ msgid "Score 60-74%%"
 msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:64
-#, fuzzy
-#| msgid "Bronze"
 msgid "Bronze Medals"
-msgstr "Бронза"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:66
 #, python-format
@@ -2990,10 +2622,8 @@ msgid "Score 50-59%%"
 msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:71
-#, fuzzy
-#| msgid "Only Online"
 msgid "Total Online"
-msgstr "Только онлайн"
+msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:73
 #: analytics/templates/analytics/zipgrade.html:155
@@ -3005,27 +2635,21 @@ msgid "View Online Candidate List"
 msgstr ""
 
 #: admissions/templates/admissions/online_analytics_dashboard.html:95
-#, fuzzy
-#| msgid "Total Registrations"
 msgid "View Raw Registrations"
-msgstr "Всего регистраций"
+msgstr ""
 
 #: admissions/templates/admissions/online_school_analytics.html:4
 #: admissions/templates/admissions/online_school_analytics.html:22
-#, fuzzy
-#| msgid "School Analytics"
 msgid "Online School Analytics"
-msgstr "Аналитика по Школе"
+msgstr ""
 
 #: admissions/templates/admissions/online_school_analytics.html:23
 msgid "Performance comparison across schools for online registered applicants"
 msgstr ""
 
 #: admissions/templates/admissions/online_school_analytics.html:35
-#, fuzzy
-#| msgid "Primary School"
 msgid "Performance by School"
-msgstr "Основная школа"
+msgstr ""
 
 #: admissions/templates/admissions/online_school_analytics.html:42
 #: admissions/templates/admissions/online_subject_analytics.html:67
@@ -3038,10 +2662,8 @@ msgstr ""
 
 #: admissions/templates/admissions/online_school_analytics.html:45
 #: admissions/templates/admissions/online_subject_analytics.html:70
-#, fuzzy
-#| msgid "Percentage"
 msgid "Avg Percentage"
-msgstr "Процент"
+msgstr ""
 
 #: admissions/templates/admissions/online_school_analytics.html:68
 msgid "No school data available for online applicants."
@@ -3049,10 +2671,8 @@ msgstr ""
 
 #: admissions/templates/admissions/online_subject_analytics.html:4
 #: admissions/templates/admissions/online_subject_analytics.html:20
-#, fuzzy
-#| msgid "Student Analytics"
 msgid "Online Subject Analytics"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: admissions/templates/admissions/online_subject_analytics.html:21
 msgid "Average scores and performance breakdown per subject split"
@@ -3061,7 +2681,7 @@ msgstr ""
 #: admissions/templates/admissions/online_subject_analytics.html:44
 #: schools/templates/schools/school_detail.html:39 zipgrade/models.py:68
 msgid "Total Students"
-msgstr "Всего студентов"
+msgstr ""
 
 #: admissions/templates/admissions/online_subject_analytics.html:53
 msgid "No subject splits defined for this cycle."
@@ -3089,46 +2709,35 @@ msgid "Ranking of the highest scoring online applicants"
 msgstr ""
 
 #: admissions/templates/admissions/online_top_students.html:34
-#, fuzzy
-#| msgid "Top Students"
 msgid "Top 100 Students"
-msgstr "Топ учеников"
+msgstr ""
 
 #: admissions/templates/admissions/online_top_students.html:35
 msgid "Showing top performers by percentage"
 msgstr ""
 
 #: admissions/templates/admissions/online_top_students.html:42
-#, fuzzy
-#| msgid "Subject Name"
 msgid "Student Name"
-msgstr "Название предмета"
+msgstr ""
 
-# --- Analytics / UI Specific ---
 #: admissions/templates/admissions/online_top_students.html:82
-#: admissions/templates/admissions/round_results_student.html:341
+#: admissions/templates/admissions/round_results_student.html:280
 #: exams/templates/exams/teacher_exam_results.html:90
 #: zipgrade/templates/zipgrade/exam_detail.html:196
-#, fuzzy
-#| msgid "No school found"
 msgid "No results found."
-msgstr "Школа не найдена"
+msgstr ""
 
 #: admissions/templates/admissions/registration_by_school.html:10
 msgid "Candidates for cycle"
 msgstr ""
 
 #: admissions/templates/admissions/registration_by_school.html:28
-#, fuzzy
-#| msgid "Last Name"
 msgid "Candidate Name"
-msgstr "Фамилия"
+msgstr ""
 
 #: admissions/templates/admissions/registration_by_school.html:31
-#, fuzzy
-#| msgid "Primary School"
 msgid "Prev. School"
-msgstr "Основная школа"
+msgstr ""
 
 #: admissions/templates/admissions/registration_by_school.html:55
 #: exams/templates/exams/exam_confirm_delete.html:30
@@ -3142,112 +2751,78 @@ msgstr ""
 
 #: admissions/templates/admissions/round_results_student.html:4
 msgid "Round 1 Results"
-msgstr "Итоги 1-го тура"
+msgstr ""
 
-#: admissions/templates/admissions/round_results_student.html:218
+#: admissions/templates/admissions/round_results_student.html:175
 msgid "Results have not been published yet"
-msgstr "Результаты ещё не опубликованы"
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:176
+msgid "Results will be shown here when published."
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:183
+msgid "Admission exam results"
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:190
+msgid "Total participants"
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:194
+#: admissions/templates/admissions/round_results_student.html:225
+msgid "Accepted"
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:198
+#: admissions/templates/admissions/round_results_student.html:226
+msgid "Not accepted"
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:204
+msgid "Top Students by Subject"
+msgstr ""
 
 #: admissions/templates/admissions/round_results_student.html:219
-msgid "Results will be shown here when published."
-msgstr "Результаты будут показаны здесь после публикации."
-
-#: admissions/templates/admissions/round_results_student.html:227
-msgid "Admission exam results"
-msgstr "Результаты вступительного экзамена"
-
-#: admissions/templates/admissions/round_results_student.html:230
-msgid "Dear students and parents!"
-msgstr "Уважаемые ученики и родители!"
-
-#: admissions/templates/admissions/round_results_student.html:231
-msgid "The results of Round 1 of the Aalam Olympiad exam have been published."
-msgstr "Результаты 1-го тура экзамена «Аалам Олимпиады» опубликованы."
-
-#: admissions/templates/admissions/round_results_student.html:232
-msgid "This section contains the results of the offline test. Students can see their score, points earned, and pass status here."
-msgstr "В данном разделе размещены результаты офлайн-тестирования. Ученики могут увидеть свои результаты, набранные баллы и статус прохождения."
-
-#: admissions/templates/admissions/round_results_student.html:234
-msgid "Note:"
-msgstr "Примечание:"
-
-#: admissions/templates/admissions/round_results_student.html:234
-msgid "Only offline test results are shown here. Results from online tests are not included in this section."
-msgstr "Здесь показаны только результаты офлайн-тестирования. Результаты онлайн-тестов в данный раздел не включены."
-
-#: admissions/templates/admissions/round_results_student.html:236
-msgid "We wish all participants success and sincerely congratulate the students who advanced to the next stage!"
-msgstr "Желаем всем участникам успехов и от всего сердца поздравляем учеников, прошедших в следующий этап!"
-
-#: admissions/templates/admissions/round_results_student.html:244
-msgid "Total participants"
-msgstr "Всего участников"
-
-#: admissions/templates/admissions/round_results_student.html:252
-#: admissions/templates/admissions/round_results_student.html:335
-msgid "Did not pass"
-msgstr "Не прошли"
-
-#: admissions/templates/admissions/round_results_student.html:258
-msgid "Top Students by Subject"
-msgstr "Лучшие ученики по предметам"
-
-#: admissions/templates/admissions/round_results_student.html:260
-msgid "Math"
-msgstr "Математика"
-
-#: admissions/templates/admissions/round_results_student.html:261
-msgid "Kyrgyz Language"
-msgstr "Кыргызский язык"
-
-#: admissions/templates/admissions/round_results_student.html:262
-msgid "Biology"
-msgstr "Биология"
-
-#: admissions/templates/admissions/round_results_student.html:263
-msgid "Geography"
-msgstr "География"
-
-#: admissions/templates/admissions/round_results_student.html:264
-msgid "History"
-msgstr "История"
-
-#: admissions/templates/admissions/round_results_student.html:265
-msgid "English"
-msgstr "Английский язык"
-
-#: admissions/templates/admissions/round_results_student.html:266
-msgid "Russian"
-msgstr "Русский язык"
-
-#: admissions/templates/admissions/round_results_student.html:268
-msgid "Top 10"
-msgstr "Топ 10"
-
-#: admissions/templates/admissions/round_results_student.html:285
 msgid "Search results"
-msgstr "Поиск результатов"
+msgstr ""
 
-#: admissions/templates/admissions/round_results_student.html:288
+#: admissions/templates/admissions/round_results_student.html:222
 msgid "Search by name..."
-msgstr "Поиск по имени..."
+msgstr ""
 
-#: admissions/templates/admissions/round_results_student.html:301
+#: admissions/templates/admissions/round_results_student.html:224
+#: analytics/templates/analytics/class_heatmap.html:38
+#: analytics/templates/analytics/students.html:63
+#: analytics/templates/analytics/students.html:74
+#: schools/templates/schools/school_list.html:35
+#: zipgrade/templates/zipgrade/exam_detail.html:114
+msgid "All"
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:240
 msgid "Full name"
-msgstr "ФИО"
+msgstr ""
 
-#: admissions/templates/admissions/round_results_student.html:310
+#: admissions/templates/admissions/round_results_student.html:249
 msgid "Loading..."
-msgstr "Загрузка..."
+msgstr ""
 
-#: admissions/templates/admissions/round_results_student.html:337
+#: admissions/templates/admissions/round_results_student.html:274
+msgid "accepted"
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:275
+msgid "not accepted"
+msgstr ""
+
+#: admissions/templates/admissions/round_results_student.html:276
 msgid "Showing"
-msgstr "Показано"
+msgstr ""
 
-#: admissions/templates/admissions/round_results_student.html:339
+#: admissions/templates/admissions/round_results_student.html:278
 msgid "results"
-msgstr "результатов"
+msgstr ""
 
 #: admissions/templates/admissions/school_registry.html:10
 msgid "Schools are auto-populated from student registrations and uploads."
@@ -3266,16 +2841,12 @@ msgstr ""
 #: exams/templates/exams/exam_results.html:15
 #: exams/templates/exams/teacher_exam_results.html:4
 #: exams/templates/exams/teacher_exam_results.html:8
-#, fuzzy
-#| msgid "Result"
 msgid "Results"
-msgstr "Результат"
+msgstr ""
 
 #: admissions/templates/admissions/school_registry.html:51
-#, fuzzy
-#| msgid "Total Registrations"
 msgid "Registrations"
-msgstr "Всего регистраций"
+msgstr ""
 
 #: admissions/templates/admissions/school_registry.html:59
 msgid "No schools registered yet. Schools will appear here automatically when students register."
@@ -3286,49 +2857,38 @@ msgstr ""
 msgid "Add External School"
 msgstr ""
 
-# --- Schools ---
 #: admissions/templates/admissions/school_registry_form.html:14
 #: schools/templates/schools/school_list.html:17 schools/views.py:65
-#, fuzzy
-#| msgid "School"
 msgid "Add School"
-msgstr "Школа"
+msgstr ""
 
 #: admissions/templates/admissions/school_registry_form.html:17
 msgid "Register a new school to the external registry."
 msgstr ""
 
 #: admissions/templates/admissions/school_registry_form.html:30
-#, fuzzy
-#| msgid "Type the full name of your school."
 msgid "Full name of the external school."
-msgstr "Напишите полное название вашей школы."
+msgstr ""
 
 #: admissions/templates/admissions/school_registry_form.html:36
 msgid "Unique identifier for this school (e.g., 101, 102)."
 msgstr ""
 
 #: admissions/templates/admissions/school_registry_form.html:41
-#, fuzzy
-#| msgid "Register"
 msgid "Register School"
-msgstr "Регистрация"
+msgstr ""
 
 #: admissions/templates/admissions/school_subject_analytics.html:4
 #: admissions/templates/admissions/school_subject_analytics.html:42
-#, fuzzy
-#| msgid "School Analytics"
 msgid "School Subject Analytics"
-msgstr "Аналитика по Школе"
+msgstr ""
 
 #: admissions/templates/admissions/school_subject_analytics.html:51
 #: admissions/templates/admissions/subject_rankings.html:19
 #: exams/templates/exams/exam_form.html:29
 #: zipgrade/templates/zipgrade/preview.html:210
-#, fuzzy
-#| msgid "Subject"
 msgid "Select Subject"
-msgstr "Предмет"
+msgstr ""
 
 #: admissions/templates/admissions/school_subject_analytics.html:53
 #: admissions/templates/admissions/subject_rankings.html:21
@@ -3336,10 +2896,8 @@ msgid "Choose a subject"
 msgstr ""
 
 #: admissions/templates/admissions/school_subject_analytics.html:64
-#, fuzzy
-#| msgid "Subject Rankings"
 msgid "School Rankings"
-msgstr "Рейтинг по предметам"
+msgstr ""
 
 #: admissions/templates/admissions/school_subject_analytics.html:65
 msgid "Average correct/wrong answers per school"
@@ -3359,10 +2917,8 @@ msgstr ""
 
 #: admissions/templates/admissions/school_subject_analytics.html:77
 #: analytics/templates/analytics/classes.html:173
-#, fuzzy
-#| msgid "Class Performance"
 msgid "Performance"
-msgstr "Успеваемость класса"
+msgstr ""
 
 #: admissions/templates/admissions/school_subject_analytics.html:108
 msgid "No school data found for this subject."
@@ -3376,38 +2932,29 @@ msgstr ""
 msgid "Select a subject to see school analytics"
 msgstr ""
 
-# --- Admission Module ---
 #: admissions/templates/admissions/student_admission.html:4
-#, fuzzy
-#| msgid "Admission"
 msgid "My Admission"
-msgstr "Приёмная комиссия"
+msgstr ""
 
 #: admissions/templates/admissions/student_admission.html:18
-#, fuzzy
-#| msgid "Admissions"
 msgid "Admission Status"
-msgstr "Приём"
+msgstr ""
 
 #: admissions/templates/admissions/student_admission.html:39
 #: exams/templates/exams/exam_list.html:61
 #: exams/templates/exams/exam_questions.html:47
 #: exams/templates/exams/student_exams.html:21
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1868
-#, fuzzy
-#| msgid "Description"
 msgid "Duration"
-msgstr "Описание"
+msgstr ""
 
 #: admissions/templates/admissions/student_admission.html:39
 msgid "minutes"
 msgstr ""
 
 #: admissions/templates/admissions/student_admission.html:41
-#, fuzzy
-#| msgid "Passing Score (%)"
 msgid "Passing Score"
-msgstr "Проходной балл (%)"
+msgstr ""
 
 #: admissions/templates/admissions/student_admission.html:101
 msgid "Exam completed. Calculating results..."
@@ -3422,27 +2969,20 @@ msgid "Your exam timed out."
 msgstr ""
 
 #: admissions/templates/admissions/student_admission.html:115
-#, fuzzy
-#| msgid "In Progress"
 msgid "Exam in progress."
-msgstr "В процессе"
+msgstr ""
 
-# --- Exams ---
 #: admissions/templates/admissions/student_admission.html:118
-#, fuzzy
-#| msgid "Online Exam"
 msgid "Continue Exam"
-msgstr "Онлайн Экзамен"
+msgstr ""
 
 #: admissions/templates/admissions/student_admission.html:133
 msgid "No online admission exam is currently available for this cycle."
 msgstr ""
 
 #: admissions/templates/admissions/subject_rankings.html:10
-#, fuzzy
-#| msgid "Top Students"
 msgid "Subject Top Students"
-msgstr "Топ учеников"
+msgstr ""
 
 #: admissions/templates/admissions/subject_rankings.html:44
 msgid "Wrong"
@@ -3462,10 +3002,8 @@ msgid "Make sure data has been uploaded and master answers are set."
 msgstr ""
 
 #: admissions/templates/admissions/subject_rankings.html:78
-#, fuzzy
-#| msgid "Subject Rankings"
 msgid "Select a subject to see rankings"
-msgstr "Рейтинг по предметам"
+msgstr ""
 
 #: admissions/views.py:137
 msgid "Admission cycle created successfully."
@@ -3492,10 +3030,8 @@ msgid "No admission cycle found to export."
 msgstr ""
 
 #: admissions/views.py:517 exams/templates/exams/exam_list.html:42
-#, fuzzy
-#| msgid "Total Students"
 msgid "All Students"
-msgstr "Всего студентов"
+msgstr ""
 
 #: admissions/views.py:520
 msgid "ФИО"
@@ -3629,22 +3165,17 @@ msgid "Your exam is completed. Results are being processed."
 msgstr ""
 
 #: admissions/views.py:1377 admissions/views.py:1729
-#, fuzzy
-#| msgid "Admission Cycle"
 msgid "No admission cycle found."
-msgstr "Цикл приёма"
+msgstr ""
 
 #: admissions/views.py:1402
 #, python-format
 msgid "Saved %d master answer keys."
 msgstr ""
 
-# --- Analytics / UI Specific ---
 #: admissions/views.py:1448
-#, fuzzy
-#| msgid "No school found"
 msgid "No cycle found."
-msgstr "Школа не найдена"
+msgstr ""
 
 #: admissions/views.py:1457
 msgid "No master answers defined. Please set them first."
@@ -3665,10 +3196,8 @@ msgstr ""
 
 #: analytics/templates/analytics/class_heatmap.html:17
 #: schools/templates/schools/class_form.html:10
-#, fuzzy
-#| msgid "Back to Dashboard"
 msgid "Back to Classes"
-msgstr "Назад к панели"
+msgstr ""
 
 #: analytics/templates/analytics/class_heatmap.html:29 zipgrade/models.py:109
 msgid "All Classes"
@@ -3678,14 +3207,6 @@ msgstr ""
 #: analytics/templates/analytics/students.html:72 schools/models.py:90
 #: schools/models.py:163 schools/templates/schools/class_form.html:41
 msgid "Section"
-msgstr "Секция"
-
-#: analytics/templates/analytics/class_heatmap.html:38
-#: analytics/templates/analytics/students.html:63
-#: analytics/templates/analytics/students.html:74
-#: schools/templates/schools/school_list.html:35
-#: zipgrade/templates/zipgrade/exam_detail.html:114
-msgid "All"
 msgstr ""
 
 #: analytics/templates/analytics/class_heatmap.html:47
@@ -3698,7 +3219,7 @@ msgstr ""
 #: analytics/templates/analytics/zipgrade.html:230
 #: templates/partials/sidebar.html:166
 msgid "Exams"
-msgstr "Экзамены"
+msgstr ""
 
 #: analytics/templates/analytics/class_heatmap.html:59
 msgid "Student x Topic Performance Matrix"
@@ -3712,16 +3233,14 @@ msgstr ""
 #: analytics/templates/analytics/classes.html:9
 #: templates/partials/sidebar.html:245
 msgid "Class Analytics"
-msgstr "Аналитика по Классам"
+msgstr ""
 
 #: analytics/templates/analytics/classes.html:27
 #: analytics/templates/analytics/schools.html:24
 #: analytics/templates/analytics/student_advanced.html:17
 #: analytics/templates/analytics/students.html:13
-#, fuzzy
-#| msgid "Grade"
 msgid "ZipGrade"
-msgstr "Класс"
+msgstr ""
 
 #: analytics/templates/analytics/classes.html:42
 msgid "Topic Heatmap"
@@ -3738,20 +3257,16 @@ msgid "PDF"
 msgstr ""
 
 #: analytics/templates/analytics/classes.html:74
-#, fuzzy
-#| msgid "Please select a class"
 msgid "Select Class"
-msgstr "Пожалуйста, выберите класс"
+msgstr ""
 
 #: analytics/templates/analytics/classes.html:82
 msgid "No classes found. Please upload master student list."
 msgstr ""
 
 #: analytics/templates/analytics/classes.html:92
-#, fuzzy
-#| msgid "Student Analytics"
 msgid "Students in Class"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: analytics/templates/analytics/classes.html:99
 #: analytics/templates/analytics/schools.html:111
@@ -3761,16 +3276,14 @@ msgstr ""
 #: analytics/templates/analytics/classes.html:122
 #: analytics/templates/analytics/schools.html:127
 #: analytics/templates/analytics/zipgrade.html:120
-#, fuzzy
-#| msgid "Lowest Score"
 msgid "Best Score"
-msgstr "Низший балл"
+msgstr ""
 
 #: analytics/templates/analytics/classes.html:129
 #: analytics/templates/analytics/schools.html:132
 #: analytics/templates/analytics/zipgrade.html:127
 msgid "Lowest Score"
-msgstr "Низший балл"
+msgstr ""
 
 #: analytics/templates/analytics/classes.html:142
 msgid "Best Performing Subjects"
@@ -3783,41 +3296,30 @@ msgstr ""
 
 #: analytics/templates/analytics/classes.html:164
 #: analytics/templates/analytics/classes.html:207
-#, fuzzy
-#| msgid "Subject Rankings"
 msgid "Student Rankings"
-msgstr "Рейтинг по предметам"
+msgstr ""
 
 #: analytics/templates/analytics/classes.html:208
 msgid "No exam data available for this class."
 msgstr ""
 
 #: analytics/templates/analytics/classes.html:250
-#, fuzzy
-#| msgid "Average Score"
 msgid "Average Score by Subject"
-msgstr "Средний балл"
+msgstr ""
 
-# --- Registration Form ---
 #: analytics/templates/analytics/classes.html:287
-#, fuzzy
-#| msgid "Student Registration"
 msgid "Student Score Distribution"
-msgstr "Регистрация ученика"
+msgstr ""
 
 #: analytics/templates/analytics/item_analysis.html:4
 #: analytics/templates/analytics/item_analysis.html:9
-#, fuzzy
-#| msgid "Student Analytics"
 msgid "Item Analysis"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: analytics/templates/analytics/item_analysis.html:18
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:17
-#, fuzzy
-#| msgid "Back to Dashboard"
 msgid "Back to Exam"
-msgstr "Назад к панели"
+msgstr ""
 
 #: analytics/templates/analytics/item_analysis.html:26
 msgid "Question Analysis Overview"
@@ -3828,20 +3330,16 @@ msgid "Misconception Detected"
 msgstr ""
 
 #: analytics/templates/analytics/item_analysis.html:43
-#, fuzzy
-#| msgid "Total Questions"
 msgid "Total Responses"
-msgstr "Всего вопросов"
+msgstr ""
 
 #: analytics/templates/analytics/item_analysis.html:62
 msgid "Common Misconception"
 msgstr ""
 
 #: analytics/templates/analytics/item_analysis.html:63
-#, fuzzy
-#| msgid "students"
 msgid "of students chose"
-msgstr "учеников"
+msgstr ""
 
 #: analytics/templates/analytics/item_analysis.html:69
 msgid "No answer data available for this exam."
@@ -3853,10 +3351,8 @@ msgstr ""
 
 #: analytics/templates/analytics/network.html:4
 #: analytics/templates/analytics/network.html:8
-#, fuzzy
-#| msgid "Student Analytics"
 msgid "Network Analytics"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: analytics/templates/analytics/network.html:12
 msgid "Network-wide analytics comparing all schools - coming in Phase 6."
@@ -3877,10 +3373,8 @@ msgstr ""
 #: schools/templates/schools/master_student_list.html:26
 #: schools/templates/schools/subject_list.html:35
 #: zipgrade/templates/zipgrade/results.html:56
-#, fuzzy
-#| msgid "Schools"
 msgid "All Schools"
-msgstr "Школы"
+msgstr ""
 
 #: analytics/templates/analytics/rankings.html:22
 msgid "exams analyzed"
@@ -3891,25 +3385,19 @@ msgid "Absolute Top"
 msgstr ""
 
 #: analytics/templates/analytics/rankings.html:32
-#, fuzzy
-#| msgid "In Progress"
 msgid "Progress Top"
-msgstr "В процессе"
+msgstr ""
 
 #: analytics/templates/analytics/rankings.html:36 schools/models.py:171
 #: schools/templates/schools/class_list.html:4
 #: schools/templates/schools/school_list.html:77
 #: templates/partials/sidebar.html:156
-#, fuzzy
-#| msgid "Passed"
 msgid "Classes"
-msgstr "Прошли"
+msgstr ""
 
 #: analytics/templates/analytics/rankings.html:42
-#, fuzzy
-#| msgid "End Time"
 msgid "All Time"
-msgstr "Время окончания"
+msgstr ""
 
 #: analytics/templates/analytics/rankings.html:43
 msgid "Year"
@@ -3925,10 +3413,8 @@ msgstr ""
 
 #: analytics/templates/analytics/rankings.html:50
 #: analytics/templates/analytics/schools.html:92
-#, fuzzy
-#| msgid "Subjects"
 msgid "All Subjects"
-msgstr "Предметы"
+msgstr ""
 
 #: analytics/templates/analytics/rankings.html:63
 #, python-format
@@ -3938,10 +3424,8 @@ msgstr ""
 #: analytics/templates/analytics/rankings.html:65
 #: analytics/templates/analytics/rankings.html:70
 #: analytics/templates/analytics/rankings.html:75
-#, fuzzy
-#| msgid "students"
 msgid "students eligible"
-msgstr "учеников"
+msgstr ""
 
 #: analytics/templates/analytics/rankings.html:68
 #, python-format
@@ -3998,32 +3482,24 @@ msgid "Folders"
 msgstr ""
 
 #: analytics/templates/analytics/schools.html:81
-#, fuzzy
-#| msgid "Recent Exams"
 msgid "Select Exams"
-msgstr "Недавние экзамены"
+msgstr ""
 
 #: analytics/templates/analytics/schools.html:98
-#, fuzzy
-#| msgid "Filter"
 msgid "Apply Filters"
-msgstr "Фильтр"
+msgstr ""
 
 #: analytics/templates/analytics/schools.html:99
 msgid "Reset"
 msgstr ""
 
 #: analytics/templates/analytics/schools.html:140
-#, fuzzy
-#| msgid "School Code"
 msgid "School Comparison"
-msgstr "Код школы"
+msgstr ""
 
 #: analytics/templates/analytics/schools.html:141
-#, fuzzy
-#| msgid "Subject"
 msgid "by subject"
-msgstr "Предмет"
+msgstr ""
 
 #: analytics/templates/analytics/schools.html:157
 msgid "Class Comparison (Average Score)"
@@ -4036,41 +3512,32 @@ msgstr ""
 #: analytics/templates/analytics/schools.html:168
 #: analytics/templates/analytics/students.html:315
 msgid "Recent Exams"
-msgstr "Недавние экзамены"
+msgstr ""
 
 #: analytics/templates/analytics/schools.html:185
-#, fuzzy
-#| msgid "No registrations yet."
 msgid "No exams yet"
-msgstr "Регистраций пока нет."
+msgstr ""
 
 #: analytics/templates/analytics/schools.html:193
 #: analytics/templates/analytics/schools.html:195
-#, fuzzy
-#| msgid "View All Results"
 msgid "View All Exams"
-msgstr "Все результаты"
+msgstr ""
 
 #: analytics/templates/analytics/schools.html:213
-#, fuzzy
-#| msgid "Completed"
 msgid "Completed Exams"
-msgstr "Завершено"
+msgstr ""
 
 #: analytics/templates/analytics/schools.html:235
 #: analytics/templates/analytics/schools.html:282
-#, fuzzy, python-format
-#| msgid "Average Score"
+#, python-format
 msgid "Average Score %%"
-msgstr "Средний балл"
+msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:4
 #: analytics/templates/analytics/student_advanced.html:9
 #: analytics/templates/analytics/students.html:31
-#, fuzzy
-#| msgid "Admission Analytics"
 msgid "Advanced Analytics"
-msgstr "Аналитика приёма"
+msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:40
 #: analytics/templates/analytics/zipgrade.html:35
@@ -4082,43 +3549,33 @@ msgid "Areas Needing Attention"
 msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:78
-#, fuzzy
-#| msgid "Subject Name"
 msgid "Subject Mastery"
-msgstr "Название предмета"
+msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:80
-#, fuzzy
-#| msgid "Class Performance"
 msgid "vs Class Average"
-msgstr "Успеваемость класса"
+msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:88
 msgid "Competency Gap Analysis"
 msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:96
-#, fuzzy
-#| msgid "Class Performance"
 msgid "Performance Trend"
-msgstr "Успеваемость класса"
+msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:98
 msgid "with Moving Average"
 msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:121
-#, fuzzy
-#| msgid "Student"
 msgid "Student Score"
-msgstr "Ученик"
+msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:128
 #: analytics/templates/analytics/students.html:168
-#, fuzzy
-#| msgid "Class Performance"
 msgid "Class Average"
-msgstr "Успеваемость класса"
+msgstr ""
 
 #: analytics/templates/analytics/student_advanced.html:166
 msgid "Moving Average"
@@ -4136,13 +3593,13 @@ msgstr ""
 #: analytics/templates/analytics/students.html:9
 #: templates/partials/sidebar.html:255
 msgid "Student Analytics"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:17 exams/models.py:97
 #: exams/templates/exams/exam_list.html:4
 #: exams/templates/exams/exam_list.html:8 templates/partials/sidebar.html:203
 msgid "Online Exams"
-msgstr "Онлайн Экзамены"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:84
 msgid "Name or ID..."
@@ -4151,16 +3608,12 @@ msgstr ""
 #: analytics/templates/analytics/students.html:148
 #: schools/templates/schools/master_student_list.html:71
 #: schools/templates/schools/school_detail.html:134
-#, fuzzy
-#| msgid "students"
 msgid "No students found."
-msgstr "учеников"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:180
-#, fuzzy
-#| msgid "My Exams"
 msgid "Total Exams"
-msgstr "Мои Экзамены"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:198
 #: analytics/templates/analytics/zipgrade.html:194
@@ -4168,10 +3621,8 @@ msgid "Worst"
 msgstr ""
 
 #: analytics/templates/analytics/students.html:214
-#, fuzzy
-#| msgid "Subjects"
 msgid "Strong Subjects"
-msgstr "Предметы"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:223
 #: analytics/templates/analytics/students.html:242
@@ -4179,28 +3630,20 @@ msgid "Not enough data"
 msgstr ""
 
 #: analytics/templates/analytics/students.html:233
-#, fuzzy
-#| msgid "Subjects"
 msgid "Weak Subjects"
-msgstr "Предметы"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:252
-#, fuzzy
-#| msgid "In Progress"
 msgid "Progress Chart"
-msgstr "В процессе"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:257
-#, fuzzy
-#| msgid "Subject Name"
 msgid "Subject Radar"
-msgstr "Название предмета"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:266
-#, fuzzy
-#| msgid "Class Performance"
 msgid "Subject Performance"
-msgstr "Успеваемость класса"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:291
 msgid "Improving"
@@ -4220,15 +3663,13 @@ msgstr ""
 
 #: analytics/templates/analytics/students.html:302
 #: zipgrade/templates/zipgrade/exam_detail.html:64
-#, fuzzy
-#| msgid "Average Score"
 msgid "Average"
-msgstr "Средний балл"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:323
 #: exams/templates/exams/exam_result.html:16 zipgrade/models.py:242
 msgid "Result"
-msgstr "Результат"
+msgstr ""
 
 #: analytics/templates/analytics/students.html:358
 msgid "No exam data found for this student."
@@ -4236,10 +3677,8 @@ msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:4
 #: analytics/templates/analytics/zipgrade.html:9
-#, fuzzy
-#| msgid "ZipGrade Archives"
 msgid "ZipGrade Analytics"
-msgstr "Архивы ZipGrade"
+msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:37
 #: schools/templates/schools/class_add_students.html:30
@@ -4247,67 +3686,54 @@ msgid "Select All"
 msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:44
-#, fuzzy
-#| msgid "Analytics"
 msgid "Analyze"
-msgstr "Аналитика"
+msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:55 zipgrade/forms.py:19
 #: zipgrade/models.py:62
 msgid "Exam Title"
-msgstr "Название экзамена"
+msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:77
 msgid "No ZipGrade exams found for this school."
 msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:85
-#, fuzzy
-#| msgid "View All Results"
 msgid "Analysis Results"
-msgstr "Все результаты"
+msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:88
 msgid "exam(s)"
 msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:97
-#, fuzzy
-#| msgid "Upload Results"
 msgid "Total Results"
-msgstr "Загрузить результаты"
+msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:138
-#, fuzzy
-#| msgid "Class Performance"
 msgid "Class Comparison"
-msgstr "Успеваемость класса"
+msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:142
 msgid "No class data available (students may not be linked)"
 msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:148
-#, fuzzy
-#| msgid "Subject Rankings"
 msgid "Subject Breakdown"
-msgstr "Рейтинг по предметам"
+msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:156
-#, fuzzy, python-format
-#| msgid "Pass Rate"
+#, python-format
 msgid "Pass %%"
-msgstr "Проходимость"
+msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:176
 msgid "No subject splits defined for selected exams"
 msgstr ""
 
 #: analytics/templates/analytics/zipgrade.html:184
-#, fuzzy
-#| msgid "Class Analytics"
 msgid "Class Statistics"
-msgstr "Аналитика по Классам"
+msgstr ""
 
 #: analytics/utils.py:554 analytics/utils.py:605
 msgid "Excellent (80-100%)"
@@ -4325,16 +3751,15 @@ msgstr ""
 msgid "Unsatisfactory (0-49%)"
 msgstr ""
 
-# --- Analytics / UI Specific ---
 #: analytics/views.py:34 analytics/views.py:225 analytics/views.py:640
 #: analytics/views.py:754 analytics/views.py:792 analytics/views.py:820
 #: analytics/views.py:933
 msgid "No school found"
-msgstr "Школа не найдена"
+msgstr ""
 
 #: analytics/views.py:798 analytics/views.py:826
 msgid "Please select a class"
-msgstr "Пожалуйста, выберите класс"
+msgstr ""
 
 #: exams/forms.py:39
 msgid "End time must be after start time."
@@ -4363,66 +3788,58 @@ msgstr ""
 #: exams/templates/exams/exam_result.html:202
 #: exams/templates/exams/exam_result.html:208
 #: exams/templates/exams/take_exam.html:417
-#, fuzzy
-#| msgid "True/False"
 msgid "False"
-msgstr "Правда/Ложь"
+msgstr ""
 
 #: exams/forms.py:86
-#, fuzzy
-#| msgid "Column"
 msgid "Column A item"
-msgstr "Колонка"
+msgstr ""
 
 #: exams/forms.py:87
-#, fuzzy
-#| msgid "Column"
 msgid "Column B item"
-msgstr "Колонка"
+msgstr ""
 
 #: exams/forms.py:99
 msgid "Item text"
 msgstr ""
 
 #: exams/forms.py:100 exams/templates/exams/question_form.html:176
-#, fuzzy
-#| msgid "Description"
 msgid "Position"
-msgstr "Описание"
+msgstr ""
 
 #: exams/models.py:13 exams/templates/exams/exam_form.html:73
 #: zipgrade/models.py:17
 #: zipgrade/templates/zipgrade/generate_answersheets.html:148
 msgid "Description"
-msgstr "Описание"
+msgstr ""
 
 #: exams/models.py:33
 msgid "Created By"
-msgstr "Создал(а)"
+msgstr ""
 
 #: exams/models.py:39 exams/templates/exams/exam_form.html:47
 msgid "Duration (minutes)"
-msgstr "Длительность (мин)"
+msgstr ""
 
 #: exams/models.py:47 exams/templates/exams/exam_form.html:52
 msgid "Start Time"
-msgstr "Время начала"
+msgstr ""
 
 #: exams/models.py:48 exams/templates/exams/exam_form.html:57
 msgid "End Time"
-msgstr "Время окончания"
+msgstr ""
 
 #: exams/models.py:53 exams/templates/exams/exam_form.html:80
 msgid "Shuffle Questions"
-msgstr "Перемешать вопросы"
+msgstr ""
 
 #: exams/models.py:57 exams/templates/exams/exam_form.html:84
 msgid "Shuffle Options"
-msgstr "Перемешать варианты"
+msgstr ""
 
 #: exams/models.py:61 exams/templates/exams/exam_form.html:88
 msgid "Show Results Immediately"
-msgstr "Показать результаты сразу"
+msgstr ""
 
 #: exams/models.py:71 exams/templates/exams/exam_form.html:92
 msgid "Prevent Returning to Previous Questions"
@@ -4444,14 +3861,13 @@ msgstr ""
 msgid "Select specific classes or leave empty for all students"
 msgstr ""
 
-# --- Exams ---
 #: exams/models.py:96
 msgid "Online Exam"
-msgstr "Онлайн Экзамен"
+msgstr ""
 
 #: exams/models.py:124
 msgid "Multiple Choice"
-msgstr "Выбор ответа"
+msgstr ""
 
 #: exams/models.py:125
 msgid "Fill in the Blanks"
@@ -4462,26 +3878,20 @@ msgid "Matching"
 msgstr ""
 
 #: exams/models.py:127
-#, fuzzy
-#| msgid "Order"
 msgid "Ordering"
-msgstr "Порядок"
+msgstr ""
 
 #: exams/models.py:128
-#, fuzzy
-#| msgid "True/False"
 msgid "True / False"
-msgstr "Правда/Ложь"
+msgstr ""
 
 #: exams/models.py:150
 msgid "Question Type"
-msgstr "Тип вопроса"
+msgstr ""
 
 #: exams/models.py:161
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Correct Answer (True/False)"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/models.py:162
 msgid "For True/False questions: select the correct answer"
@@ -4493,25 +3903,19 @@ msgstr ""
 
 #: exams/models.py:176
 msgid "Exam Question"
-msgstr "Вопрос экзамена"
+msgstr ""
 
 #: exams/models.py:177
-#, fuzzy
-#| msgid "Exam Question"
 msgid "Exam Questions"
-msgstr "Вопрос экзамена"
+msgstr ""
 
 #: exams/models.py:210 exams/templates/exams/question_form.html:172
-#, fuzzy
-#| msgid "Option Text"
 msgid "Item Text"
-msgstr "Текст ответа"
+msgstr ""
 
 #: exams/models.py:211
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Correct Position"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/models.py:214
 msgid "Ordering Item"
@@ -4539,124 +3943,92 @@ msgstr ""
 
 #: exams/models.py:262
 msgid "Question Option"
-msgstr "Вариант ответа"
+msgstr ""
 
 #: exams/models.py:263
-#, fuzzy
-#| msgid "Question Option"
 msgid "Question Options"
-msgstr "Вариант ответа"
+msgstr ""
 
 #: exams/models.py:297
 msgid "Finished At"
-msgstr "Завершено в"
+msgstr ""
 
 #: exams/models.py:317 exams/templates/exams/attempt_answers.html:50
 #: exams/templates/exams/exam_result.html:77
-#, fuzzy
-#| msgid "Exam Variant"
 msgid "Exam Recording"
-msgstr "Вариант экзамена"
+msgstr ""
 
 #: exams/models.py:335
 msgid "Exam Attempt"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: exams/models.py:336
-#, fuzzy
-#| msgid "Exam Attempt"
 msgid "Exam Attempts"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: exams/models.py:403
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Text Answer"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/models.py:408
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Matching Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: exams/models.py:414
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Ordering Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: exams/models.py:424
-#, fuzzy
-#| msgid "Average Score"
 msgid "Partial Score"
-msgstr "Средний балл"
+msgstr ""
 
 #: exams/models.py:429
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Attempt Answer"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/models.py:430
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Attempt Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: exams/models.py:514
-#, fuzzy
-#| msgid "Tab Switch Count"
 msgid "Tab Switch"
-msgstr "Кол-во переключений вкладки"
+msgstr ""
 
 #: exams/models.py:515
 msgid "Window Blur"
 msgstr ""
 
 #: exams/models.py:516
-#, fuzzy
-#| msgid "Exam Attempt"
 msgid "Copy Attempt"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: exams/models.py:517
-#, fuzzy
-#| msgid "Exam Attempt"
 msgid "Paste Attempt"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: exams/models.py:518
 msgid "Right Click"
 msgstr ""
 
 #: exams/models.py:519
-#, fuzzy
-#| msgid "Locked"
 msgid "Exam Locked"
-msgstr "Заблокировано"
+msgstr ""
 
 #: exams/models.py:520
 msgid "Admin Unlock"
 msgstr ""
 
 #: exams/models.py:521
-#, fuzzy
-#| msgid "Exam Date"
 msgid "Exam Started"
-msgstr "Дата экзамена"
+msgstr ""
 
 #: exams/models.py:522 exams/templates/exams/exam_result.html:241
-#, fuzzy
-#| msgid "Exam Title"
 msgid "Exam Submitted"
-msgstr "Название экзамена"
+msgstr ""
 
 #: exams/models.py:535
-#, fuzzy
-#| msgid "Question Type"
 msgid "Event Type"
-msgstr "Тип вопроса"
+msgstr ""
 
 #: exams/models.py:538
 msgid "Timestamp"
@@ -4671,18 +4043,14 @@ msgid "Proctor Events"
 msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:4
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Student Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:14
 #: exams/templates/exams/unlock_confirm.html:14
 #: zipgrade/templates/zipgrade/exam_detail.html:223
-#, fuzzy
-#| msgid "Upload Results"
 msgid "Back to Results"
-msgstr "Загрузить результаты"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:37
 #: exams/templates/exams/exam_result.html:47
@@ -4691,10 +4059,8 @@ msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:42
 #: exams/templates/exams/unlock_confirm.html:39
-#, fuzzy
-#| msgid "Tab Switch Count"
 msgid "Tab Switches"
-msgstr "Кол-во переключений вкладки"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:53
 #: exams/templates/exams/exam_result.html:80
@@ -4702,10 +4068,8 @@ msgid "Your browser does not support video playback."
 msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:59
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Detailed Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:70
 #: exams/templates/exams/attempt_answers.html:74
@@ -4720,37 +4084,27 @@ msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:86
 #: exams/templates/exams/attempt_answers.html:182
-#, fuzzy
-#| msgid "Student Analytics"
 msgid "Student Answer"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:124
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Correct pairings:"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:160
 #: exams/templates/exams/exam_result.html:180
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Correct order:"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:173
 #: exams/templates/exams/exam_result.html:192
-#, fuzzy
-#| msgid "Points"
 msgid "points"
-msgstr "Баллы"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:204
 #: exams/templates/exams/exam_result.html:224
-#, fuzzy
-#| msgid "Incorrect %"
 msgid "correct"
-msgstr "% ошибок"
+msgstr ""
 
 #: exams/templates/exams/attempt_answers.html:211
 msgid "No answers recorded."
@@ -4760,20 +4114,16 @@ msgstr ""
 #: exams/templates/exams/exam_confirm_delete.html:16
 #: zipgrade/templates/zipgrade/exam_confirm_delete.html:4
 #: zipgrade/templates/zipgrade/exam_confirm_delete.html:8
-#, fuzzy
-#| msgid "Create Exam"
 msgid "Delete Exam"
-msgstr "Создать Экзамен"
+msgstr ""
 
 #: exams/templates/exams/exam_confirm_delete.html:14
 #: exams/templates/exams/exam_questions.html:13
 #: exams/templates/exams/exam_result.html:14
 #: exams/templates/exams/exam_results.html:13
 #: exams/templates/exams/teacher_exam_results.html:10
-#, fuzzy
-#| msgid "Back to Dashboard"
 msgid "Back to Exams"
-msgstr "Назад к панели"
+msgstr ""
 
 #: exams/templates/exams/exam_confirm_delete.html:33
 msgid "You are about to delete the exam"
@@ -4790,32 +4140,25 @@ msgstr ""
 
 #: exams/templates/exams/exam_confirm_delete.html:48
 #: exams/templates/exams/question_confirm_delete.html:58
-#, fuzzy
-#| msgid "Completed"
 msgid "Confirm Delete"
-msgstr "Завершено"
+msgstr ""
 
 #: exams/templates/exams/exam_form.html:4
 #: exams/templates/exams/exam_form.html:8
-#, fuzzy
-#| msgid "Edit"
 msgid "Edit Exam"
-msgstr "Изменить"
+msgstr ""
 
 #: exams/templates/exams/exam_form.html:4
 #: exams/templates/exams/exam_form.html:8
 #: exams/templates/exams/exam_form.html:118
 #: exams/templates/exams/exam_list.html:17 templates/partials/sidebar.html:214
 msgid "Create Exam"
-msgstr "Создать Экзамен"
+msgstr ""
 
-# --- Schools ---
 #: exams/templates/exams/exam_form.html:39
 #: zipgrade/templates/zipgrade/generate_answersheets.html:58
-#, fuzzy
-#| msgid "School"
 msgid "Select School"
-msgstr "Школа"
+msgstr ""
 
 #: exams/templates/exams/exam_form.html:104
 msgid "Enable Proctoring (Warnings)"
@@ -4829,16 +4172,12 @@ msgstr ""
 
 #: exams/templates/exams/exam_list.html:34
 #: exams/templates/exams/exam_results.html:29
-#, fuzzy
-#| msgid "Status"
 msgid "All Status"
-msgstr "Статус"
+msgstr ""
 
 #: exams/templates/exams/exam_list.html:35
-#, fuzzy
-#| msgid "Active"
 msgid "Active Now"
-msgstr "Активен"
+msgstr ""
 
 #: exams/templates/exams/exam_list.html:37
 #: exams/templates/exams/exam_list.html:81
@@ -4849,53 +4188,38 @@ msgstr ""
 msgid "Available"
 msgstr ""
 
-# --- Analytics / UI Specific ---
 #: exams/templates/exams/exam_list.html:101
 #: exams/templates/exams/teacher_exam_list.html:60
-#, fuzzy
-#| msgid "No school found"
 msgid "No exams found."
-msgstr "Школа не найдена"
+msgstr ""
 
 #: exams/templates/exams/exam_questions.html:4
-#, fuzzy
-#| msgid "End Question"
 msgid "Manage Questions"
-msgstr "Конечный вопрос"
+msgstr ""
 
 #: exams/templates/exams/exam_questions.html:41
-#, fuzzy
-#| msgid "Max Points"
 msgid "Total Points"
-msgstr "Макс. баллов"
+msgstr ""
 
 #: exams/templates/exams/exam_questions.html:126
-#, fuzzy
-#| msgid "No registrations yet."
 msgid "No questions added yet."
-msgstr "Регистраций пока нет."
+msgstr ""
 
 #: exams/templates/exams/exam_questions.html:128
-#, fuzzy
-#| msgid "Start Question"
 msgid "Add First Question"
-msgstr "Начальный вопрос"
+msgstr ""
 
 #: exams/templates/exams/exam_result.html:24
-#, fuzzy
-#| msgid "Completed"
 msgid "Exam Completed"
-msgstr "Завершено"
+msgstr ""
 
 #: exams/templates/exams/exam_result.html:59
 msgid "Exam Rules Check"
 msgstr ""
 
 #: exams/templates/exams/exam_result.html:61
-#, fuzzy
-#| msgid "Tab Switch Count"
 msgid "Tab Switches:"
-msgstr "Кол-во переключений вкладки"
+msgstr ""
 
 #: exams/templates/exams/exam_result.html:64
 msgid "Warning: Tab switching was detected during the exam."
@@ -4911,16 +4235,12 @@ msgstr ""
 
 #: exams/templates/exams/exam_result.html:110
 #: exams/templates/exams/exam_result.html:200
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Your Answer"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/templates/exams/exam_result.html:117
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Accepted Answers"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: exams/templates/exams/exam_result.html:146
 msgid "Correct pairings shown below:"
@@ -4935,10 +4255,8 @@ msgid "Results will be available after the exam period ends or when released by 
 msgstr ""
 
 #: exams/templates/exams/exam_result.html:246
-#, fuzzy
-#| msgid "My Exams"
 msgid "Back to My Exams"
-msgstr "Мои Экзамены"
+msgstr ""
 
 #: exams/templates/exams/exam_results.html:37
 msgid "Sort by Date"
@@ -4979,18 +4297,13 @@ msgstr ""
 msgid "Delete Recording"
 msgstr ""
 
-# --- Analytics / UI Specific ---
 #: exams/templates/exams/exam_results.html:124
-#, fuzzy
-#| msgid "No school found"
 msgid "No attempts found."
-msgstr "Школа не найдена"
+msgstr ""
 
 #: exams/templates/exams/my_exams.html:17
-#, fuzzy
-#| msgid "Exam Result"
 msgid "No Exams Yet"
-msgstr "Результат экзамена"
+msgstr ""
 
 #: exams/templates/exams/my_exams.html:18
 msgid "Your upcoming and completed exams will appear here."
@@ -5005,16 +4318,12 @@ msgid "Form errors:"
 msgstr ""
 
 #: exams/templates/exams/question_form.html:36
-#, fuzzy
-#| msgid "Option Text"
 msgid "Options errors:"
-msgstr "Текст ответа"
+msgstr ""
 
 #: exams/templates/exams/question_form.html:67
-#, fuzzy
-#| msgid "Optional"
 msgid "Image (Optional)"
-msgstr "Необязательно"
+msgstr ""
 
 #: exams/templates/exams/question_form.html:75
 msgid "Correct Answers (separate variants with |)"
@@ -5026,17 +4335,13 @@ msgstr ""
 
 #: exams/templates/exams/question_form.html:130
 #: exams/templates/exams/take_exam.html:353
-#, fuzzy
-#| msgid "Column"
 msgid "Column A"
-msgstr "Колонка"
+msgstr ""
 
 #: exams/templates/exams/question_form.html:135
 #: exams/templates/exams/take_exam.html:356
-#, fuzzy
-#| msgid "Column"
 msgid "Column B"
-msgstr "Колонка"
+msgstr ""
 
 #: exams/templates/exams/question_form.html:151
 msgid "Add Pair"
@@ -5051,40 +4356,32 @@ msgid "Add Item"
 msgstr ""
 
 #: exams/templates/exams/question_form.html:201
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Select the correct answer"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/templates/exams/student_exams.html:20
 msgid "Availability"
 msgstr ""
 
 #: exams/templates/exams/student_exams.html:23
-#, fuzzy
-#| msgid "Actions"
 msgid "Action"
-msgstr "Действия"
+msgstr ""
 
 #: exams/templates/exams/student_exams.html:38
 msgid "End"
 msgstr ""
 
 #: exams/templates/exams/student_exams.html:60
-#, fuzzy
-#| msgid "View All Results"
 msgid "View Result"
-msgstr "Все результаты"
+msgstr ""
 
 #: exams/templates/exams/student_exams.html:64
 msgid "Continue"
 msgstr ""
 
 #: exams/templates/exams/student_exams.html:64
-#, fuzzy
-#| msgid "Start Time"
 msgid "Start Exam"
-msgstr "Время начала"
+msgstr ""
 
 #: exams/templates/exams/student_exams.html:67
 msgid "Contact Admin"
@@ -5099,10 +4396,8 @@ msgid "No exams available at this time."
 msgstr ""
 
 #: exams/templates/exams/take_exam.html:4
-#, fuzzy
-#| msgid "In Progress"
 msgid "InProgress"
-msgstr "В процессе"
+msgstr ""
 
 #: exams/templates/exams/take_exam.html:249
 msgid "⚠️ Warning!"
@@ -5129,16 +4424,12 @@ msgid "I Understand"
 msgstr ""
 
 #: exams/templates/exams/take_exam.html:299
-#, fuzzy
-#| msgid "Question Option"
 msgid "Question Navigation"
-msgstr "Вариант ответа"
+msgstr ""
 
 #: exams/templates/exams/take_exam.html:338
-#, fuzzy
-#| msgid "Correct Answer"
 msgid "Your Answer:"
-msgstr "Правильный ответ"
+msgstr ""
 
 #: exams/templates/exams/take_exam.html:341
 msgid "Type your answer here..."
@@ -5205,16 +4496,12 @@ msgid "Management"
 msgstr ""
 
 #: exams/templates/exams/teacher_exam_list.html:8
-#, fuzzy
-#| msgid "Exam Variant"
 msgid "Exam Management"
-msgstr "Вариант экзамена"
+msgstr ""
 
 #: exams/templates/exams/teacher_exam_results.html:32
-#, fuzzy
-#| msgid "Master Student"
 msgid "Search Student"
-msgstr "Студент (Общий список)"
+msgstr ""
 
 #: exams/templates/exams/teacher_exam_results.html:53
 msgid "Submitted"
@@ -5222,10 +4509,8 @@ msgstr ""
 
 #: exams/templates/exams/unlock_confirm.html:4
 #: exams/templates/exams/unlock_confirm.html:16
-#, fuzzy
-#| msgid "Exam Attempt"
 msgid "Unlock Attempt"
-msgstr "Попытка экзамена"
+msgstr ""
 
 #: exams/templates/exams/unlock_confirm.html:23
 msgid "Unlock Exam for"
@@ -5260,10 +4545,8 @@ msgid "The student will have to start the exam from the beginning."
 msgstr ""
 
 #: exams/templates/exams/unlock_confirm.html:46
-#, fuzzy
-#| msgid "Confirm Password"
 msgid "Confirm Unlock"
-msgstr "Подтвердите пароль"
+msgstr ""
 
 #: exams/views.py:88
 msgid "Exam created successfully. Now add questions."
@@ -5314,45 +4597,33 @@ msgid "You do not have access to this exam."
 msgstr ""
 
 #: schools/forms.py:15
-#, fuzzy
-#| msgid "School Name"
 msgid "School name"
-msgstr "Название школы"
+msgstr ""
 
 #: schools/forms.py:19
 msgid "Unique school code (e.g., AMS-R)"
 msgstr ""
 
 #: schools/forms.py:23
-#, fuzzy
-#| msgid "School Name"
 msgid "School address"
-msgstr "Название школы"
+msgstr ""
 
 #: schools/forms.py:28
-#, fuzzy
-#| msgid "Phone Number 1"
 msgid "Phone number"
-msgstr "Номер телефона 1"
+msgstr ""
 
 #: schools/forms.py:32
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1920
-#, fuzzy
-#| msgid "email address"
 msgid "Email address"
-msgstr "email адрес"
+msgstr ""
 
 #: schools/forms.py:56
-#, fuzzy
-#| msgid "Subject Name"
 msgid "Subject name"
-msgstr "Название предмета"
+msgstr ""
 
 #: schools/forms.py:60
-#, fuzzy
-#| msgid "Subject Code"
 msgid "Subject code (optional)"
-msgstr "Код предмета"
+msgstr ""
 
 #: schools/forms.py:81
 msgid "Excel File (.xlsx)"
@@ -5363,10 +4634,8 @@ msgid "Upload an Excel file with columns: id, name, surname, class, section"
 msgstr ""
 
 #: schools/forms.py:91
-#, fuzzy
-#| msgid "Weakest Students"
 msgid "Replace existing students"
-msgstr "Отстающие ученики"
+msgstr ""
 
 #: schools/forms.py:92
 msgid "If checked, all existing students for this school will be deleted before import."
@@ -5384,19 +4653,15 @@ msgstr ""
 #: schools/templates/schools/master_student_list.html:50
 #: zipgrade/templates/zipgrade/preview.html:87
 msgid "Student ID"
-msgstr "ID Студента"
+msgstr ""
 
 #: schools/forms.py:119 schools/templates/schools/class_add_students.html:56
-#, fuzzy
-#| msgid "First Name"
 msgid "First name"
-msgstr "Имя"
+msgstr ""
 
 #: schools/forms.py:123 schools/templates/schools/class_add_students.html:60
-#, fuzzy
-#| msgid "Last Name"
 msgid "Last name"
-msgstr "Фамилия"
+msgstr ""
 
 #: schools/forms.py:127
 msgid "Grade (e.g., 9)"
@@ -5408,56 +4673,48 @@ msgstr ""
 
 #: schools/models.py:12 schools/templates/schools/school_detail.html:68
 msgid "School Code"
-msgstr "Код школы"
+msgstr ""
 
 #: schools/models.py:20
-#, fuzzy
-#| msgid "School Code"
 msgid "School Logo"
-msgstr "Код школы"
+msgstr ""
 
 #: schools/models.py:43
 msgid "Subject Code"
-msgstr "Код предмета"
+msgstr ""
 
 #: schools/models.py:61 schools/templates/schools/subject_list.html:4
 #: schools/templates/schools/subject_list.html:8
 #: templates/partials/sidebar.html:79
 msgid "Subjects"
-msgstr "Предметы"
+msgstr ""
 
 #: schools/models.py:84
 msgid "Normalized ID"
-msgstr "Нормализованный ID"
+msgstr ""
 
 #: schools/models.py:96
 msgid "Master Student"
-msgstr "Студент (Общий список)"
+msgstr ""
 
 #: schools/models.py:97
 msgid "Master Students"
-msgstr "Студенты (Общий список)"
+msgstr ""
 
 #: schools/templates/schools/class_add_students.html:4
 #: schools/templates/schools/class_add_students.html:66
 #: schools/templates/schools/class_detail.html:23
 #: schools/templates/schools/class_detail.html:125
-#, fuzzy
-#| msgid "Top Students"
 msgid "Add Students"
-msgstr "Топ учеников"
+msgstr ""
 
 #: schools/templates/schools/class_add_students.html:8
-#, fuzzy
-#| msgid "Top Students"
 msgid "Add Students to"
-msgstr "Топ учеников"
+msgstr ""
 
 #: schools/templates/schools/class_add_students.html:22
-#, fuzzy
-#| msgid "Master ID"
 msgid "Add from Master ID"
-msgstr "Мастер ID (Студенты)"
+msgstr ""
 
 #: schools/templates/schools/class_add_students.html:24
 msgid "Select students from Master ID that match grade"
@@ -5486,10 +4743,8 @@ msgstr ""
 #: schools/templates/schools/class_detail.html:64
 #: schools/templates/schools/credentials_print.html:79
 #: schools/templates/schools/reset_password.html:30
-#, fuzzy
-#| msgid "User"
 msgid "Username"
-msgstr "Пользователь"
+msgstr ""
 
 #: schools/templates/schools/class_detail.html:94
 msgid "Reset password for this student?"
@@ -5498,10 +4753,8 @@ msgstr ""
 #: schools/templates/schools/class_detail.html:105
 #: schools/templates/schools/master_student_confirm_delete.html:4
 #: schools/templates/schools/master_student_confirm_delete.html:8
-#, fuzzy
-#| msgid "Weakest Students"
 msgid "Delete Student"
-msgstr "Отстающие ученики"
+msgstr ""
 
 #: schools/templates/schools/class_detail.html:106
 msgid "Delete this student? This cannot be undone."
@@ -5532,10 +4785,8 @@ msgid "Select section..."
 msgstr ""
 
 #: schools/templates/schools/class_form.html:51
-#, fuzzy
-#| msgid "Create Exam"
 msgid "Create Class"
-msgstr "Создать Экзамен"
+msgstr ""
 
 #: schools/templates/schools/class_list.html:8
 msgid "Class Management"
@@ -5589,53 +4840,47 @@ msgstr ""
 #: schools/templates/schools/master_student_list.html:8
 #: templates/partials/sidebar.html:91
 msgid "Master ID"
-msgstr "Мастер ID (Студенты)"
+msgstr ""
 
 #: schools/templates/schools/master_student_list.html:11
-#, fuzzy
-#| msgid "Upload File"
 msgid "Upload List"
-msgstr "Загрузить файл"
+msgstr ""
 
 #: schools/templates/schools/master_student_list.html:22
-#, fuzzy
-#| msgid "Search"
 msgid "Search..."
-msgstr "Поиск"
+msgstr ""
 
 #: schools/templates/schools/master_student_list.html:34
 #: schools/templates/schools/school_detail.html:89
-#, fuzzy
-#| msgid "Grade"
 msgid "All Grades"
-msgstr "Класс"
+msgstr ""
 
 #: schools/templates/schools/master_student_upload.html:4
 #: schools/templates/schools/master_student_upload.html:8
 msgid "Upload Master Student List"
-msgstr "Загрузить список студентов (Master List)"
+msgstr ""
 
 #: schools/templates/schools/master_student_upload.html:41
 #: zipgrade/templates/zipgrade/upload.html:18
 msgid "Upload File"
-msgstr "Загрузить файл"
+msgstr ""
 
 #: schools/templates/schools/master_student_upload.html:47
 msgid "File Format"
-msgstr "Формат файла"
+msgstr ""
 
 #: schools/templates/schools/master_student_upload.html:50
 msgid "Your Excel file must contain the following columns:"
-msgstr "Ваш Excel файл должен содержать следующие колонки:"
+msgstr ""
 
 #: schools/templates/schools/master_student_upload.html:57
 #: zipgrade/templates/zipgrade/generate_answersheets.html:147
 msgid "Column"
-msgstr "Колонка"
+msgstr ""
 
 #: schools/templates/schools/master_student_upload.html:58
 msgid "Example"
-msgstr "Пример"
+msgstr ""
 
 #: schools/templates/schools/master_student_upload.html:63
 #: schools/templates/schools/master_student_upload.html:67
@@ -5643,11 +4888,11 @@ msgstr "Пример"
 #: schools/templates/schools/master_student_upload.html:75
 #: venv/lib/python3.14/site-packages/django/utils/text.py:288
 msgid "or"
-msgstr "или"
+msgstr ""
 
 #: schools/templates/schools/master_student_upload.html:93
 msgid "Student IDs with leading zeros will be handled automatically for matching with ZipGrade data."
-msgstr "ID студентов с ведущими нулями будут обработаны автоматически для сопоставления с данными ZipGrade."
+msgstr ""
 
 #: schools/templates/schools/reset_password.html:39
 msgid "Leave empty to auto-generate"
@@ -5659,10 +4904,8 @@ msgstr ""
 
 #: schools/templates/schools/school_confirm_delete.html:4
 #: schools/templates/schools/school_confirm_delete.html:8
-#, fuzzy
-#| msgid "Delete"
 msgid "Delete School"
-msgstr "Удалить"
+msgstr ""
 
 #: schools/templates/schools/school_confirm_delete.html:22
 #, python-format
@@ -5675,41 +4918,29 @@ msgstr ""
 
 #: schools/templates/schools/school_detail.html:17 schools/views.py:372
 #: schools/views.py:373
-#, fuzzy
-#| msgid "Student"
 msgid "Add Student"
-msgstr "Ученик"
+msgstr ""
 
-# --- Schools ---
 #: schools/templates/schools/school_detail.html:20 schools/views.py:87
-#, fuzzy
-#| msgid "School"
 msgid "Edit School"
-msgstr "Школа"
+msgstr ""
 
 #: schools/templates/schools/school_detail.html:55
-#, fuzzy
-#| msgid "Grade"
 msgid "Grades"
-msgstr "Класс"
+msgstr ""
 
 #: schools/templates/schools/school_detail.html:84
 #: zipgrade/templates/zipgrade/exam_detail.html:108
-#, fuzzy
-#| msgid "students"
 msgid "Search students..."
-msgstr "учеников"
+msgstr ""
 
 #: schools/templates/schools/school_list.html:29
 msgid "Search by name or code..."
 msgstr ""
 
-# --- Analytics / UI Specific ---
 #: schools/templates/schools/school_list.html:90
-#, fuzzy
-#| msgid "No school found"
 msgid "No schools found."
-msgstr "Школа не найдена"
+msgstr ""
 
 #: schools/templates/schools/school_list.html:92
 msgid "Add Your First School"
@@ -5717,33 +4948,24 @@ msgstr ""
 
 #: schools/templates/schools/subject_confirm_delete.html:4
 #: schools/templates/schools/subject_confirm_delete.html:8
-#, fuzzy
-#| msgid "Subject"
 msgid "Delete Subject"
-msgstr "Предмет"
+msgstr ""
 
 #: schools/templates/schools/subject_list.html:17 schools/views.py:196
-#, fuzzy
-#| msgid "Subject"
 msgid "Add Subject"
-msgstr "Предмет"
+msgstr ""
 
 #: schools/templates/schools/subject_list.html:29
-#, fuzzy
-#| msgid "Subjects"
 msgid "Search subjects..."
-msgstr "Предметы"
+msgstr ""
 
 #: schools/templates/schools/subject_list.html:53
 msgid "Code"
 msgstr ""
 
-# --- Analytics / UI Specific ---
 #: schools/templates/schools/subject_list.html:80
-#, fuzzy
-#| msgid "No school found"
 msgid "No subjects found."
-msgstr "Школа не найдена"
+msgstr ""
 
 #: schools/utils.py:77
 #, python-format
@@ -5761,10 +4983,8 @@ msgid "School \"%(name)s\" created successfully."
 msgstr ""
 
 #: schools/views.py:66
-#, fuzzy
-#| msgid "Primary School"
 msgid "Create School"
-msgstr "Основная школа"
+msgstr ""
 
 #: schools/views.py:80
 msgid "School updated successfully."
@@ -5781,20 +5001,16 @@ msgid "Subject \"%(name)s\" created successfully."
 msgstr ""
 
 #: schools/views.py:197 zipgrade/templates/zipgrade/preview.html:159
-#, fuzzy
-#| msgid "Subject"
 msgid "Create Subject"
-msgstr "Предмет"
+msgstr ""
 
 #: schools/views.py:211
 msgid "Subject updated successfully."
 msgstr ""
 
 #: schools/views.py:218
-#, fuzzy
-#| msgid "Subject"
 msgid "Edit Subject"
-msgstr "Предмет"
+msgstr ""
 
 #: schools/views.py:233
 #, python-format
@@ -5824,16 +5040,12 @@ msgid "Student updated successfully."
 msgstr ""
 
 #: schools/views.py:396
-#, fuzzy
-#| msgid "Student"
 msgid "Edit Student"
-msgstr "Ученик"
+msgstr ""
 
 #: schools/views.py:410
-#, fuzzy
-#| msgid "Student ID"
 msgid "Student deleted."
-msgstr "ID Студента"
+msgstr ""
 
 #: schools/views.py:463
 #, python-format
@@ -5873,46 +5085,42 @@ msgstr ""
 msgid "Student %(name)s removed."
 msgstr ""
 
-# --- Navigation & Common ---
 #: templates/partials/sidebar.html:28
 msgid "Main"
-msgstr "Главная"
+msgstr ""
 
 #: templates/partials/sidebar.html:49
 msgid "Administration"
-msgstr "Администрирование"
+msgstr ""
 
-# --- Admission Module ---
 #: templates/partials/sidebar.html:97
 msgid "Admission"
-msgstr "Приёмная комиссия"
+msgstr ""
 
 #: templates/partials/sidebar.html:107
 msgid "Admissions"
-msgstr "Приём"
+msgstr ""
 
 #: templates/partials/sidebar.html:146
-#, fuzzy
-#| msgid "Student Analytics"
 msgid "Student Management"
-msgstr "Аналитика по Ученикам"
+msgstr ""
 
 #: templates/partials/sidebar.html:177
 #: zipgrade/templates/zipgrade/upload.html:4
 msgid "Upload ZipGrade"
-msgstr "Загрузить ZipGrade"
+msgstr ""
 
 #: templates/partials/sidebar.html:189
 msgid "ZipGrade Archives"
-msgstr "Архивы ZipGrade"
+msgstr ""
 
 #: templates/partials/sidebar.html:332
 msgid "Theme"
-msgstr "Тема"
+msgstr ""
 
 #: templates/partials/sidebar.html:409
 msgid "Logout"
-msgstr "Выйти"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
@@ -5927,10 +5135,8 @@ msgid "Static Files"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/contrib/syndication/apps.py:7
-#, fuzzy
-#| msgid "Section"
 msgid "Syndication"
-msgstr "Секция"
+msgstr ""
 
 #. Translators: String used to replace omitted page numbers in elided page
 #. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
@@ -5968,10 +5174,8 @@ msgid "Enter a valid integer."
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/core/validators.py:211
-#, fuzzy
-#| msgid "Your email address"
 msgid "Enter a valid email address."
-msgstr "Ваш email адрес"
+msgstr ""
 
 #. Translators: "letters" means latin letters: a-z and A-Z.
 #: venv/lib/python3.14/site-packages/django/core/validators.py:289
@@ -6049,10 +5253,8 @@ msgstr[1] ""
 #: venv/lib/python3.14/site-packages/django/core/validators.py:514
 #: venv/lib/python3.14/site-packages/django/forms/fields.py:365
 #: venv/lib/python3.14/site-packages/django/forms/fields.py:404
-#, fuzzy
-#| msgid "Mother's phone number"
 msgid "Enter a number."
-msgstr "Телефон матери"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/core/validators.py:516
 #, python-format
@@ -6200,10 +5402,8 @@ msgid "“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1945
-#, fuzzy
-#| msgid "File Format"
 msgid "File path"
-msgstr "Формат файла"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2023
 #, python-format
@@ -6211,10 +5411,8 @@ msgid "“%(value)s” value must be a float."
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2025
-#, fuzzy
-#| msgid "Father's phone number"
 msgid "Floating point number"
-msgstr "Телефон отца"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2065
 #, python-format
@@ -6234,16 +5432,12 @@ msgid "Small integer"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2188
-#, fuzzy
-#| msgid "email address"
 msgid "IPv4 address"
-msgstr "email адрес"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2219
-#, fuzzy
-#| msgid "Address"
 msgid "IP address"
-msgstr "Адрес"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2310
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2311
@@ -6287,10 +5481,8 @@ msgid "“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2534
-#, fuzzy
-#| msgid "End Time"
 msgid "Time"
-msgstr "Время окончания"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2642
 msgid "URL"
@@ -6314,10 +5506,8 @@ msgid "Image"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/json.py:24
-#, fuzzy
-#| msgid "Subject"
 msgid "A JSON object"
-msgstr "Предмет"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/db/models/fields/json.py:26
 msgid "Value must be valid JSON."
@@ -6357,18 +5547,13 @@ msgstr ""
 msgid ":?.!"
 msgstr ""
 
-# --- Users / Accounts ---
 #: venv/lib/python3.14/site-packages/django/forms/fields.py:92
-#, fuzzy
-#| msgid "Email is required"
 msgid "This field is required."
-msgstr "Email обязателен"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/forms/fields.py:314
-#, fuzzy
-#| msgid "Mother's phone number"
 msgid "Enter a whole number."
-msgstr "Телефон матери"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/forms/fields.py:485
 #: venv/lib/python3.14/site-packages/django/forms/fields.py:1251
@@ -6524,10 +5709,8 @@ msgstr ""
 #: zipgrade/templates/zipgrade/exam_detail.html:158
 #: zipgrade/templates/zipgrade/preview.html:99
 #: zipgrade/templates/zipgrade/results.html:79
-#, fuzzy
-#| msgid "Unknown Student"
 msgid "Unknown"
-msgstr "Неизвестный студент"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/forms/widgets.py:870
 msgid "Yes"
@@ -6548,11 +5731,9 @@ msgid "Running"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/tasks/base.py:38
-#, fuzzy
-#| msgid "Failed"
 msgctxt "Task"
 msgid "Failed"
-msgstr "Не прошли"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/tasks/base.py:40
 msgctxt "Task"
@@ -6670,16 +5851,12 @@ msgid "Fri"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:21
-#, fuzzy
-#| msgid "Status"
 msgid "Sat"
-msgstr "Статус"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:22
-#, fuzzy
-#| msgid "Student"
 msgid "Sun"
-msgstr "Ученик"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:25
 msgid "January"
@@ -6690,10 +5867,8 @@ msgid "February"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:27
-#, fuzzy
-#| msgid "Search"
 msgid "March"
-msgstr "Поиск"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:28
 msgid "April"
@@ -6716,10 +5891,8 @@ msgid "August"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:33
-#, fuzzy
-#| msgid "Remember me"
 msgid "September"
-msgstr "Запомнить меня"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:34
 msgid "October"
@@ -6730,10 +5903,8 @@ msgid "November"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:36
-#, fuzzy
-#| msgid "Remember me"
 msgid "December"
-msgstr "Запомнить меня"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:39
 msgid "jan"
@@ -6794,11 +5965,9 @@ msgid "Feb."
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:55
-#, fuzzy
-#| msgid "Search"
 msgctxt "abbrev. month"
 msgid "March"
-msgstr "Поиск"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:56
 msgctxt "abbrev. month"
@@ -6856,11 +6025,9 @@ msgid "February"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:69
-#, fuzzy
-#| msgid "Search"
 msgctxt "alt. month"
 msgid "March"
-msgstr "Поиск"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:70
 msgctxt "alt. month"
@@ -6888,11 +6055,9 @@ msgid "August"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:75
-#, fuzzy
-#| msgid "Remember me"
 msgctxt "alt. month"
 msgid "September"
-msgstr "Запомнить меня"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:76
 msgctxt "alt. month"
@@ -6905,11 +6070,9 @@ msgid "November"
 msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/dates.py:78
-#, fuzzy
-#| msgid "Remember me"
 msgctxt "alt. month"
 msgid "December"
-msgstr "Запомнить меня"
+msgstr ""
 
 #: venv/lib/python3.14/site-packages/django/utils/ipv6.py:20
 msgid "This is not a valid IPv6 address."
@@ -7119,13 +6282,11 @@ msgstr ""
 
 #: zipgrade/forms.py:27 zipgrade/models.py:64
 msgid "Exam Date"
-msgstr "Дата экзамена"
+msgstr ""
 
 #: zipgrade/forms.py:35
-#, fuzzy
-#| msgid "ZipGrade Archives"
 msgid "ZipGrade File"
-msgstr "Архивы ZipGrade"
+msgstr ""
 
 #: zipgrade/forms.py:40
 msgid "Upload CSV or XLSX file from ZipGrade."
@@ -7154,80 +6315,64 @@ msgid "Question range overlaps with existing split: %(subject)s (Q%(start)s-Q%(e
 msgstr ""
 
 #: zipgrade/models.py:16
-#, fuzzy
-#| msgid "Full Name"
 msgid "Folder Name"
-msgstr "ФИО"
+msgstr ""
 
 #: zipgrade/models.py:24
 msgid "Parent Folder"
 msgstr ""
 
 #: zipgrade/models.py:31
-#, fuzzy
-#| msgid "Exam Title"
 msgid "Exam Folder"
-msgstr "Название экзамена"
+msgstr ""
 
 #: zipgrade/models.py:32
-#, fuzzy
-#| msgid "Exam Title"
 msgid "Exam Folders"
-msgstr "Название экзамена"
+msgstr ""
 
 #: zipgrade/models.py:63
 msgid "Original Filename"
-msgstr "Имя файла"
+msgstr ""
 
 #: zipgrade/models.py:69 zipgrade/templates/zipgrade/preview.html:28
 msgid "Unknown Students"
-msgstr "Неизвестные студенты"
+msgstr ""
 
 #: zipgrade/models.py:72
-#, fuzzy
-#| msgid "Answers (JSON)"
 msgid "Answer Key (JSON)"
-msgstr "Ответы (JSON)"
+msgstr ""
 
 #: zipgrade/models.py:81
 msgid "Folder"
 msgstr ""
 
-# --- ZipGrade ---
 #: zipgrade/models.py:88
 msgid "ZipGrade Exam"
-msgstr "Экзамен ZipGrade"
+msgstr ""
 
-# --- ZipGrade ---
 #: zipgrade/models.py:89
-#, fuzzy
-#| msgid "ZipGrade Exam"
 msgid "ZipGrade Exams"
-msgstr "Экзамен ZipGrade"
+msgstr ""
 
 #: zipgrade/models.py:110
-#, fuzzy
-#| msgid "Class Analytics"
 msgid "RU Classes Only"
-msgstr "Аналитика по Классам"
+msgstr ""
 
 #: zipgrade/models.py:111
-#, fuzzy
-#| msgid "Class Analytics"
 msgid "KG Classes Only"
-msgstr "Аналитика по Классам"
+msgstr ""
 
 #: zipgrade/models.py:128
 msgid "Start Question"
-msgstr "Начальный вопрос"
+msgstr ""
 
 #: zipgrade/models.py:129
 msgid "End Question"
-msgstr "Конечный вопрос"
+msgstr ""
 
 #: zipgrade/models.py:136
 msgid "Points per Question"
-msgstr "Баллов за вопрос"
+msgstr ""
 
 #: zipgrade/models.py:144
 msgid "Class Type"
@@ -7239,49 +6384,43 @@ msgstr ""
 
 #: zipgrade/models.py:190
 msgid "ZipGrade Student ID"
-msgstr "ZipGrade ID студента"
+msgstr ""
 
 #: zipgrade/models.py:191
 msgid "First Name (ZipGrade)"
-msgstr "Имя (ZipGrade)"
+msgstr ""
 
 #: zipgrade/models.py:192
 msgid "Last Name (ZipGrade)"
-msgstr "Фамилия (ZipGrade)"
+msgstr ""
 
 #: zipgrade/models.py:195 zipgrade/models.py:251
 msgid "Earned Points"
-msgstr "Набрано баллов"
+msgstr ""
 
 #: zipgrade/models.py:196 zipgrade/models.py:252
 msgid "Max Points"
-msgstr "Макс. баллов"
+msgstr ""
 
 #: zipgrade/models.py:200
 msgid "Answers (JSON)"
-msgstr "Ответы (JSON)"
+msgstr ""
 
 #: zipgrade/models.py:203
 msgid "Unknown Student"
-msgstr "Неизвестный студент"
+msgstr ""
 
 #: zipgrade/models.py:206
-#, fuzzy
-#| msgid "First Name"
 msgid "Manual First Name"
-msgstr "Имя"
+msgstr ""
 
 #: zipgrade/models.py:207
-#, fuzzy
-#| msgid "Last Name"
 msgid "Manual Last Name"
-msgstr "Фамилия"
+msgstr ""
 
 #: zipgrade/models.py:208
-#, fuzzy
-#| msgid "Full Name"
 msgid "Manual Class Name"
-msgstr "ФИО"
+msgstr ""
 
 #: zipgrade/models.py:256
 msgid "Question Results (JSON)"
@@ -7289,13 +6428,11 @@ msgstr ""
 
 #: zipgrade/models.py:259
 msgid "Subject Result"
-msgstr "Результат по предмету"
+msgstr ""
 
 #: zipgrade/models.py:260
-#, fuzzy
-#| msgid "Subject Result"
 msgid "Subject Results"
-msgstr "Результат по предмету"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/answer_key_form.html:4
 #: zipgrade/templates/zipgrade/answer_key_form.html:8
@@ -7336,42 +6473,30 @@ msgstr ""
 msgid "TRUE/FALSE in export will show actual correct/incorrect counts"
 msgstr ""
 
-# --- Registration Form ---
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:4
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:9
-#, fuzzy
-#| msgid "Student Registration"
 msgid "Edit Student Information"
-msgstr "Регистрация ученика"
+msgstr ""
 
-# --- ZipGrade ---
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:26
-#, fuzzy
-#| msgid "ZipGrade Exam"
 msgid "ZipGrade ID:"
-msgstr "Экзамен ZipGrade"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:27
-#, fuzzy
-#| msgid "Original Filename"
 msgid "Original Name:"
-msgstr "Имя файла"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:34
-#, fuzzy
-#| msgid "Last Name (ZipGrade)"
 msgid "Last Name (Surname)"
-msgstr "Фамилия (ZipGrade)"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:36
 msgid "Enter last name"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:42
-#, fuzzy
-#| msgid "First Name"
 msgid "Enter first name"
-msgstr "Имя"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:48
 msgid "Enter class (e.g. 9B)"
@@ -7382,10 +6507,8 @@ msgid "Link to Existing Student (Optional)"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:54
-#, fuzzy
-#| msgid "Weakest Students"
 msgid "-- Select Student --"
-msgstr "Отстающие ученики"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/edit_unknown_student.html:61
 msgid "If selected, this will link the result to the student's record."
@@ -7401,22 +6524,16 @@ msgid "student results will be deleted."
 msgstr ""
 
 #: zipgrade/templates/zipgrade/exam_detail.html:17
-#, fuzzy
-#| msgid "Upload Results"
 msgid "Download Results"
-msgstr "Загрузить результаты"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/exam_detail.html:26 zipgrade/views.py:409
-#, fuzzy
-#| msgid "Subject Split"
 msgid "Add Subject Split"
-msgstr "Разделение по предметам"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/exam_detail.html:73
-#, fuzzy
-#| msgid "Upload File"
 msgid "Uploaded"
-msgstr "Загрузить файл"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/exam_detail.html:74
 msgid "By"
@@ -7427,10 +6544,8 @@ msgid "Matched Only"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/exam_detail.html:116
-#, fuzzy
-#| msgid "Unknown Student"
 msgid "Unknown Only"
-msgstr "Неизвестный студент"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/exam_detail.html:121
 msgid "Sort"
@@ -7441,10 +6556,8 @@ msgid "Score (High)"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/exam_detail.html:125
-#, fuzzy
-#| msgid "Score"
 msgid "Score (Low)"
-msgstr "Балл"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/exam_detail.html:147
 #: zipgrade/templates/zipgrade/preview.html:89
@@ -7457,10 +6570,8 @@ msgid "Matched"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:4
-#, fuzzy
-#| msgid "Master Answers"
 msgid "Generate Answer Sheets"
-msgstr "Ключи ответов"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:17
 msgid "Generate ZipGrade Answer Sheets"
@@ -7513,10 +6624,8 @@ msgid "Use the same Master ID format with student data columns."
 msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:119
-#, fuzzy
-#| msgid "Upload the CSV file"
 msgid "Upload the file"
-msgstr "Загрузите CSV файл"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:120
 msgid "Select your .xlsx file using the upload form."
@@ -7531,40 +6640,32 @@ msgid "A PDF with all pre-filled answer sheets will be generated and downloaded 
 msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:141
-#, fuzzy
-#| msgid "Supported Columns"
 msgid "Expected XLSX Columns"
-msgstr "Поддерживаемые столбцы"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:149
 msgid "Required"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:155
-#, fuzzy
-#| msgid "Student ID"
 msgid "Student ID (9 digits)"
-msgstr "ID Студента"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:170
 msgid "Grade/Class number"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:175
-#, fuzzy
-#| msgid "Section"
 msgid "Section letter"
-msgstr "Секция"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:180
 msgid "Class type (RU/KG)"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:207
-#, fuzzy
-#| msgid "Upload Master Student List"
 msgid "Upload Student List"
-msgstr "Загрузить список студентов (Master List)"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/generate_answersheets.html:210
 msgid "Select an Excel file (.xlsx) with your student data"
@@ -7596,10 +6697,8 @@ msgid "Preview Import"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/preview.html:35
-#, fuzzy
-#| msgid "Master Students"
 msgid "Matched Students"
-msgstr "Студенты (Общий список)"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/preview.html:69
 #, python-format
@@ -7613,24 +6712,20 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: zipgrade/templates/zipgrade/preview.html:78
-#, fuzzy
-#| msgid "Upload & Preview"
 msgid "Preview"
-msgstr "Загрузить и просмотреть"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/preview.html:79
 msgid "showing first 50"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/preview.html:88
-#, fuzzy
-#| msgid "Last Name (ZipGrade)"
 msgid "Name (ZipGrade)"
-msgstr "Фамилия (ZipGrade)"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/preview.html:132
 msgid "Optional"
-msgstr "Необязательно"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/preview.html:134
 msgid "Specify the question ranges for each subject. Example: Math (1-10), English (11-20)."
@@ -7641,41 +6736,29 @@ msgid "Add Split"
 msgstr ""
 
 #: zipgrade/templates/zipgrade/preview.html:169
-#, fuzzy
-#| msgid "Confirm Password"
 msgid "Confirm Import"
-msgstr "Подтвердите пароль"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/results.html:4
 #: zipgrade/templates/zipgrade/results.html:8
-#, fuzzy
-#| msgid "Upload ZipGrade Results"
 msgid "ZipGrade Results"
-msgstr "Загрузить результаты ZipGrade"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/results.html:18
-#, fuzzy
-#| msgid "Upload Results"
 msgid "Upload Answersheets"
-msgstr "Загрузить результаты"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/results.html:27
-#, fuzzy
-#| msgid "Upload New File"
 msgid "Upload New"
-msgstr "Загрузить новый файл"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/results.html:44
-#, fuzzy
-#| msgid "Exam Date"
 msgid "From Date"
-msgstr "Дата экзамена"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/results.html:49
-#, fuzzy
-#| msgid "Date"
 msgid "To Date"
-msgstr "Дата"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/results.html:129
 msgid "No exams uploaded yet."
@@ -7683,10 +6766,8 @@ msgstr ""
 
 #: zipgrade/templates/zipgrade/subject_split_confirm_delete.html:4
 #: zipgrade/templates/zipgrade/subject_split_confirm_delete.html:8
-#, fuzzy
-#| msgid "Subject Split"
 msgid "Delete Subject Split"
-msgstr "Разделение по предметам"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/subject_split_confirm_delete.html:22
 #, python-format
@@ -7695,47 +6776,47 @@ msgstr ""
 
 #: zipgrade/templates/zipgrade/subject_split_form.html:42
 msgid "Save"
-msgstr "Сохранить"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:10
 msgid "View All Results"
-msgstr "Все результаты"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:46
 msgid "Upload & Preview"
-msgstr "Загрузить и просмотреть"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:52
 msgid "Instructions"
-msgstr "Инструкция"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:55
 msgid "Export results from ZipGrade as CSV"
-msgstr "Экспортируйте результаты из ZipGrade в формате CSV"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:56
 msgid "Select the school and enter exam details"
-msgstr "Выберите школу и введите данные экзамена"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:57
 msgid "Upload the CSV file"
-msgstr "Загрузите CSV файл"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:58
 msgid "Preview and confirm the import"
-msgstr "Проверьте и подтвердите импорт"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:59
 msgid "Optionally add subject splits for detailed analytics"
-msgstr "Опционально: добавьте разделение по предметам для детальной аналитики"
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:69
 msgid "Students will be automatically matched to the Master Student List using Smart ID matching."
-msgstr "Ученики будут автоматически сопоставлены с общим списком по ID (Smart Match)."
+msgstr ""
 
 #: zipgrade/templates/zipgrade/upload.html:72
 msgid "Supported Columns"
-msgstr "Поддерживаемые столбцы"
+msgstr ""
 
 #: zipgrade/views.py:36
 #, python-format
@@ -7769,26 +6850,20 @@ msgid "Subject split updated successfully."
 msgstr ""
 
 #: zipgrade/views.py:439
-#, fuzzy
-#| msgid "Subject Split"
 msgid "Edit Subject Split"
-msgstr "Разделение по предметам"
+msgstr ""
 
 #: zipgrade/views.py:456
-#, fuzzy
-#| msgid "Subject Split"
 msgid "Subject split deleted."
-msgstr "Разделение по предметам"
+msgstr ""
 
 #: zipgrade/views.py:630
 msgid "Student information updated successfully."
 msgstr ""
 
 #: zipgrade/views.py:655
-#, fuzzy
-#| msgid "Please select a class"
 msgid "Please select an XLSX file to upload."
-msgstr "Пожалуйста, выберите класс"
+msgstr ""
 
 #: zipgrade/views.py:660
 msgid "Please upload a valid Excel file (.xlsx or .xls)."
@@ -7813,10 +6888,8 @@ msgid "Generated %(count)s sheets with %(warn)s warnings: %(errors)s"
 msgstr ""
 
 #: zipgrade/views.py:721
-#, fuzzy
-#| msgid "Please select a class"
 msgid "Please select a school."
-msgstr "Пожалуйста, выберите класс"
+msgstr ""
 
 #: zipgrade/views.py:784
 #, python-format
@@ -7830,58 +6903,3 @@ msgstr ""
 #: zipgrade/views.py:793
 msgid "Answer key cleared."
 msgstr ""
-
-#~ msgid "Accepted"
-#~ msgstr "Принято"
-
-#~ msgid "accepted"
-#~ msgstr "принято"
-
-#~ msgid "Export PDF"
-#~ msgstr "Экспорт в PDF"
-
-#~ msgid "Welcome Back"
-#~ msgstr "С возвращением"
-
-#~ msgid "Sign in to your Aalam Synak account"
-#~ msgstr "Войдите в свой аккаунт Aalam Synak"
-
-#~ msgid "Sign In"
-#~ msgstr "Войти"
-
-#~ msgid "Sign Up"
-#~ msgstr "Зарегистрироваться"
-
-#~ msgid "Forgot Password?"
-#~ msgstr "Забыли пароль?"
-
-#~ msgid "Don't have an account?"
-#~ msgstr "Нет аккаунта?"
-
-#~ msgid "Already have an account?"
-#~ msgstr "Уже есть аккаунт?"
-
-# --- Registration Form ---
-#~ msgid "Register as a student to access Aalam Synak"
-#~ msgstr "Зарегистрируйтесь как студент для доступа к Aalam Synak"
-
-#~ msgid "Your phone number"
-#~ msgstr "Ваш номер телефона"
-
-#~ msgid "Enter your email"
-#~ msgstr "Введите ваш email"
-
-#~ msgid "Passed / Failed"
-#~ msgstr "Прошли / Не прошли"
-
-#~ msgid "Phone Number 2"
-#~ msgstr "Номер телефона 2"
-
-#~ msgid "Напр: Баткен, Ош, Бишкек"
-#~ msgstr "Напр: Баткен, Ош, Бишкек"
-
-#~ msgid "Необязательно"
-#~ msgstr "Необязательно"
-
-#~ msgid "e.g. Баткен, Ош, Бишкек..."
-#~ msgstr "напр. Баткен, Ош, Бишкек..."

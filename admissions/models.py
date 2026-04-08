@@ -489,4 +489,86 @@ class OnlineAttemptAnswer(models.Model):
         unique_together = ['attempt', 'question']
 
 
+# ============================================================
+# ROUND RESULTS — Excel-based admission results for students
+# ============================================================
+
+class RoundResultSession(models.Model):
+    """An upload session for round results (e.g. '1-тур жыйынтыгы')."""
+    title = models.CharField(max_length=255, verbose_name=_('Title'))
+    file = models.FileField(upload_to='round_results/', verbose_name=_('Excel File'))
+    is_published = models.BooleanField(default=False, verbose_name=_('Published'))
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        verbose_name=_('Uploaded By')
+    )
+
+    class Meta:
+        verbose_name = _('Round Result Session')
+        verbose_name_plural = _('Round Result Sessions')
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return self.title
+
+
+class RoundResult(models.Model):
+    """Individual student result row imported from Excel."""
+    STATUS_CHOICES = [
+        ('accepted', _('Өттү')),
+        ('rejected', _('Өтпөдү')),
+    ]
+
+    session = models.ForeignKey(
+        RoundResultSession,
+        on_delete=models.CASCADE,
+        related_name='results',
+        verbose_name=_('Session')
+    )
+    full_name = models.CharField(max_length=300, verbose_name=_('Full Name'))
+    gender = models.CharField(max_length=50, blank=True, default='', verbose_name=_('Gender'))
+    district = models.CharField(max_length=200, blank=True, default='', verbose_name=_('District'))
+    school = models.CharField(max_length=300, blank=True, default='', verbose_name=_('School'))
+    phone1 = models.CharField(max_length=50, blank=True, default='', verbose_name=_('Phone 1'))
+    phone2 = models.CharField(max_length=50, blank=True, default='', verbose_name=_('Phone 2'))
+
+    # Subject scores (raw score like 8) and percentages
+    math_score = models.FloatField(null=True, blank=True, verbose_name=_('Math Score'))
+    math_pct = models.FloatField(null=True, blank=True, verbose_name=_('Math %'))
+    kyrgyz_score = models.FloatField(null=True, blank=True, verbose_name=_('Kyrgyz Score'))
+    kyrgyz_pct = models.FloatField(null=True, blank=True, verbose_name=_('Kyrgyz %'))
+    biology_score = models.FloatField(null=True, blank=True, verbose_name=_('Biology Score'))
+    biology_pct = models.FloatField(null=True, blank=True, verbose_name=_('Biology %'))
+    geography_score = models.FloatField(null=True, blank=True, verbose_name=_('Geography Score'))
+    geography_pct = models.FloatField(null=True, blank=True, verbose_name=_('Geography %'))
+    history_score = models.FloatField(null=True, blank=True, verbose_name=_('History Score'))
+    history_pct = models.FloatField(null=True, blank=True, verbose_name=_('History %'))
+    english_score = models.FloatField(null=True, blank=True, verbose_name=_('English Score'))
+    english_pct = models.FloatField(null=True, blank=True, verbose_name=_('English %'))
+    russian_score = models.FloatField(null=True, blank=True, verbose_name=_('Russian Score'))
+    russian_pct = models.FloatField(null=True, blank=True, verbose_name=_('Russian %'))
+
+    # Totals
+    total_score = models.FloatField(default=0, verbose_name=_('Total Score'))
+    total_pct = models.FloatField(default=0, verbose_name=_('Total %'))
+
+    # Medal & Status
+    medal = models.CharField(max_length=50, blank=True, default='', verbose_name=_('Medal'))
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='rejected',
+        verbose_name=_('Status')
+    )
+
+    class Meta:
+        verbose_name = _('Round Result')
+        verbose_name_plural = _('Round Results')
+        ordering = ['-total_score']
+
+    def __str__(self):
+        return f"{self.full_name} — {self.total_score}"
 

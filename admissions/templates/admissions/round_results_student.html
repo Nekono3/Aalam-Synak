@@ -1,0 +1,461 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Round 1 Results" %} | Aalam Synak{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== Round Results — Premium Design ===== */
+.rr-hero { text-align: center; padding: 2.5rem 1.5rem 1rem; margin-bottom: 0; }
+.rr-hero h1 {
+    font-size: 2.25rem; font-weight: 800;
+    background: linear-gradient(135deg, #FFD700, #FFA500, #FF6347);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 0.5rem;
+}
+.rr-hero p { color: var(--text-secondary); font-size: 1.05rem; }
+
+/* Description block */
+.rr-desc {
+    max-width: 800px; margin: 0 auto; padding: 1.5rem 2rem 2rem;
+    font-size: 0.92rem; line-height: 1.7; color: var(--text-secondary);
+    text-align: left;
+}
+.rr-desc strong { color: var(--text-primary); }
+.rr-desc .rr-note {
+    margin-top: 1rem; padding: 0.75rem 1rem; border-radius: var(--radius-lg);
+    background: rgba(245,158,11,0.08); border-left: 3px solid #F59E0B;
+    font-size: 0.85rem;
+}
+[data-theme="dark"] .rr-desc .rr-note { background: rgba(245,158,11,0.12); }
+
+/* Stats */
+.rr-stats { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+.rr-stat-card {
+    background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
+    padding: 1.25rem 2rem; text-align: center; min-width: 150px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.rr-stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.rr-stat-card .num { font-size: 1.75rem; font-weight: 800; }
+.rr-stat-card .lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+.rr-stat-card.total .num { color: var(--primary-blue); }
+.rr-stat-card.pass .num { color: #10B981; }
+
+/* Top 10 Grid */
+.rr-top-section-title {
+    font-size: 1.3rem; font-weight: 700; margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 8px;
+}
+.rr-top-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem; margin-bottom: 2.5rem;
+}
+.rr-top-card {
+    background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
+    box-shadow: var(--glass-shadow); overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.rr-top-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.rr-card-hdr {
+    padding: 0.85rem 1.25rem; font-weight: 700; font-size: 0.95rem;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 2px solid; user-select: none;
+}
+.rr-card-hdr.math { border-color: #6366F1; color: #6366F1; }
+.rr-card-hdr.kyrgyz { border-color: #EC4899; color: #EC4899; }
+.rr-card-hdr.bio { border-color: #10B981; color: #10B981; }
+.rr-card-hdr.geo { border-color: #F59E0B; color: #F59E0B; }
+.rr-card-hdr.hist { border-color: #8B5CF6; color: #8B5CF6; }
+.rr-card-hdr.eng { border-color: #3B82F6; color: #3B82F6; }
+.rr-card-hdr.rus { border-color: #EF4444; color: #EF4444; }
+.rr-card-hdr.total { border-color: #FFD700; color: #FFD700; }
+[data-theme="light"] .rr-card-hdr { color: var(--text-primary); }
+
+/* Accordion toggle */
+.rr-card-toggle {
+    font-size: 1rem; transition: transform 0.25s ease; display: inline-block;
+}
+.rr-top-card.rr-open .rr-card-toggle { transform: rotate(90deg); }
+.rr-card-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+.rr-top-card.rr-open .rr-card-body { max-height: 600px; }
+/* Desktop: start open */
+@media (min-width: 641px) {
+    .rr-top-card .rr-card-body { max-height: 600px; }
+    .rr-top-card .rr-card-toggle { transform: rotate(90deg); }
+    .rr-top-card:not(.rr-open):not(.rr-init) .rr-card-body { max-height: 600px; }
+    .rr-top-card:not(.rr-open):not(.rr-init) .rr-card-toggle { transform: rotate(90deg); }
+}
+
+/* Top 10 column header */
+.rr-col-hdr {
+    display: flex; padding: 0.35rem 1.25rem; font-size: 0.7rem;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-muted); border-bottom: 1px solid rgba(128,128,128,0.12);
+}
+.rr-col-hdr .ch-name { flex: 1; margin-left: 34px; }
+.rr-col-hdr .ch-val { white-space: nowrap; }
+
+.rr-top-list { list-style: none; margin: 0; padding: 0; }
+.rr-top-list li {
+    display: flex; align-items: center; padding: 0.5rem 1.25rem;
+    border-bottom: 1px solid rgba(128,128,128,0.06); font-size: 0.88rem;
+    transition: background 0.15s;
+}
+.rr-top-list li:hover { background: rgba(99,102,241,0.06); }
+.rr-top-list li:last-child { border-bottom: none; }
+
+.rr-rank-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; margin-right: 10px; flex-shrink: 0;
+    background: var(--bg-secondary); color: var(--text-muted);
+}
+.rr-rank-num.r1 { background: linear-gradient(135deg,#FFD700,#FFA500); color: #fff; }
+.rr-rank-num.r2 { background: linear-gradient(135deg,#C0C0C0,#A0A0A0); color: #fff; }
+.rr-rank-num.r3 { background: linear-gradient(135deg,#CD7F32,#B5651D); color: #fff; }
+.rr-sname { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rr-sval { font-weight: 700; margin-left: 8px; white-space: nowrap; font-size: 0.85rem; color: var(--text-primary); }
+
+/* ===== Search Section ===== */
+.rr-search-section { margin-top: 2rem; }
+.rr-search-bar {
+    display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;
+    margin-bottom: 1.25rem;
+}
+.rr-search-bar input[type="text"] {
+    flex: 1; min-width: 220px; padding: 0.75rem 1rem; border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color); background: var(--bg-card);
+    color: var(--text-primary); font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.rr-search-bar input[type="text"]:focus {
+    outline: none; border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+.rr-search-bar select {
+    padding: 0.75rem 1rem; border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color); background: var(--bg-card);
+    color: var(--text-primary); font-size: 0.9rem; min-width: 180px;
+}
+
+/* Results info */
+.rr-results-info {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.75rem; font-size: 0.85rem; color: var(--text-muted);
+}
+
+/* Table */
+.rr-table { width: 100%; border-collapse: collapse; }
+.rr-table th {
+    text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-muted); border-bottom: 2px solid var(--border-color);
+}
+.rr-table td {
+    padding: 0.7rem 1rem; font-size: 0.9rem;
+    border-bottom: 1px solid rgba(128,128,128,0.08);
+}
+.rr-table tbody tr { transition: background 0.15s; }
+.rr-table tbody tr:hover { background: rgba(99,102,241,0.04); }
+
+/* Medal styles */
+.medal-gold { background: linear-gradient(135deg,#FFD700,#FFA500); color:#fff; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:700; display:inline-flex; align-items:center; gap:3px; }
+.medal-silver { background: linear-gradient(135deg,#C0C0C0,#A0A0A0); color:#fff; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:700; display:inline-flex; align-items:center; gap:3px; }
+.medal-bronze { background: linear-gradient(135deg,#CD7F32,#B5651D); color:#fff; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:700; display:inline-flex; align-items:center; gap:3px; }
+
+/* Status */
+.st-pass { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600; background:rgba(16,185,129,0.12); color:#059669; }
+[data-theme="dark"] .st-pass { background:rgba(16,185,129,0.2); color:#34D399; }
+.st-fail { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600; background:rgba(239,68,68,0.12); color:#DC2626; }
+[data-theme="dark"] .st-fail { background:rgba(239,68,68,0.2); color:#F87171; }
+.medal-candidate { padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600; background:rgba(148,163,184,0.15); color:var(--text-muted); display:inline-flex; align-items:center; gap:3px; }
+
+/* Pagination */
+.rr-pag { display: flex; justify-content: center; gap: 0.4rem; margin-top: 1.25rem; flex-wrap: wrap; }
+.rr-pag button {
+    padding: 7px 14px; border-radius: var(--radius-md); font-size: 0.85rem;
+    font-weight: 500; border: 1px solid var(--border-color);
+    background: var(--bg-card); color: var(--text-primary); cursor: pointer;
+    transition: all 0.15s;
+}
+.rr-pag button:hover:not(:disabled) { background: var(--primary-blue); color: #fff; border-color: var(--primary-blue); }
+.rr-pag button.active { background: var(--primary-blue); color: #fff; border-color: var(--primary-blue); }
+.rr-pag button:disabled { opacity: 0.4; cursor: default; }
+
+/* Loading spinner */
+.rr-loading { text-align: center; padding: 2rem; color: var(--text-muted); }
+
+/* Empty */
+.rr-empty { text-align: center; padding: 4rem 2rem; }
+.rr-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+/* Responsive */
+@media (max-width: 640px) {
+    .rr-hero h1 { font-size: 1.5rem; }
+    .rr-top-grid { grid-template-columns: 1fr; }
+    .rr-stat-card { min-width: 100px; padding: 0.85rem 1rem; }
+    .rr-stat-card .num { font-size: 1.35rem; }
+    .rr-search-bar { flex-direction: column; }
+    .rr-search-bar input, .rr-search-bar select { width: 100%; }
+    .rr-table th, .rr-table td { padding: 0.5rem 0.5rem; font-size: 0.8rem; }
+    .rr-desc { padding: 1rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if not session %}
+<div class="rr-empty glass-card animate-fade-in">
+    <div class="rr-empty-icon">📋</div>
+    <h2>{% trans "Results have not been published yet" %}</h2>
+    <p>{% trans "Results will be shown here when published." %}</p>
+</div>
+{% else %}
+
+<!-- Hero + Description -->
+<div class="glass-card animate-fade-in">
+    <div class="rr-hero">
+        <h1>🏆 {{ session.title }}</h1>
+        <p>{% trans "Admission exam results" %}</p>
+    </div>
+    <div class="rr-desc">
+        <p><strong>{% trans "Dear students and parents!" %}</strong></p>
+        <p>{% trans "The results of Round 1 of the Aalam Olympiad exam have been published." %}</p>
+        <p>{% trans "This section contains the results of the offline test. Students can see their score, points earned, and pass status here." %}</p>
+        <div class="rr-note">
+            <strong>{% trans "Note:" %}</strong> {% trans "Only offline test results are shown here. Results from online tests are not included in this section." %}
+        </div>
+        <p style="margin-top:1rem">{% trans "We wish all participants success and sincerely congratulate the students who advanced to the next stage!" %}</p>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="rr-stats animate-slide-up">
+    <div class="rr-stat-card" style="border-top:3px solid #3B82F6">
+        <div class="num" style="color:#3B82F6">{{ total_count }}</div>
+        <div class="lbl">{% trans "Total participants" %}</div>
+    </div>
+    <div class="rr-stat-card" style="border-top:3px solid #10B981">
+        <div class="num" style="color:#10B981">{{ accepted_count }}</div>
+        <div class="lbl">{% trans "Passed" %}</div>
+    </div>
+    <div class="rr-stat-card" style="border-top:3px solid #EF4444">
+        <div class="num" style="color:#EF4444">{{ rejected_count }}</div>
+        <div class="lbl">{% trans "Did not pass" %}</div>
+    </div>
+</div>
+
+<!-- Top 10 Rankings -->
+<div class="animate-slide-up">
+    <div class="rr-top-section-title">⭐ {% trans "Top Students by Subject" %}</div>
+    <div class="rr-top-grid">
+        {% trans "Math" as t_math %}
+        {% trans "Kyrgyz Language" as t_kyrgyz %}
+        {% trans "Biology" as t_bio %}
+        {% trans "Geography" as t_geo %}
+        {% trans "History" as t_hist %}
+        {% trans "English" as t_eng %}
+        {% trans "Russian" as t_rus %}
+        {% trans "Total Score" as t_total %}
+        {% trans "Top 10" as t_top10 %}
+        {% trans "Name" as t_name %}
+        {% trans "Score" as t_score %}
+
+        {% include "admissions/_top10_card.html" with items=top_math title_text=t_math top10_text=t_top10 name_text=t_name score_text=t_score css_class="math" max_score="20" %}
+        {% include "admissions/_top10_card.html" with items=top_kyrgyz title_text=t_kyrgyz top10_text=t_top10 name_text=t_name score_text=t_score css_class="kyrgyz" max_score="10" %}
+        {% include "admissions/_top10_card.html" with items=top_biology title_text=t_bio top10_text=t_top10 name_text=t_name score_text=t_score css_class="bio" max_score="10" %}
+        {% include "admissions/_top10_card.html" with items=top_geography title_text=t_geo top10_text=t_top10 name_text=t_name score_text=t_score css_class="geo" max_score="10" %}
+        {% include "admissions/_top10_card.html" with items=top_history title_text=t_hist top10_text=t_top10 name_text=t_name score_text=t_score css_class="hist" max_score="10" %}
+        {% include "admissions/_top10_card.html" with items=top_english title_text=t_eng top10_text=t_top10 name_text=t_name score_text=t_score css_class="eng" max_score="10" %}
+        {% include "admissions/_top10_card.html" with items=top_russian title_text=t_rus top10_text=t_top10 name_text=t_name score_text=t_score css_class="rus" max_score="10" %}
+        {% include "admissions/_top10_card.html" with items=top_total title_text=t_total top10_text=t_top10 name_text=t_name score_text=t_score css_class="total" max_score="70" is_total=True %}
+    </div>
+</div>
+
+<!-- Search & Results Section (always visible, only accepted students) -->
+<div class="rr-search-section glass-card animate-slide-up" style="padding: 1.5rem;" id="searchSection">
+    <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">🔍 {% trans "Search results" %}</h2>
+
+    <div class="rr-search-bar">
+        <input type="text" id="searchInput" placeholder="{% trans "Search by name..." %}" autocomplete="off">
+    </div>
+
+    <div class="rr-results-info">
+        <span id="resultsCount"></span>
+        <span id="pageInfo"></span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="rr-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>{% trans "Full name" %}</th>
+                    <th>{% trans "School" %}</th>
+                    <th style="text-align:center">{% trans "Score" %}</th>
+                    <th style="text-align:center">{% trans "Percentage" %}</th>
+                    <th style="text-align:center">{% trans "Medal" %}</th>
+                    <th style="text-align:center">{% trans "Status" %}</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody">
+                <tr><td colspan="7" class="rr-loading">{% trans "Loading..." %}</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="rr-pag" id="pagination"></div>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if session %}
+<script>
+(function(){
+    const SEARCH_URL = "{% url 'admissions:round_results_search_ajax' %}";
+    const input = document.getElementById('searchInput');
+    const body = document.getElementById('resultsBody');
+    const pag = document.getElementById('pagination');
+    const countEl = document.getElementById('resultsCount');
+    const pageEl = document.getElementById('pageInfo');
+
+    // i18n strings
+    const TXT = {
+        passed: "{% trans 'Passed' %}",
+        notPassed: "{% trans 'Did not pass' %}",
+        candidate: "{% trans 'Candidate' %}",
+        showing: "{% trans 'Showing' %}",
+        of: "{% trans 'of' %}",
+        results: "{% trans 'results' %}",
+        page: "{% trans 'Page' %}",
+        noResults: "{% trans 'No results found.' %}",
+        prev: "{% trans 'Previous' %}",
+        next: "{% trans 'Next' %}"
+    };
+
+    let timer = null;
+    let currentPage = 1;
+
+    function doSearch(page) {
+        currentPage = page || 1;
+        const q = input.value.trim();
+        // Show ALL students
+        const url = `${SEARCH_URL}?search=${encodeURIComponent(q)}&page=${currentPage}`;
+
+        body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1.5rem;color:var(--text-muted)">⏳</td></tr>';
+
+        fetch(url)
+            .then(r => {
+                if (!r.ok) throw new Error('Network error');
+                return r.json();
+            })
+            .then(data => {
+                renderResults(data);
+                renderPagination(data);
+                countEl.textContent = `${TXT.showing} ${data.results.length} ${TXT.of} ${data.total} ${TXT.results}`;
+                pageEl.textContent = data.num_pages > 1 ? `${TXT.page} ${data.current_page} / ${data.num_pages}` : '';
+            })
+            .catch(err => {
+                console.error('Search error:', err);
+                body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1.5rem;color:#EF4444">Error loading results</td></tr>';
+            });
+    }
+
+    function renderResults(data) {
+        if (!data.results.length) {
+            body.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted)">${TXT.noResults}</td></tr>`;
+            return;
+        }
+        let html = '';
+        data.results.forEach(r => {
+            const medalHtml = getMedalBadge(r.medal);
+            const statusHtml = r.status === 'accepted'
+                ? `<span class="st-pass">✓ ${TXT.passed}</span>`
+                : `<span class="st-fail">✗ ${TXT.notPassed}</span>`;
+
+            html += `<tr>
+                <td style="color:var(--text-muted)">${r.rank}</td>
+                <td style="font-weight:600">${highlightMatch(r.full_name, input.value.trim())}</td>
+                <td style="color:var(--text-muted);font-size:0.85rem">${r.school}</td>
+                <td style="text-align:center;font-weight:700">${r.total_score}</td>
+                <td style="text-align:center">${r.total_pct}%</td>
+                <td style="text-align:center">${medalHtml}</td>
+                <td style="text-align:center">${statusHtml}</td>
+            </tr>`;
+        });
+        body.innerHTML = html;
+    }
+
+    function getMedalBadge(medal) {
+        if (!medal) return `<span class="medal-candidate">${TXT.candidate}</span>`;
+        const ml = medal.toLowerCase();
+        if (ml.includes('gold')) return '<span class="medal-gold">🥇 GOLD</span>';
+        if (ml.includes('silver')) return '<span class="medal-silver">🥈 SILVER</span>';
+        if (ml.includes('bronze')) return '<span class="medal-bronze">🥉 BRONZE</span>';
+        return `<span class="medal-candidate">${TXT.candidate}</span>`;
+    }
+
+    function highlightMatch(text, query) {
+        if (!query) return escHtml(text);
+        const idx = text.toLowerCase().indexOf(query.toLowerCase());
+        if (idx === -1) return escHtml(text);
+        const before = text.slice(0, idx);
+        const match = text.slice(idx, idx + query.length);
+        const after = text.slice(idx + query.length);
+        return `${escHtml(before)}<mark style="background:#FBBF24;color:#000;padding:0 2px;border-radius:3px">${escHtml(match)}</mark>${escHtml(after)}`;
+    }
+
+    function escHtml(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    function renderPagination(data) {
+        if (data.num_pages <= 1) { pag.innerHTML = ''; return; }
+        let html = '';
+        html += `<button ${data.has_prev ? '' : 'disabled'} onclick="window._rrSearch(${data.current_page - 1})">${TXT.prev}</button>`;
+
+        const cp = data.current_page;
+        const tp = data.num_pages;
+        const pages = [];
+        pages.push(1);
+        for (let i = Math.max(2, cp - 2); i <= Math.min(tp - 1, cp + 2); i++) pages.push(i);
+        if (tp > 1) pages.push(tp);
+        const unique = [...new Set(pages)];
+
+        let last = 0;
+        unique.forEach(p => {
+            if (last && p - last > 1) html += '<button disabled>…</button>';
+            html += `<button class="${p === cp ? 'active' : ''}" onclick="window._rrSearch(${p})">${p}</button>`;
+            last = p;
+        });
+
+        html += `<button ${data.has_next ? '' : 'disabled'} onclick="window._rrSearch(${data.current_page + 1})">${TXT.next}</button>`;
+        pag.innerHTML = html;
+    }
+
+    // Expose for pagination buttons
+    window._rrSearch = function(page) { doSearch(page); };
+
+    // Live search on input
+    input.addEventListener('input', function() {
+        clearTimeout(timer);
+        timer = setTimeout(() => doSearch(1), 300);
+    });
+
+    // Initial load
+    doSearch(1);
+})();
+</script>
+{% endif %}
+{% endblock %}

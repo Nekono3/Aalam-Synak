@@ -11,7 +11,8 @@ from .models import (
     AdmissionCycle, ExternalSchool, AdmissionCandidate,
     AdmissionResult, AdmissionSubjectScore, AdmissionUploadSession,
     AdmissionRegistration, AdmissionQuestion, AdmissionQuestionOption,
-    AdmissionSubjectSplit, AdmissionMasterAnswer, OnlineAttempt, OnlineAttemptAnswer
+    AdmissionSubjectSplit, AdmissionMasterAnswer, OnlineAttempt, OnlineAttemptAnswer,
+    RoundResultSession, RoundResult
 )
 from .forms import (
     AdmissionXLSXUploadForm, AdmissionRegistrationForm,
@@ -369,7 +370,6 @@ def candidate_list(request):
     
     if cycle_id:
         from .models import AdmissionRegistration
-        from exams.models import OnlineAttempt
         registered_user_ids = AdmissionRegistration.objects.filter(cycle_id=cycle_id).values_list('user_id', flat=True)
         attempt_user_ids = OnlineAttempt.objects.filter(cycle_id=cycle_id).values_list('student_id', flat=True)
         candidates = candidates.filter(
@@ -1993,3 +1993,296 @@ def recalculate_all_online_results(request):
         
     messages.success(request, f"Successfully recalculated {count} student results.")
     return redirect('admissions:online_analytics_dashboard')
+
+
+# ============================================================
+# ROUND RESULTS — Admin management + Student-facing page
+# ============================================================
+
+@login_required
+@user_passes_test(is_super_admin)
+def round_results_admin(request):
+    """Admin management page for round result sessions."""
+    sessions = RoundResultSession.objects.all()
+    context = {
+        'sessions': sessions,
+    }
+    return render(request, 'admissions/round_results_admin.html', context)
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def round_results_upload(request):
+    """Upload Excel and import round results."""
+    if request.method == 'POST':
+        title = request.POST.get('title', '1-тур жыйынтыгы')
+        excel_file = request.FILES.get('file')
+        if not excel_file:
+            messages.error(request, 'Excel файл тандалган жок.')
+            return redirect('admissions:round_results_upload')
+
+        session = RoundResultSession.objects.create(
+            title=title,
+            file=excel_file,
+            uploaded_by=request.user,
+        )
+
+        import re
+
+        def parse_subject(val):
+            """Parse '8/10 (80.0%)' → (score=8, pct=80.0). Returns (None, None) on failure."""
+            if not val:
+                return None, None
+            s = str(val).strip()
+            # Try pattern: "8/10 (80.0%)"
+            m = re.match(r'(\d+)\s*/\s*(\d+)\s*\((\d+\.?\d*)%\)', s)
+            if m:
+                score = float(m.group(1))
+                pct = float(m.group(3))
+                return score, pct
+            # Fallback: just a number
+            try:
+                return float(s), None
+            except (ValueError, TypeError):
+                return None, None
+
+        def safe_float(val):
+            if val is None:
+                return None
+            try:
+                s = str(val).replace('%', '').strip()
+                return float(s)
+            except (ValueError, TypeError):
+                return None
+
+        def safe_str(val):
+            if val is None:
+                return ''
+            return str(val).strip()
+
+        try:
+            wb = openpyxl.load_workbook(excel_file, data_only=True, read_only=True)
+            ws = wb.active
+            rows = []
+            for row in ws.iter_rows(values_only=True):
+                rows.append(row)
+            wb.close()
+
+            if len(rows) < 2:
+                messages.warning(request, 'Excel файлда маалымат жок.')
+                return redirect('admissions:round_results_admin')
+
+            # Fixed column mapping based on actual file:
+            # 0=ФИО, 1=Жыныс, 2=Район, 3=Мектеби, 4=Тел1, 5=Тел2,
+            # 6=Общий балл, 7=Процент,
+            # 8=Математика, 9=Кыргыз тил, 10=Биология,
+            # 11=География, 12=Тарых, 13=Англис тил, 14=Орус тил,
+            # 15=Медаль, 16=Файл
+
+            count = 0
+            for row in rows[1:]:
+                if len(row) < 8:
+                    continue
+                name_val = row[0]
+                if not name_val or str(name_val).strip() == '':
+                    continue
+
+                full_name = safe_str(name_val)
+                gender = safe_str(row[1]) if len(row) > 1 else ''
+                district = safe_str(row[2]) if len(row) > 2 else ''
+                school = safe_str(row[3]) if len(row) > 3 else ''
+                phone1 = safe_str(row[4]) if len(row) > 4 else ''
+                phone2 = safe_str(row[5]) if len(row) > 5 else ''
+
+                total_score_val = safe_float(row[6]) if len(row) > 6 else 0
+                total_pct_val = safe_float(row[7]) if len(row) > 7 else 0
+
+                # Parse subjects (columns 8-14)
+                math_s, math_p = parse_subject(row[8]) if len(row) > 8 else (None, None)
+                kyrgyz_s, kyrgyz_p = parse_subject(row[9]) if len(row) > 9 else (None, None)
+                bio_s, bio_p = parse_subject(row[10]) if len(row) > 10 else (None, None)
+                geo_s, geo_p = parse_subject(row[11]) if len(row) > 11 else (None, None)
+                hist_s, hist_p = parse_subject(row[12]) if len(row) > 12 else (None, None)
+                eng_s, eng_p = parse_subject(row[13]) if len(row) > 13 else (None, None)
+                rus_s, rus_p = parse_subject(row[14]) if len(row) > 14 else (None, None)
+
+                # Medal
+                medal_raw = safe_str(row[15]) if len(row) > 15 else ''
+
+                # Status: if has a medal → accepted
+                status = 'rejected'
+                if medal_raw:
+                    medal_lower = medal_raw.lower()
+                    if any(k in medal_lower for k in ['gold', 'silver', 'bronze', 'алтын', 'күмүш', 'коло']):
+                        status = 'accepted'
+
+                RoundResult.objects.create(
+                    session=session,
+                    full_name=full_name,
+                    gender=gender,
+                    district=district,
+                    school=school,
+                    phone1=phone1,
+                    phone2=phone2,
+                    total_score=total_score_val or 0,
+                    total_pct=total_pct_val or 0,
+                    math_score=math_s,
+                    math_pct=math_p,
+                    kyrgyz_score=kyrgyz_s,
+                    kyrgyz_pct=kyrgyz_p,
+                    biology_score=bio_s,
+                    biology_pct=bio_p,
+                    geography_score=geo_s,
+                    geography_pct=geo_p,
+                    history_score=hist_s,
+                    history_pct=hist_p,
+                    english_score=eng_s,
+                    english_pct=eng_p,
+                    russian_score=rus_s,
+                    russian_pct=rus_p,
+                    medal=medal_raw,
+                    status=status,
+                )
+                count += 1
+
+            messages.success(request, f'{count} окуучу ийгиликтүү жүктөлдү.')
+        except Exception as e:
+            messages.error(request, f'Excel файлды окууда ката: {e}')
+
+        return redirect('admissions:round_results_admin')
+
+    return render(request, 'admissions/round_results_upload.html')
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def round_results_toggle_publish(request, pk):
+    """Toggle publish status of a round result session."""
+    session = get_object_or_404(RoundResultSession, pk=pk)
+    session.is_published = not session.is_published
+    session.save()
+    state = 'жарыяланды' if session.is_published else 'жашырылды'
+    messages.success(request, f'"{session.title}" {state}.')
+    return redirect('admissions:round_results_admin')
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def round_results_delete(request, pk):
+    """Delete a round result session and all its results."""
+    session = get_object_or_404(RoundResultSession, pk=pk)
+    title = session.title
+    session.delete()
+    messages.success(request, f'"{title}" өчүрүлдү.')
+    return redirect('admissions:round_results_admin')
+
+
+def round_results_student(request):
+    """Student-facing page: top rankings + searchable results."""
+    # Get latest published session
+    session = RoundResultSession.objects.filter(is_published=True).first()
+    if not session:
+        return render(request, 'admissions/round_results_student.html', {
+            'session': None,
+        })
+
+    all_results = session.results.all()
+
+    # Top 10 per subject (exclude zero scores — 0/0 means subject wasn't taken)
+    top_math = all_results.filter(math_score__isnull=False, math_score__gt=0).order_by('-math_score')[:10]
+    top_kyrgyz = all_results.filter(kyrgyz_score__isnull=False, kyrgyz_score__gt=0).order_by('-kyrgyz_score')[:10]
+    top_biology = all_results.filter(biology_score__isnull=False, biology_score__gt=0).order_by('-biology_score')[:10]
+    top_geography = all_results.filter(geography_score__isnull=False, geography_score__gt=0).order_by('-geography_score')[:10]
+    top_history = all_results.filter(history_score__isnull=False, history_score__gt=0).order_by('-history_score')[:10]
+    top_english = all_results.filter(english_score__isnull=False, english_score__gt=0).order_by('-english_score')[:10]
+    top_russian = all_results.filter(russian_score__isnull=False, russian_score__gt=0).order_by('-russian_score')[:10]
+    top_total = all_results.order_by('-total_score')[:10]
+
+    # Paginated + searchable results
+    search_q = request.GET.get('search', '').strip()
+    status_filter = request.GET.get('status', '')
+    results_qs = all_results
+
+    if search_q:
+        results_qs = results_qs.filter(full_name__icontains=search_q)
+    if status_filter:
+        results_qs = results_qs.filter(status=status_filter)
+
+    from django.core.paginator import Paginator
+    paginator = Paginator(results_qs, 20)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'session': session,
+        'top_math': top_math,
+        'top_kyrgyz': top_kyrgyz,
+        'top_biology': top_biology,
+        'top_geography': top_geography,
+        'top_history': top_history,
+        'top_english': top_english,
+        'top_russian': top_russian,
+        'top_total': top_total,
+        'page_obj': page_obj,
+        'search_q': search_q,
+        'status_filter': status_filter,
+        'total_count': all_results.count(),
+        'accepted_count': all_results.filter(status='accepted').count(),
+        'rejected_count': all_results.filter(status='rejected').count(),
+    }
+    return render(request, 'admissions/round_results_student.html', context)
+
+
+def round_results_search_ajax(request):
+    """AJAX endpoint for live search of round results."""
+    from django.http import JsonResponse
+
+    session = RoundResultSession.objects.filter(is_published=True).first()
+    if not session:
+        return JsonResponse({'results': [], 'total': 0, 'num_pages': 0,
+                             'current_page': 1, 'has_prev': False, 'has_next': False})
+
+    search_q = request.GET.get('search', '').strip()
+    status_filter = request.GET.get('status', '')
+    try:
+        page = int(request.GET.get('page', 1))
+    except (ValueError, TypeError):
+        page = 1
+
+    qs = session.results.all()
+    if search_q:
+        # SQLite icontains is case-insensitive for ASCII only.
+        # For Cyrillic, annotate with Upper and filter.
+        from django.db.models.functions import Upper
+        qs = qs.annotate(_upper_name=Upper('full_name')).filter(
+            _upper_name__icontains=search_q.upper()
+        )
+    if status_filter:
+        qs = qs.filter(status=status_filter)
+
+    from django.core.paginator import Paginator
+    paginator = Paginator(qs, 20)
+    page_obj = paginator.get_page(page)
+
+    results = []
+    start = page_obj.start_index()  # 1-based index
+    for i, r in enumerate(page_obj):
+        results.append({
+            'rank': start + i,
+            'full_name': r.full_name or '',
+            'school': r.school or '',
+            'district': r.district or '',
+            'total_score': float(r.total_score) if r.total_score else 0,
+            'total_pct': float(r.total_pct) if r.total_pct else 0,
+            'medal': r.medal if r.medal and r.medal.lower() != 'none' else '',
+            'status': r.status or '',
+        })
+
+    return JsonResponse({
+        'results': results,
+        'total': paginator.count,
+        'num_pages': paginator.num_pages,
+        'current_page': page_obj.number,
+        'has_prev': page_obj.has_previous(),
+        'has_next': page_obj.has_next(),
+    })

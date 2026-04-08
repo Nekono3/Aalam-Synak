@@ -52,13 +52,21 @@ urlpatterns = [
     path('online-analytics/top/', views.online_top_students, name='online_top_students'),
     path('online-analytics/export/full/', views.export_online_results_full, name='export_online_results_full'),
     path('online-analytics/recalculate-all/', views.recalculate_all_online_results, name='recalculate_all_online_results'),
-    
+
+    # Round Results (Admin)
+    path('round-results/', views.round_results_admin, name='round_results_admin'),
+    path('round-results/upload/', views.round_results_upload, name='round_results_upload'),
+    path('round-results/<int:pk>/toggle/', views.round_results_toggle_publish, name='round_results_toggle_publish'),
+    path('round-results/<int:pk>/delete/', views.round_results_delete, name='round_results_delete'),
+
     # Student Views
     path('student/', views.student_admission_view, name='student_admission'),
+    path('student/results/', views.round_results_student, name='round_results_student'),
+    path('student/results/search/', views.round_results_search_ajax, name='round_results_search_ajax'),
     path('student/start/<int:pk>/', views.cycle_exam_start, name='cycle_exam_start'),
     path('student/attempt/<int:attempt_pk>/', views.cycle_exam_take, name='cycle_exam_take'),
     path('student/attempt/<int:attempt_pk>/submit/', views.cycle_exam_submit, name='cycle_exam_submit'),
     path('student/attempt/<int:attempt_pk>/result/', views.cycle_exam_result, name='cycle_exam_result'),
     path('student/attempt/<int:attempt_pk>/save-answer/', views.save_answer_ajax, name='save_answer_ajax'),
-    
+
 ]

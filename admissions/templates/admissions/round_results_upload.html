@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Excel жүктөө | AIMS{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <h1 class="h2">📤 Жыйынтыктарды жүктөө</h1>
+    <p class="text-muted">Excel файлдан окуучулардын жыйынтыктарын импорттоо</p>
+</div>
+
+<div class="card mt-4 p-4" style="max-width: 600px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group mb-3">
+            <label class="form-label font-bold">Аталышы</label>
+            <input type="text" name="title" class="form-input" value="1-тур жыйынтыгы" placeholder="Мис: 1-тур жыйынтыгы">
+        </div>
+
+        <div class="form-group mb-4">
+            <label class="form-label font-bold">Excel файл (.xlsx)</label>
+            <input type="file" name="file" accept=".xlsx,.xls" class="form-input" required>
+            <p class="text-muted small mt-1">Файлда ФИО, предмет упайлары, жалпы упай, статус колонкалары болушу керек.</p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Жүктөө</button>
+            <a href="{% url 'admissions:round_results_admin' %}" class="btn btn-secondary">Артка</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
