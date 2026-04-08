@@ -2079,8 +2079,8 @@ def round_results_upload(request):
                 messages.warning(request, 'Excel файлда маалымат жок.')
                 return redirect('admissions:round_results_admin')
 
+            bulk_results = []
             count = 0
-            results_to_create = []
             for row in rows[1:]:
                 if len(row) < 8:
                     continue
@@ -2122,39 +2122,37 @@ def round_results_upload(request):
                 if passed_by_score or has_medal:
                     status = 'accepted'
 
-                results_to_create.append(
-                    RoundResult(
-                        session=session,
-                        full_name=full_name,
-                        gender=gender,
-                        district=district,
-                        school=school,
-                        phone1=phone1,
-                        phone2=phone2,
-                        total_score=total_score_val or 0,
-                        total_pct=total_pct_val or 0,
-                        math_score=math_s,
-                        math_pct=math_p,
-                        kyrgyz_score=kyrgyz_s,
-                        kyrgyz_pct=kyrgyz_p,
-                        biology_score=bio_s,
-                        biology_pct=bio_p,
-                        geography_score=geo_s,
-                        geography_pct=geo_p,
-                        history_score=hist_s,
-                        history_pct=hist_p,
-                        english_score=eng_s,
-                        english_pct=eng_p,
-                        russian_score=rus_s,
-                        russian_pct=rus_p,
-                        medal=medal_raw,
-                        status=status,
-                    )
-                )
+                bulk_results.append(RoundResult(
+                    session=session,
+                    full_name=full_name,
+                    gender=gender,
+                    district=district,
+                    school=school,
+                    phone1=phone1,
+                    phone2=phone2,
+                    total_score=total_score_val or 0,
+                    total_pct=total_pct_val or 0,
+                    math_score=math_s,
+                    math_pct=math_p,
+                    kyrgyz_score=kyrgyz_s,
+                    kyrgyz_pct=kyrgyz_p,
+                    biology_score=bio_s,
+                    biology_pct=bio_p,
+                    geography_score=geo_s,
+                    geography_pct=geo_p,
+                    history_score=hist_s,
+                    history_pct=hist_p,
+                    english_score=eng_s,
+                    english_pct=eng_p,
+                    russian_score=rus_s,
+                    russian_pct=rus_p,
+                    medal=medal_raw,
+                    status=status,
+                ))
                 count += 1
-            
-            # Use bulk_create for massive speedup
-            RoundResult.objects.bulk_create(results_to_create, batch_size=1000)
+
+            if bulk_results:
+                RoundResult.objects.bulk_create(bulk_results, batch_size=500)
 
             messages.success(request, f'{count} окуучу ийгиликтүү жүктөлдү.')
         except Exception as e:
