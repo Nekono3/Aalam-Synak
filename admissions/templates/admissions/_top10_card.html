@@ -23,10 +23,12 @@
             {% for r in items %}
             <li>
                 <span class="rr-rank-num {% if forloop.counter == 1 %}r1{% elif forloop.counter == 2 %}r2{% elif forloop.counter == 3 %}r3{% endif %}">{{ forloop.counter }}</span>
-                <div class="rr-sname-container">
-                    <span class="rr-sname">{{ r.full_name }}</span>
-                    <span class="rr-subinfo">{{ r.short_district }}{% if r.district and r.school %}, {% endif %}{{ r.school }}</span>
-                </div>
+                <span class="rr-sname">
+                    {{ r.full_name }}
+                    {% if r.district or r.school %}
+                    <span style="display:block;font-size:0.65rem;color:var(--text-muted);font-weight:400;margin-top:1px;line-height:1.2;">{% if r.district %}{{ r.district }}{% endif %}{% if r.district and r.school %} · {% endif %}{% if r.school %}{{ r.school }}{% endif %}</span>
+                    {% endif %}
+                </span>
                 {% if is_total %}
                 <span class="rr-sval">{{ r.total_score|floatformat:0 }} ({{ r.total_pct|floatformat:0 }}%)</span>
                 {% else %}

@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse, JsonResponse
@@ -2312,7 +2311,7 @@ def round_results_search_ajax(request):
             'rank': start + i,
             'full_name': r.full_name or '',
             'school': r.school or '',
-            'district': r.short_district or '',
+            'district': r.district or '',
             'total_score': float(r.total_score) if r.total_score else 0,
             'total_pct': float(r.total_pct) if r.total_pct else 0,
             'medal': r.medal if r.medal and r.medal.lower() != 'none' else '',

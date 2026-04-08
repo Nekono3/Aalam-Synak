@@ -112,17 +112,15 @@
 .rr-top-list li:last-child { border-bottom: none; }
 
 .rr-rank-num {
-    width: 26px; height: 26px; border-radius: 50%;
+    width: 24px; height: 24px; border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 700; margin-right: 12px; flex-shrink: 0;
+    font-size: 0.72rem; font-weight: 700; margin-right: 10px; flex-shrink: 0;
     background: var(--bg-secondary); color: var(--text-muted);
 }
 .rr-rank-num.r1 { background: linear-gradient(135deg,#FFD700,#FFA500); color: #fff; }
 .rr-rank-num.r2 { background: linear-gradient(135deg,#C0C0C0,#A0A0A0); color: #fff; }
 .rr-rank-num.r3 { background: linear-gradient(135deg,#CD7F32,#B5651D); color: #fff; }
-.rr-sname-container { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-.rr-sname { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.9rem; }
-.rr-subinfo { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rr-sname { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rr-sval { font-weight: 700; margin-left: 8px; white-space: nowrap; font-size: 0.85rem; color: var(--text-primary); }
 
 /* ===== Search Section ===== */
@@ -341,12 +339,12 @@
         <table class="rr-table">
             <thead>
                 <tr>
-                    <th style="width: 50px;">#</th>
-                    <th>{% trans "Name" %} / {% trans "School" %}</th>
-                    <th style="text-align:center; width: 80px;">{% trans "Score" %}</th>
-                    <th style="text-align:center; width: 100px;">{% trans "Percentage" %}</th>
-                    <th style="text-align:center; width: 120px;">{% trans "Medal" %}</th>
-                    <th style="text-align:center; width: 120px;">{% trans "Status" %}</th>
+                    <th>#</th>
+                    <th>{% trans "Full name" %}</th>
+                    <th style="text-align:center">{% trans "Score" %}</th>
+                    <th style="text-align:center">{% trans "Percentage" %}</th>
+                    <th style="text-align:center">{% trans "Medal" %}</th>
+                    <th style="text-align:center">{% trans "Status" %}</th>
                 </tr>
             </thead>
             <tbody id="resultsBody">
@@ -419,6 +417,16 @@
             });
     }
 
+    function abbreviateDistrict(d) {
+        if (!d) return '';
+        return d.replace(/\s*шаары\s*/gi, ' ш.')
+                .replace(/\s*району\s*/gi, ' р.')
+                .replace(/\s*районы\s*/gi, ' р.')
+                .replace(/\s*облусу\s*/gi, ' обл.')
+                .replace(/\s*айылы\s*/gi, ' а.')
+                .trim();
+    }
+
     function renderResults(data) {
         if (!data.results.length) {
             body.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">${TXT.noResults}</td></tr>`;
@@ -433,13 +441,15 @@
                 ? `<span class="st-pass">✓ ${TXT.passed}</span>`
                 : `<span class="st-fail">✗ ${TXT.notPassed}</span>`;
             const q = input.value.trim();
+            const dist = abbreviateDistrict(r.district);
+            const subInfo = [dist, r.school].filter(Boolean).join(' · ');
 
             // Table row (desktop)
             tableHtml += `<tr>
                 <td style="color:var(--text-muted)">${r.rank}</td>
                 <td>
                     <div style="font-weight:600">${highlightMatch(r.full_name, q)}</div>
-                    <div style="font-size:0.75rem;color:var(--text-muted)">${r.district ? r.district + ', ' : ''}${r.school}</div>
+                    ${subInfo ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px;line-height:1.2">${subInfo}</div>` : ''}
                 </td>
                 <td style="text-align:center;font-weight:700">${r.total_score}</td>
                 <td style="text-align:center">${r.total_pct}%</td>
@@ -451,11 +461,9 @@
             cardHtml += `<div class="rr-card-item">
                 <div class="rr-ci-top">
                     <span class="rr-ci-rank">${r.rank}</span>
-                    <div class="rr-ci-info">
-                        <div class="rr-ci-name">${highlightMatch(r.full_name, q)}</div>
-                        <div class="rr-ci-school">${r.district ? r.district + ', ' : ''}${r.school || '—'}</div>
-                    </div>
+                    <span class="rr-ci-name">${highlightMatch(r.full_name, q)}</span>
                 </div>
+                <div class="rr-ci-school">${subInfo || '—'}</div>
                 <div class="rr-ci-row">
                     <span class="rr-ci-score">${r.total_score}</span>
                     <span class="rr-ci-pct">(${r.total_pct}%)</span>

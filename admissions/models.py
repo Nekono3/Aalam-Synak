@@ -570,28 +570,6 @@ class RoundResult(models.Model):
         verbose_name_plural = _('Round Results')
         ordering = ['-total_score']
 
-    @property
-    def short_district(self):
-        if not self.district:
-            return ''
-        d = self.district.strip()
-        # Common abbreviations
-        replacements = [
-            (' районунда', ' р.'),
-            (' району', ' р.'),
-            (' шаары', ' ш.'),
-            (' обл.', ' обл.'),
-            (' область', ' обл.'),
-            (' ОБЛАСТЬ', ' обл.'),
-        ]
-        low_d = d.lower()
-        for old, new in replacements:
-            if old.lower() in low_d:
-                # Case insensitive replacement
-                import re
-                d = re.compile(re.escape(old), re.IGNORECASE).sub(new, d)
-        return d.strip()
-
     def __str__(self):
         return f"{self.full_name} — {self.total_score}"
 
