@@ -577,8 +577,6 @@ class RoundResult(models.Model):
         d = self.district.strip()
         # Common abbreviations
         replacements = [
-            ('Сулуктуу р.', 'Сүлүктү ш.'),
-            ('Сулуктуу', 'Сүлүктү'),
             (' районунда', ' р.'),
             (' району', ' р.'),
             (' шаары', ' ш.'),
