@@ -19,7 +19,7 @@
 .rr-desc {
     max-width: 800px; margin: 0 auto; padding: 1.5rem 2rem 2rem;
     font-size: 0.92rem; line-height: 1.7; color: var(--text-secondary);
-    text-align: left;
+    text-align: left; overflow: hidden; box-sizing: border-box;
 }
 .rr-desc strong { color: var(--text-primary); }
 .rr-desc .rr-note {
@@ -198,14 +198,30 @@
 
 /* Responsive */
 @media (max-width: 640px) {
-    .rr-hero h1 { font-size: 1.5rem; }
-    .rr-top-grid { grid-template-columns: 1fr; }
-    .rr-stat-card { min-width: 100px; padding: 0.85rem 1rem; }
-    .rr-stat-card .num { font-size: 1.35rem; }
-    .rr-search-bar { flex-direction: column; }
-    .rr-search-bar input, .rr-search-bar select { width: 100%; }
-    .rr-table th, .rr-table td { padding: 0.5rem 0.5rem; font-size: 0.8rem; }
-    .rr-desc { padding: 1rem; }
+    .rr-hero { padding: 1.25rem 0.75rem 0.5rem; }
+    .rr-hero h1 { font-size: 1.3rem; }
+    .rr-hero p { font-size: 0.85rem; }
+    .rr-desc { padding: 0.75rem; font-size: 0.82rem; line-height: 1.6; word-wrap: break-word; overflow-wrap: break-word; }
+    .rr-desc .rr-note { padding: 0.5rem 0.75rem; font-size: 0.78rem; }
+    .rr-stats { gap: 0.5rem; margin-bottom: 1.25rem; }
+    .rr-stat-card { min-width: 0; flex: 1 1 28%; padding: 0.75rem 0.5rem; }
+    .rr-stat-card .num { font-size: 1.15rem; }
+    .rr-stat-card .lbl { font-size: 0.68rem; }
+    .rr-top-section-title { font-size: 1rem; }
+    .rr-top-grid { grid-template-columns: 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .rr-card-hdr { padding: 0.65rem 0.75rem; font-size: 0.85rem; }
+    .rr-col-hdr { padding: 0.25rem 0.75rem; font-size: 0.65rem; }
+    .rr-top-list li { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+    .rr-sname { font-size: 0.78rem; }
+    .rr-sval { font-size: 0.78rem; }
+    .rr-search-bar { flex-direction: column; margin-bottom: 0.75rem; }
+    .rr-search-bar input, .rr-search-bar select { width: 100%; min-width: 0; font-size: 0.88rem; }
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -0.5rem; padding: 0 0.5rem; }
+    .rr-table th, .rr-table td { padding: 0.45rem 0.4rem; font-size: 0.75rem; white-space: nowrap; }
+    .rr-table th:nth-child(3), .rr-table td:nth-child(3) { max-width: 80px; white-space: normal; word-break: break-word; }
+    .rr-pag button { padding: 5px 10px; font-size: 0.78rem; }
+    .rr-results-info { flex-direction: column; gap: 0.25rem; font-size: 0.78rem; }
+    .st-pass, .st-fail, .medal-candidate, .medal-gold, .medal-silver, .medal-bronze { font-size: 0.68rem; padding: 2px 7px; }
 }
 </style>
 {% endblock %}
