@@ -2027,12 +2027,17 @@ def round_results_upload(request):
             messages.error(request, 'Excel файл тандалган жок.')
             return redirect('admissions:round_results_upload')
 
-        session = RoundResultSession.objects.create(
-            title=title,
-            file=excel_file,
-            uploaded_by=request.user,
-            passing_score=passing_score,
-        )
+        session = None
+        try:
+            session = RoundResultSession.objects.create(
+                title=title,
+                file=excel_file,
+                uploaded_by=request.user,
+                passing_score=passing_score,
+            )
+        except Exception as e:
+            messages.error(request, f'Сессия түзүүдө ката: {e}')
+            return redirect('admissions:round_results_upload')
 
         import re
 
