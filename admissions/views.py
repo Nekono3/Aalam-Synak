@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse, JsonResponse
@@ -2010,8 +2011,6 @@ def round_results_admin(request):
     return render(request, 'admissions/round_results_admin.html', context)
 
 
-@login_required
-@user_passes_test(is_super_admin)
 @login_required
 @user_passes_test(is_super_admin)
 def round_results_upload(request):
