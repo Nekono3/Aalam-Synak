@@ -14,17 +14,32 @@
     color: var(--text-primary);
 }
 
-.back-link {
+.back-btn {
     display: inline-flex;
     align-items: center;
-    color: var(--text-secondary);
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
     text-decoration: none;
+    font-weight: 600;
     font-size: 0.95rem;
-    margin-bottom: 1.5rem;
-    transition: color 0.2s ease;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
 }
-.back-link:hover {
-    color: var(--primary-color, #4facfe);
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-color, #4facfe);
+    transform: translateY(-1px);
+}
+.back-btn i {
+    font-size: 0.85rem;
+}
+[data-theme="light"] .back-btn {
+    background: #fff;
+    box-shadow: var(--shadow-sm);
 }
 
 /* Header Card */
@@ -242,6 +257,13 @@
 .medal-bronze { background: linear-gradient(135deg, #CD7F32, #8b5a2b); box-shadow: 0 4px 15px rgba(205, 127, 50, 0.4); }
 
 @media (max-width: 576px) {
+    .profile-container { padding-top: 1rem; }
+    .back-btn { 
+        width: 100%; 
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    .profile-header-card { padding: 2rem 1rem; }
     .profile-name { font-size: 1.6rem; }
     .stat-value { font-size: 1.5rem; }
     .section-card { padding: 1.25rem; }
@@ -252,8 +274,8 @@
 {% block content %}
 <div class="profile-container animate-fade-in">
     <!-- Back Link -->
-    <a href="{% url 'admissions:round_results_student' %}" class="back-link">
-        <i class="fas fa-arrow-left me-2"></i> Жыйынтыктарга кайтуу
+    <a href="{% url 'admissions:round_results_student' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Жыйынтыктарга кайтуу
     </a>
 
     <!-- Top Header Card -->
