@@ -388,8 +388,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Render Radar Chart
     const labels = {{ chart_labels_json|safe }};
     const data = {{ chart_data_json|safe }};
-    
-    if(labels.length > 0) {
+    let radarChart = null;
+
+    function renderRadarChart() {
+        if(labels.length === 0) {
+            document.querySelector('.chart-container').innerHTML = '<p class="text-muted text-center py-5">Диаграмма үчүн маалымат жетишсиз.</p>';
+            return;
+        }
+
         const ctx = document.getElementById('radarChart').getContext('2d');
         const colorMain = '#4facfe';
         const colorFill = 'rgba(79, 172, 254, 0.2)';
@@ -399,7 +405,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
         const labelColor = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)';
 
-        new Chart(ctx, {
+        if (radarChart) {
+            radarChart.destroy();
+        }
+
+        radarChart = new Chart(ctx, {
             type: 'radar',
             data: {
                 labels: labels,
@@ -452,9 +462,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-    } else {
-        document.querySelector('.chart-container').innerHTML = '<p class="text-muted text-center py-5">Диаграмма үчүн маалымат жетишсиз.</p>';
     }
+
+    // Initial render
+    renderRadarChart();
+
+    // Watch for theme changes to re-render chart
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                renderRadarChart();
+            }
+        });
+    });
+    observer.observe(document.documentElement, { attributes: true });
 });
 </script>
 {% endblock %}
