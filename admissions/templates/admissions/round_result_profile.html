@@ -312,21 +312,18 @@
         </div>
         <div class="stat-card">
             <div class="stat-label">Медаль /<br>Орун</div>
-            <div class="stat-value" style="font-size: 1.5rem;">
+            <div class="stat-value" style="font-size: 1.5rem; display: flex; flex-direction: column; align-items: flex-end;">
+                <span style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 0.2rem; font-weight: 600;">{{ rank }}-орун</span>
                 {% if result.medal and result.medal|lower != 'none' %}
-                    <div class="medal-wrapper">
-                        {% if 'алтын' in result.medal|lower or 'gold' in result.medal|lower %}
-                            <span style="color: #FFD700; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥇</span>
-                        {% elif 'күмүш' in result.medal|lower or 'silver' in result.medal|lower %}
-                            <span style="color: #9ca3af; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥈</span>
-                        {% elif 'коло' in result.medal|lower or 'bronze' in result.medal|lower %}
-                            <span style="color: #CD7F32; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥉</span>
-                        {% else %}
-                            <span style="color: #FFD700; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🏅</span>
-                        {% endif %}
-                    </div>
-                {% else %}
-                    <span class="text-muted" style="color: #6b7280;">-</span>
+                    {% if 'алтын' in result.medal|lower or 'gold' in result.medal|lower %}
+                        <span style="color: #FFD700; font-size: 1.3rem;">{{ result.medal }}</span>
+                    {% elif 'күмүш' in result.medal|lower or 'silver' in result.medal|lower %}
+                        <span style="color: #9ca3af; font-size: 1.3rem;">{{ result.medal }}</span>
+                    {% elif 'коло' in result.medal|lower or 'bronze' in result.medal|lower %}
+                        <span style="color: #CD7F32; font-size: 1.3rem;">{{ result.medal }}</span>
+                    {% else %}
+                        <span style="color: #FFD700; font-size: 1.3rem;">{{ result.medal }}</span>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

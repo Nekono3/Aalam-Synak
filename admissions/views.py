@@ -2390,6 +2390,14 @@ def round_result_profile(request, pk):
             elif first_name.endswith('ОВА') or first_name.endswith('ЕВА') or patronymic.endswith('ОВА') or patronymic.endswith('ЕВА'):
                 is_girl = True
 
+    # Compute dynamic rank based on total_score
+    all_students = result.session.results.all().order_by('-total_score', 'full_name')
+    rank = None
+    for index, student in enumerate(all_students, 1):
+        if student.id == result.id:
+            rank = index
+            break
+
     context = {
         'result': result,
         'subjects_data': subjects_data,  # for the html cards/bars
@@ -2397,5 +2405,6 @@ def round_result_profile(request, pk):
         'chart_data_json': json.dumps(chart_data),
         'is_boy': is_boy,
         'is_girl': is_girl,
+        'rank': rank,
     }
     return render(request, 'admissions/round_result_profile.html', context)
