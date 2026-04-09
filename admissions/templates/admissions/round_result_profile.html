@@ -1,0 +1,422 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Окуучунун жыйынтыгы | {{ result.full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== Profile Premium Layout ===== */
+.profile-container {
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    --card-bg: #1e1e24;
+    --border-color: #2d2d35;
+    
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-primary);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s ease;
+}
+.back-link:hover {
+    color: var(--primary-color, #4facfe);
+}
+
+/* Header Card */
+.profile-header-card {
+    background: var(--card-bg, #1e1e24);
+    border: 1px solid var(--border-color, #2d2d35);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.profile-header-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 5px;
+}
+.profile-header-card.status-accepted::before {
+    background: linear-gradient(90deg, #10b981, #34d399);
+}
+.profile-header-card.status-rejected::before {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.profile-avatar-placeholder {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: #13131a;
+    border: 2px solid var(--border-color);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 1.25rem;
+    color: var(--text-secondary);
+}
+
+.profile-name {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary, #fff);
+}
+.profile-school {
+    font-size: 1.05rem;
+    color: var(--text-secondary, #9ca3af);
+    margin-bottom: 0.25rem;
+}
+.profile-district {
+    font-size: 0.9rem;
+    color: var(--text-muted, #6b7280);
+    margin-bottom: 1.5rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+.status-badge.accepted {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.status-badge.rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.status-message {
+    margin-top: 1rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+.status-message.accepted { color: #10b981; }
+.status-message.rejected { color: #9ca3af; }
+
+/* Summary Stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stat-card {
+    background: var(--card-bg, #1e1e24);
+    border: 1px solid var(--border-color, #2d2d35);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+.stat-card:hover { transform: translateY(-3px); }
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary, #9ca3af);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+}
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary, #fff);
+}
+.stat-value.highlight {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Radar & Subjects Split */
+.details-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .details-split { grid-template-columns: 1fr; }
+}
+
+.section-card {
+    background: var(--card-bg, #1e1e24);
+    border: 1px solid var(--border-color, #2d2d35);
+    border-radius: 16px;
+    padding: 2rem;
+}
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.section-title i { color: var(--primary-color, #4facfe); }
+
+/* Subject Progress Bars */
+.subject-row {
+    margin-bottom: 1.25rem;
+}
+.subject-row:last-child { margin-bottom: 0; }
+.subject-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+.subject-score {
+    color: var(--text-secondary, #9ca3af);
+}
+.progress-bg {
+    background: rgba(255, 255, 255, 0.05);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    transition: width 1s ease-out;
+}
+
+/* Radar Chart Container */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+}
+
+.medal-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    transform: rotate(15deg);
+}
+
+@media (max-width: 576px) {
+    .profile-name { font-size: 1.6rem; }
+    .stat-value { font-size: 1.5rem; }
+    .section-card { padding: 1.25rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container animate-fade-in">
+    <!-- Back Link -->
+    <a href="{% url 'admissions:round_results_student' %}" class="back-link">
+        <i class="fas fa-arrow-left me-2"></i> Жыйынтыктарга кайтуу
+    </a>
+
+    <!-- Top Header Card -->
+    <div class="profile-header-card {% if result.status == 'accepted' %}status-accepted{% else %}status-rejected{% endif %}">
+        {% if result.medal and result.medal.lower != 'none' %}
+            <div class="medal-badge" title="{{ result.medal }}"><i class="fas fa-medal"></i></div>
+        {% endif %}
+        
+        <div class="profile-avatar-placeholder">
+            {% if 'м' in result.gender.lower or 'эркек' in result.gender.lower %}
+                👨‍🎓
+            {% elif 'ж' in result.gender.lower or 'аял' in result.gender.lower or 'кыз' in result.gender.lower %}
+                👩‍🎓
+            {% else %}
+                <i class="fas fa-user-graduate"></i>
+            {% endif %}
+        </div>
+
+        <h1 class="profile-name">{{ result.full_name }}</h1>
+        <div class="profile-school">
+            {% if result.school %}{{ result.school }}{% else %}<span class="text-muted">Мектеп көрсөтүлгөн эмес</span>{% endif %}
+        </div>
+        <div class="profile-district">
+            {% if result.district %}{{ result.district }}{% endif %}
+        </div>
+
+        {% if result.status == 'accepted' %}
+            <div class="status-badge accepted">
+                <i class="fas fa-check-circle"></i> Өттү
+            </div>
+            <div class="status-message accepted">
+                Куттуктайбыз! Сиз сынактын кийинки этабына ийгиликтүү өттүңүз.
+            </div>
+        {% else %}
+            <div class="status-badge rejected">
+                <i class="fas fa-times-circle"></i> Өтпөдү
+            </div>
+            <div class="status-message rejected">
+                Кечиресиз, сиздин упайыңыз кийинки турга өтүүгө жетишсиз болду.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Жалпы упай</div>
+            <div class="stat-value highlight">{{ result.total_score }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Жалпы пайыз</div>
+            <div class="stat-value">{{ result.total_pct|floatformat:1 }}%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Медаль / Орун</div>
+            <div class="stat-value" style="font-size: 1.5rem;">
+                {% if result.medal and result.medal.lower != 'none' %}
+                    <span style="color: #FFD700;">{{ result.medal }}</span>
+                {% else %}
+                    <span class="text-muted">-</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Split -->
+    <div class="details-split">
+        <!-- Subjects List -->
+        <div class="section-card">
+            <h2 class="section-title"><i class="fas fa-tasks"></i> Предметтер боюнча жыйынтык</h2>
+            <div class="subjects-wrapper">
+                {% for subj in subjects_data %}
+                <div class="subject-row">
+                    <div class="subject-header">
+                        <span class="subject-name">{{ subj.label }}</span>
+                        <span class="subject-score">{{ subj.score }} упай ({{ subj.pct|floatformat:1 }}%)</span>
+                    </div>
+                    <div class="progress-bg">
+                        <div class="progress-fill" style="width: 0%;" data-percentage="{{ subj.pct }}"></div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center py-3">Предметтик маалыматтар жок.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Radar Chart -->
+        <div class="section-card">
+            <h2 class="section-title"><i class="fas fa-radar-chart"></i> Аналитика диаграммасы</h2>
+            <div class="chart-container">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Animate Progress Bars
+    const fills = document.querySelectorAll('.progress-fill');
+    setTimeout(() => {
+        fills.forEach(fill => {
+            const temp = fill.getAttribute('data-percentage');
+            // Max out at 100% physically, but raw value can be any
+            let pct = parseFloat(temp) || 0;
+            if(pct > 100) pct = 100;
+            fill.style.width = pct + '%';
+        });
+    }, 300);
+
+    // 2. Render Radar Chart
+    const labels = {{ chart_labels_json|safe }};
+    const data = {{ chart_data_json|safe }};
+    
+    if(labels.length > 0) {
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const colorMain = '#4facfe';
+        const colorFill = 'rgba(79, 172, 254, 0.2)';
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Пайыздык көрсөткүч',
+                    data: data,
+                    backgroundColor: colorFill,
+                    borderColor: colorMain,
+                    pointBackgroundColor: colorMain,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: colorMain,
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255,255,255,0.1)' },
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        pointLabels: {
+                            color: 'rgba(255,255,255,0.7)',
+                            font: { family: 'Inter', size: 12, weight: '500' }
+                        },
+                        ticks: {
+                            display: false,
+                            min: 0,
+                            max: 100,
+                            stepSize: 20
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleFont: { family: 'Inter', size: 13 },
+                        bodyFont: { family: 'Inter', size: 13 },
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        document.querySelector('.chart-container').innerHTML = '<p class="text-muted text-center py-5">Диаграмма үчүн маалымат жетишсиз.</p>';
+    }
+});
+</script>
+{% endblock %}

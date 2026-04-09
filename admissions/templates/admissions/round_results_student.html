@@ -15,6 +15,10 @@
 }
 .rr-hero p { color: var(--text-secondary); font-size: 1.05rem; }
 
+/* Interactive Table/Card Links */
+.profile-link-hover { transition: background-color 0.2s ease, transform 0.2s ease; }
+.profile-link-hover:hover { background-color: rgba(255, 255, 255, 0.03); transform: translateY(-1px); }
+
 /* Description block */
 .rr-desc {
     max-width: 800px; margin: 0 auto; padding: 1.5rem 2rem 2rem;
@@ -390,6 +394,7 @@
 
     let timer = null;
     let currentPage = 1;
+    const profileUrlBase = "{% url 'admissions:round_result_profile' 0 %}".slice(0, -2);
 
     function doSearch(page) {
         currentPage = page || 1;
@@ -445,7 +450,7 @@
             const subInfo = [dist, r.school].filter(Boolean).join(' · ');
 
             // Table row (desktop)
-            tableHtml += `<tr>
+            tableHtml += `<tr onclick="window.location.href='${profileUrlBase + r.id + '/'}';" style="cursor:pointer;" class="profile-link-hover">
                 <td style="color:var(--text-muted)">${r.rank}</td>
                 <td>
                     <div style="font-weight:600">${highlightMatch(r.full_name, q)}</div>
@@ -458,7 +463,7 @@
             </tr>`;
 
             // Card (mobile)
-            cardHtml += `<div class="rr-card-item">
+            cardHtml += `<div class="rr-card-item profile-link-hover" onclick="window.location.href='${profileUrlBase + r.id + '/'}';" style="cursor:pointer;">
                 <div class="rr-ci-top">
                     <span class="rr-ci-rank">${r.rank}</span>
                     <span class="rr-ci-name">${highlightMatch(r.full_name, q)}</span>

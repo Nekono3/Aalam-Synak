@@ -2311,6 +2311,7 @@ def round_results_search_ajax(request):
     start = page_obj.start_index()  # 1-based index
     for i, r in enumerate(page_obj):
         results.append({
+            'id': r.id,
             'rank': start + i,
             'full_name': r.full_name or '',
             'school': r.school or '',
@@ -2329,3 +2330,44 @@ def round_results_search_ajax(request):
         'has_prev': page_obj.has_previous(),
         'has_next': page_obj.has_next(),
     })
+
+
+def round_result_profile(request, pk):
+    """Detailed profile page for a single student round result."""
+    import json
+    result = get_object_or_404(RoundResult, pk=pk)
+    
+    # We will pass the subjects as a JSON list to the template for Chart.js
+    # Only include subjects that actually have a percentage or score recorded.
+    subjects_data = []
+    
+    # helper for adding subjects if they exist
+    def add_subject(label, score, pct):
+        if score is not None or pct is not None:
+            subjects_data.append({
+                'label': label,
+                'score': float(score) if score is not None else 0.0,
+                'pct': float(pct) if pct is not None else 0.0
+            })
+            
+    add_subject('Англис тили', result.english_score, result.english_pct)
+    add_subject('Биология', result.biology_score, result.biology_pct)
+    add_subject('Математика', result.math_score, result.math_pct)
+    add_subject('Тарых', result.history_score, result.history_pct)
+    add_subject('География', result.geography_score, result.geography_pct)
+    add_subject('Кыргыз тили', result.kyrgyz_score, result.kyrgyz_pct)
+    add_subject('Орус тили', result.russian_score, result.russian_pct)
+
+    # Sort alphabet, or just leave as added (which is logical ordering often preferred)
+    # We will pass this to the frontend.
+
+    chart_labels = [s['label'] for s in subjects_data]
+    chart_data = [s['pct'] for s in subjects_data]
+
+    context = {
+        'result': result,
+        'subjects_data': subjects_data,  # for the html cards/bars
+        'chart_labels_json': json.dumps(chart_labels, ensure_ascii=False),
+        'chart_data_json': json.dumps(chart_data),
+    }
+    return render(request, 'admissions/round_result_profile.html', context)

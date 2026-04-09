@@ -21,7 +21,7 @@
         </div>
         <ul class="rr-top-list">
             {% for r in items %}
-            <li>
+            <li onclick="window.location.href='{% url 'admissions:round_result_profile' r.id %}'" style="cursor:pointer;" class="profile-link-hover">
                 <span class="rr-rank-num {% if forloop.counter == 1 %}r1{% elif forloop.counter == 2 %}r2{% elif forloop.counter == 3 %}r3{% endif %}">{{ forloop.counter }}</span>
                 <span class="rr-sname">
                     {{ r.full_name }}

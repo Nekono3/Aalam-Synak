@@ -65,6 +65,7 @@ urlpatterns = [
     path('student/', views.student_admission_view, name='student_admission'),
     path('student/results/', views.round_results_student, name='round_results_student'),
     path('student/results/search/', views.round_results_search_ajax, name='round_results_search_ajax'),
+    path('student/results/<int:pk>/', views.round_result_profile, name='round_result_profile'),
     path('student/start/<int:pk>/', views.cycle_exam_start, name='cycle_exam_start'),
     path('student/attempt/<int:attempt_pk>/', views.cycle_exam_take, name='cycle_exam_take'),
     path('student/attempt/<int:attempt_pk>/submit/', views.cycle_exam_submit, name='cycle_exam_submit'),
