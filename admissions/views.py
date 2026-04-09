@@ -2364,10 +2364,17 @@ def round_result_profile(request, pk):
     chart_labels = [s['label'] for s in subjects_data]
     chart_data = [s['pct'] for s in subjects_data]
 
+    # Gender parsing for avatar
+    g = (result.gender or '').strip().lower()
+    is_boy = 'м' in g or 'эркек' in g
+    is_girl = 'ж' in g or 'аял' in g or 'кыз' in g
+
     context = {
         'result': result,
         'subjects_data': subjects_data,  # for the html cards/bars
         'chart_labels_json': json.dumps(chart_labels, ensure_ascii=False),
         'chart_data_json': json.dumps(chart_data),
+        'is_boy': is_boy,
+        'is_girl': is_girl,
     }
     return render(request, 'admissions/round_result_profile.html', context)

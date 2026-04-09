@@ -17,7 +17,7 @@
     margin: 2rem auto;
     padding: 0 1rem;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: var(--text-primary);
+    color: #ffffff;
 }
 
 .back-link {
@@ -35,8 +35,8 @@
 
 /* Header Card */
 .profile-header-card {
-    background: var(--card-bg, #1e1e24);
-    border: 1px solid var(--border-color, #2d2d35);
+    background: #1e1e24;
+    border: 1px solid #2d2d35;
     border-radius: 16px;
     padding: 2.5rem 2rem;
     text-align: center;
@@ -73,16 +73,16 @@
     font-size: 2rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
-    color: var(--text-primary, #fff);
+    color: #ffffff;
 }
 .profile-school {
     font-size: 1.05rem;
-    color: var(--text-secondary, #9ca3af);
+    color: #9ca3af;
     margin-bottom: 0.25rem;
 }
 .profile-district {
     font-size: 0.9rem;
-    color: var(--text-muted, #6b7280);
+    color: #6b7280;
     margin-bottom: 1.5rem;
 }
 
@@ -122,8 +122,8 @@
     margin-bottom: 2rem;
 }
 .stat-card {
-    background: var(--card-bg, #1e1e24);
-    border: 1px solid var(--border-color, #2d2d35);
+    background: #1e1e24;
+    border: 1px solid #2d2d35;
     border-radius: 16px;
     padding: 1.5rem;
     text-align: center;
@@ -132,7 +132,7 @@
 .stat-card:hover { transform: translateY(-3px); }
 .stat-label {
     font-size: 0.9rem;
-    color: var(--text-secondary, #9ca3af);
+    color: #9ca3af;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 0.75rem;
@@ -140,7 +140,7 @@
 .stat-value {
     font-size: 2rem;
     font-weight: 800;
-    color: var(--text-primary, #fff);
+    color: #ffffff;
 }
 .stat-value.highlight {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -160,8 +160,8 @@
 }
 
 .section-card {
-    background: var(--card-bg, #1e1e24);
-    border: 1px solid var(--border-color, #2d2d35);
+    background: #1e1e24;
+    border: 1px solid #2d2d35;
     border-radius: 16px;
     padding: 2rem;
 }
@@ -172,8 +172,9 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: #ffffff;
 }
-.section-title i { color: var(--primary-color, #4facfe); }
+.section-title i { color: #4facfe; }
 
 /* Subject Progress Bars */
 .subject-row {
@@ -186,9 +187,10 @@
     margin-bottom: 0.4rem;
     font-size: 0.95rem;
     font-weight: 500;
+    color: #ffffff;
 }
 .subject-score {
-    color: var(--text-secondary, #9ca3af);
+    color: #9ca3af;
 }
 .progress-bg {
     background: rgba(255, 255, 255, 0.05);
@@ -215,13 +217,14 @@
     top: -10px;
     right: -10px;
     width: 60px; height: 60px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     color: #fff; font-size: 1.5rem;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
     transform: rotate(15deg);
 }
+.medal-gold { background: linear-gradient(135deg, #FFD700, #FFA500); box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); }
+.medal-silver { background: linear-gradient(135deg, #E0E0E0, #9E9E9E); box-shadow: 0 4px 15px rgba(192, 192, 192, 0.4); }
+.medal-bronze { background: linear-gradient(135deg, #CD7F32, #8b5a2b); box-shadow: 0 4px 15px rgba(205, 127, 50, 0.4); }
 
 @media (max-width: 576px) {
     .profile-name { font-size: 1.6rem; }
@@ -240,14 +243,22 @@
 
     <!-- Top Header Card -->
     <div class="profile-header-card {% if result.status == 'accepted' %}status-accepted{% else %}status-rejected{% endif %}">
-        {% if result.medal and result.medal.lower != 'none' %}
-            <div class="medal-badge" title="{{ result.medal }}"><i class="fas fa-medal"></i></div>
+        {% if result.medal and result.medal|lower != 'none' %}
+            {% if 'алтын' in result.medal|lower or 'gold' in result.medal|lower %}
+                <div class="medal-badge medal-gold" title="{{ result.medal }}"><i class="fas fa-medal"></i></div>
+            {% elif 'күмүш' in result.medal|lower or 'silver' in result.medal|lower %}
+                <div class="medal-badge medal-silver" title="{{ result.medal }}"><i class="fas fa-medal"></i></div>
+            {% elif 'коло' in result.medal|lower or 'bronze' in result.medal|lower %}
+                <div class="medal-badge medal-bronze" title="{{ result.medal }}"><i class="fas fa-medal"></i></div>
+            {% else %}
+                <div class="medal-badge medal-gold" title="{{ result.medal }}"><i class="fas fa-medal"></i></div>
+            {% endif %}
         {% endif %}
         
         <div class="profile-avatar-placeholder">
-            {% if 'м' in result.gender.lower or 'эркек' in result.gender.lower %}
+            {% if is_boy %}
                 👨‍🎓
-            {% elif 'ж' in result.gender.lower or 'аял' in result.gender.lower or 'кыз' in result.gender.lower %}
+            {% elif is_girl %}
                 👩‍🎓
             {% else %}
                 <i class="fas fa-user-graduate"></i>
@@ -267,14 +278,14 @@
                 <i class="fas fa-check-circle"></i> Өттү
             </div>
             <div class="status-message accepted">
-                Куттуктайбыз! Сиз сынактын кийинки этабына ийгиликтүү өттүңүз.
+                AIMS — Aalam International Magnet School мектебинин кабыл алуу сынагынын 2-туруна ийгиликтүү өттүңүз!
             </div>
         {% else %}
             <div class="status-badge rejected">
                 <i class="fas fa-times-circle"></i> Өтпөдү
             </div>
             <div class="status-message rejected">
-                Кечиресиз, сиздин упайыңыз кийинки турга өтүүгө жетишсиз болду.
+                AIMS — Aalam International Magnet School мектебинин кабыл алуу сынагынын 2-туруна өтпөй калдыңыз.
             </div>
         {% endif %}
     </div>
@@ -292,10 +303,18 @@
         <div class="stat-card">
             <div class="stat-label">Медаль / Орун</div>
             <div class="stat-value" style="font-size: 1.5rem;">
-                {% if result.medal and result.medal.lower != 'none' %}
-                    <span style="color: #FFD700;">{{ result.medal }}</span>
+                {% if result.medal and result.medal|lower != 'none' %}
+                    {% if 'алтын' in result.medal|lower or 'gold' in result.medal|lower %}
+                        <span style="color: #FFD700;">{{ result.medal }}</span>
+                    {% elif 'күмүш' in result.medal|lower or 'silver' in result.medal|lower %}
+                        <span style="color: #C0C0C0;">{{ result.medal }}</span>
+                    {% elif 'коло' in result.medal|lower or 'bronze' in result.medal|lower %}
+                        <span style="color: #CD7F32;">{{ result.medal }}</span>
+                    {% else %}
+                        <span style="color: #FFD700;">{{ result.medal }}</span>
+                    {% endif %}
                 {% else %}
-                    <span class="text-muted">-</span>
+                    <span class="text-muted" style="color: #6b7280;">-</span>
                 {% endif %}
             </div>
         </div>
