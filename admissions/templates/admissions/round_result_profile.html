@@ -42,15 +42,16 @@
 
 .profile-header-card::before {
     content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 5px;
+    position: absolute; top: 0; left: 0; width: 100%; height: 5px;
 }
-.profile-header-card.status-accepted::before {
-    background: linear-gradient(90deg, #10b981, #34d399);
+.profile-header-card.status-accepted {
+    box-shadow: inset 0 30px 60px -15px rgba(16, 185, 129, 0.15), var(--shadow-md);
 }
-.profile-header-card.status-rejected::before {
-    background: linear-gradient(90deg, #ef4444, #f87171);
+.profile-header-card.status-rejected {
+    box-shadow: inset 0 30px 60px -15px rgba(239, 68, 68, 0.1), var(--shadow-md);
 }
+.status-accepted::before { background: #10B981; }
+.status-rejected::before { background: #ef4444; }
 
 .profile-avatar-placeholder {
     width: 80px; height: 80px;
@@ -101,12 +102,15 @@
 }
 
 .status-message {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     font-size: 1.05rem;
     font-weight: 500;
+    line-height: 1.6;
+    color: var(--text-primary);
 }
-.status-message.accepted { color: #10b981; }
-.status-message.rejected { color: #9ca3af; }
+.status-message .school-name { font-weight: 600; color: var(--text-secondary); }
+.status-message strong.highlight-green { color: #10b981; font-weight: 700; }
+.status-message strong.highlight-red { color: #ef4444; font-weight: 700; }
 
 /* Summary Stats */
 .stats-grid {
@@ -287,15 +291,15 @@
             <div class="status-badge accepted">
                 <i class="fas fa-check-circle"></i> Өттү
             </div>
-            <div class="status-message accepted">
-                AIMS — Aalam International Magnet School мектебинин кабыл алуу сынагынын 2-туруна ийгиликтүү өттүңүз!
+            <div class="status-message">
+                <span class="school-name">AIMS — Aalam International Magnet School</span> мектебинин кабыл алуу сынагынын 2-туруна <strong class="highlight-green">ийгиликтүү өттүңүз!</strong>
             </div>
         {% else %}
             <div class="status-badge rejected">
                 <i class="fas fa-times-circle"></i> Өтпөдү
             </div>
-            <div class="status-message rejected">
-                AIMS — Aalam International Magnet School мектебинин кабыл алуу сынагынын 2-туруна өтпөй калдыңыз.
+            <div class="status-message">
+                <span class="school-name">AIMS — Aalam International Magnet School</span> мектебинин кабыл алуу сынагынын 2-туруна <strong class="highlight-red">өтпөй калдыңыз.</strong>
             </div>
         {% endif %}
     </div>
