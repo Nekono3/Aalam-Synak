@@ -6,13 +6,10 @@
 {% block extra_css %}
 <style>
 /* ===== Profile Premium Layout ===== */
+body {
+    background-color: #1a1e27 !important;
+}
 .profile-container {
-    --text-primary: #ffffff;
-    --text-secondary: #9ca3af;
-    --text-muted: #6b7280;
-    --card-bg: #1e1e24;
-    --border-color: #2d2d35;
-    
     max-width: 900px;
     margin: 2rem auto;
     padding: 0 1rem;
@@ -35,15 +32,15 @@
 
 /* Header Card */
 .profile-header-card {
-    background: #1e1e24;
-    border: 1px solid #2d2d35;
+    background: #232833;
+    border: 1px solid #303746;
     border-radius: 16px;
     padding: 2.5rem 2rem;
     text-align: center;
     position: relative;
     overflow: hidden;
     margin-bottom: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
 .profile-header-card::before {
@@ -117,33 +114,47 @@
 /* Summary Stats */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
 .stat-card {
-    background: #1e1e24;
-    border: 1px solid #2d2d35;
-    border-radius: 16px;
-    padding: 1.5rem;
-    text-align: center;
-    transition: transform 0.2s ease;
+    background: #232833;
+    border: 1px solid #303746;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
-.stat-card:hover { transform: translateY(-3px); }
+.stat-card:hover { transform: translateY(-2px); border-color: #4facfe; }
 .stat-label {
-    font-size: 0.9rem;
-    color: #9ca3af;
+    font-size: 0.85rem;
+    color: #8c9baf;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.75rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 0;
+    text-align: left;
+    line-height: 1.4;
 }
 .stat-value {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 800;
     color: #ffffff;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.medal-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
 }
 .stat-value.highlight {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -160,8 +171,8 @@
 }
 
 .section-card {
-    background: #1e1e24;
-    border: 1px solid #2d2d35;
+    background: #232833;
+    border: 1px solid #303746;
     border-radius: 16px;
     padding: 2rem;
 }
@@ -293,26 +304,28 @@
     <!-- Summary Stats -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-label">Жалпы упай</div>
+            <div class="stat-label">Жалпы<br>упай</div>
             <div class="stat-value highlight">{{ result.total_score }}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Жалпы пайыз</div>
+            <div class="stat-label">Жалпы<br>пайыз</div>
             <div class="stat-value">{{ result.total_pct|floatformat:1 }}%</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Медаль / Орун</div>
+            <div class="stat-label">Медаль /<br>Орун</div>
             <div class="stat-value" style="font-size: 1.5rem;">
                 {% if result.medal and result.medal|lower != 'none' %}
-                    {% if 'алтын' in result.medal|lower or 'gold' in result.medal|lower %}
-                        <span style="color: #FFD700;">{{ result.medal }}</span>
-                    {% elif 'күмүш' in result.medal|lower or 'silver' in result.medal|lower %}
-                        <span style="color: #C0C0C0;">{{ result.medal }}</span>
-                    {% elif 'коло' in result.medal|lower or 'bronze' in result.medal|lower %}
-                        <span style="color: #CD7F32;">{{ result.medal }}</span>
-                    {% else %}
-                        <span style="color: #FFD700;">{{ result.medal }}</span>
-                    {% endif %}
+                    <div class="medal-wrapper">
+                        {% if 'алтын' in result.medal|lower or 'gold' in result.medal|lower %}
+                            <span style="color: #FFD700; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥇</span>
+                        {% elif 'күмүш' in result.medal|lower or 'silver' in result.medal|lower %}
+                            <span style="color: #d1d5db; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥈</span>
+                        {% elif 'коло' in result.medal|lower or 'bronze' in result.medal|lower %}
+                            <span style="color: #CD7F32; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥉</span>
+                        {% else %}
+                            <span style="color: #FFD700; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🏅</span>
+                        {% endif %}
+                    </div>
                 {% else %}
                     <span class="text-muted" style="color: #6b7280;">-</span>
                 {% endif %}

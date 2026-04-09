@@ -2368,6 +2368,27 @@ def round_result_profile(request, pk):
     g = (result.gender or '').strip().lower()
     is_boy = 'м' in g or 'эркек' in g
     is_girl = 'ж' in g or 'аял' in g or 'кыз' in g
+    
+    # If gender is not provided, guess from surname suffixes
+    if not is_boy and not is_girl:
+        full_name_upper = result.full_name.upper().strip()
+        parts = full_name_upper.split()
+        if parts:
+            # Check the surname or patronymic (usually first or last part)
+            last_name = parts[0]
+            first_name = parts[-1] if len(parts) > 1 else ""
+            patronymic = parts[1] if len(parts) > 2 else first_name
+            
+            # Kyrgyz and Russian male endings
+            if last_name.endswith('ОВ') or last_name.endswith('ЕВ') or 'УУЛУ' in parts:
+                is_boy = True
+            # Kyrgyz and Russian female endings
+            elif last_name.endswith('ОВА') or last_name.endswith('ЕВА') or 'КЫЗЫ' in parts:
+                is_girl = True
+            elif first_name.endswith('ОВ') or first_name.endswith('ЕВ') or patronymic.endswith('ОВ') or patronymic.endswith('ЕВ'):
+                is_boy = True
+            elif first_name.endswith('ОВА') or first_name.endswith('ЕВА') or patronymic.endswith('ОВА') or patronymic.endswith('ЕВА'):
+                is_girl = True
 
     context = {
         'result': result,
