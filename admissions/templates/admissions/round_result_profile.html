@@ -6,15 +6,12 @@
 {% block extra_css %}
 <style>
 /* ===== Profile Premium Layout ===== */
-body {
-    background-color: #1a1e27 !important;
-}
 .profile-container {
     max-width: 900px;
     margin: 2rem auto;
     padding: 0 1rem;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
 .back-link {
@@ -32,15 +29,15 @@ body {
 
 /* Header Card */
 .profile-header-card {
-    background: #232833;
-    border: 1px solid #303746;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 2.5rem 2rem;
     text-align: center;
     position: relative;
     overflow: hidden;
     margin-bottom: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    box-shadow: var(--shadow-md);
 }
 
 .profile-header-card::before {
@@ -70,16 +67,16 @@ body {
     font-size: 2rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
-    color: #ffffff;
+    color: var(--text-primary);
 }
 .profile-school {
     font-size: 1.05rem;
-    color: #9ca3af;
+    color: var(--text-secondary);
     margin-bottom: 0.25rem;
 }
 .profile-district {
     font-size: 0.9rem;
-    color: #6b7280;
+    color: var(--text-muted);
     margin-bottom: 1.5rem;
 }
 
@@ -119,19 +116,20 @@ body {
     margin-bottom: 2rem;
 }
 .stat-card {
-    background: #232833;
-    border: 1px solid #303746;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 1.25rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-sm);
 }
-.stat-card:hover { transform: translateY(-2px); border-color: #4facfe; }
+.stat-card:hover { transform: translateY(-2px); border-color: var(--primary-blue); box-shadow: var(--shadow-md); }
 .stat-label {
     font-size: 0.85rem;
-    color: #8c9baf;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 0;
@@ -141,7 +139,7 @@ body {
 .stat-value {
     font-size: 2.2rem;
     font-weight: 800;
-    color: #ffffff;
+    color: var(--text-primary);
     text-align: right;
     display: flex;
     flex-direction: column;
@@ -171,10 +169,11 @@ body {
 }
 
 .section-card {
-    background: #232833;
-    border: 1px solid #303746;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 2rem;
+    box-shadow: var(--shadow-sm);
 }
 .section-title {
     font-size: 1.25rem;
@@ -183,9 +182,9 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #ffffff;
+    color: var(--text-primary);
 }
-.section-title i { color: #4facfe; }
+.section-title i { color: var(--primary-blue); }
 
 /* Subject Progress Bars */
 .subject-row {
@@ -198,13 +197,13 @@ body {
     margin-bottom: 0.4rem;
     font-size: 0.95rem;
     font-weight: 500;
-    color: #ffffff;
+    color: var(--text-primary);
 }
 .subject-score {
-    color: #9ca3af;
+    color: var(--text-secondary);
 }
 .progress-bg {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--border-color);
     height: 8px;
     border-radius: 4px;
     overflow: hidden;
@@ -319,7 +318,7 @@ body {
                         {% if 'алтын' in result.medal|lower or 'gold' in result.medal|lower %}
                             <span style="color: #FFD700; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥇</span>
                         {% elif 'күмүш' in result.medal|lower or 'silver' in result.medal|lower %}
-                            <span style="color: #d1d5db; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥈</span>
+                            <span style="color: #9ca3af; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥈</span>
                         {% elif 'коло' in result.medal|lower or 'bronze' in result.medal|lower %}
                             <span style="color: #CD7F32; font-size: 1.3rem;">{{ result.medal }}</span><span style="font-size: 1rem; margin-top: 2px;">🥉</span>
                         {% else %}
