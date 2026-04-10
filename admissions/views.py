@@ -2343,6 +2343,13 @@ def round_result_profile(request, pk):
     
     # helper for adding subjects if they exist
     def add_subject(label, score, pct):
+        # Specific rule for language subjects: do not include if score is 0
+        if label in ['Кыргыз тили', 'Орус тили']:
+            s_val = float(score) if score is not None else 0.0
+            p_val = float(pct) if pct is not None else 0.0
+            if s_val == 0.0 and p_val == 0.0:
+                return  # Skip adding this subject
+
         if score is not None or pct is not None:
             subjects_data.append({
                 'label': label,
