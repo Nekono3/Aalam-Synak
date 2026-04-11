@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Import Questions" %} – {{ cycle.name }} | Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'admissions:cycle_list' %}">{% trans "Admission Cycles" %}</a>
+            <span class="separator">/</span>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}">{{ cycle.name }}</a>
+            <span class="separator">/</span>
+            <span class="active">{% trans "Import Questions" %}</span>
+        </div>
+        <h1 class="gradient-text">📤 {% trans "Import Questions from Excel" %}</h1>
+        <p class="text-secondary">{% trans "Upload an .xlsx file with questions for" %} <strong>{{ cycle.name }}</strong>.</p>
+    </div>
+</div>
+
+<div class="glass-card animate-slide-up" style="margin-top:var(--spacing-xl);max-width:700px;">
+
+    <div class="glass-card" style="padding:var(--spacing-lg);margin-bottom:var(--spacing-xl);border-left:4px solid var(--primary-blue);">
+        <h3 style="margin-bottom:var(--spacing-sm);">📄 {% trans "Excel Format" %}</h3>
+        <p class="text-secondary" style="margin-bottom:var(--spacing-md);">{% trans "Your file must have these columns in the first row:" %}</p>
+        <div class="table-container" style="overflow-x:auto;">
+            <table class="table" style="font-size:0.85rem;">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Question Text</th>
+                        <th>Points</th>
+                        <th>Option A</th>
+                        <th>Option B</th>
+                        <th>Option C</th>
+                        <th>Option D</th>
+                        <th>Option E</th>
+                        <th>Option F</th>
+                        <th>Correct Option</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>2+2 = ?</td>
+                        <td>1</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td></td>
+                        <td></td>
+                        <td>B</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="text-muted" style="margin-top:var(--spacing-sm);font-size:0.8rem;">
+            💡 {% trans "Tip: Use 'Export to Excel' on an existing cycle to get a ready-made template." %}
+        </p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group" style="margin-bottom:var(--spacing-xl);">
+            <label class="form-label">{% trans "Excel File" %} (.xlsx)</label>
+            <input type="file" name="file" class="form-input" accept=".xlsx" required>
+        </div>
+
+        <div style="display:flex;gap:var(--spacing-md);">
+            <button type="submit" class="btn btn-primary">📤 {% trans "Import" %}</button>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}" class="btn btn-outline">{% trans "Cancel" %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

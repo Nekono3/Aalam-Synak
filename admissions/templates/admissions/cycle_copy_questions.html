@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Copy Questions" %} – {{ cycle.name }} | Aalam Synak{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fade-in">
+    <div class="glass-card header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'admissions:cycle_list' %}">{% trans "Admission Cycles" %}</a>
+            <span class="separator">/</span>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}">{{ cycle.name }}</a>
+            <span class="separator">/</span>
+            <span class="active">{% trans "Copy Questions" %}</span>
+        </div>
+        <h1 class="gradient-text">📋 {% trans "Copy Questions from Another Cycle" %}</h1>
+        <p class="text-secondary">{% trans "Select a source cycle below. All its questions and answer options will be copied into" %} <strong>{{ cycle.name }}</strong>.</p>
+    </div>
+</div>
+
+<div class="glass-card animate-slide-up" style="margin-top:var(--spacing-xl);max-width:700px;">
+    {% if other_cycles %}
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group" style="margin-bottom:var(--spacing-xl);">
+            <label class="form-label">{% trans "Source Cycle" %}</label>
+            <select name="source_cycle" class="form-select" required>
+                <option value="">— {% trans "Select a cycle" %} —</option>
+                {% for c in other_cycles %}
+                <option value="{{ c.pk }}">{{ c.name }}  ({{ c.q_count }} {% trans "questions" %})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display:flex;gap:var(--spacing-md);">
+            <button type="submit" class="btn btn-primary">📋 {% trans "Copy Questions" %}</button>
+            <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}" class="btn btn-outline">{% trans "Cancel" %}</a>
+        </div>
+    </form>
+    {% else %}
+    <div style="text-align:center;padding:var(--spacing-2xl);">
+        <p class="text-muted">{% trans "No other cycles with questions found." %}</p>
+        <a href="{% url 'admissions:cycle_questions' pk=cycle.pk %}" class="btn btn-outline" style="margin-top:var(--spacing-md);">{% trans "Back" %}</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

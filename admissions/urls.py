@@ -13,6 +13,10 @@ urlpatterns = [
     path('cycles/<int:pk>/questions/add/', views.cycle_add_question, name='cycle_add_question'),
     path('cycles/<int:pk>/questions/<int:question_pk>/edit/', views.cycle_edit_question, name='cycle_edit_question'),
     path('cycles/<int:pk>/questions/<int:question_pk>/delete/', views.cycle_delete_question, name='cycle_delete_question'),
+    path('cycles/<int:pk>/questions/copy/', views.cycle_copy_questions, name='cycle_copy_questions'),
+    path('cycles/<int:pk>/questions/export/', views.cycle_export_questions_xlsx, name='cycle_export_questions'),
+    path('cycles/<int:pk>/questions/import/', views.cycle_import_questions_xlsx, name='cycle_import_questions'),
+
     path('cycles/<int:pk>/splits/', views.cycle_subject_splits, name='cycle_subject_splits'),
     path('registry/', views.school_registry, name='school_registry'),
     path('registry/new/', views.external_school_create, name='external_school_create'),

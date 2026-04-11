@@ -13,10 +13,14 @@
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
             <h1 class="gradient-text">📋 {{ cycle.name }} — {% trans "Questions" %}</h1>
-            <div style="display:flex;gap:8px;">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <a href="{% url 'admissions:cycle_copy_questions' pk=cycle.pk %}" class="btn btn-outline">📋 {% trans "Copy from Cycle" %}</a>
+                <a href="{% url 'admissions:cycle_export_questions' pk=cycle.pk %}" class="btn btn-outline">📥 {% trans "Export Excel" %}</a>
+                <a href="{% url 'admissions:cycle_import_questions' pk=cycle.pk %}" class="btn btn-outline">📤 {% trans "Import Excel" %}</a>
                 <a href="{% url 'admissions:cycle_subject_splits' pk=cycle.pk %}" class="btn btn-outline">🔀 {% trans "Subject Splits" %}</a>
                 <a href="{% url 'admissions:cycle_add_question' pk=cycle.pk %}" class="btn btn-primary">+ {% trans "Add Question" %}</a>
             </div>
+
         </div>
         <p class="text-secondary">{{ cycle.admission_questions.count }} {% trans "questions" %} · {{ cycle.timer_minutes }} {% trans "min" %} · {% trans "Pass" %}: {{ cycle.passing_score }}%</p>
     </div>

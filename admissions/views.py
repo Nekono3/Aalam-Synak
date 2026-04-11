@@ -257,6 +257,185 @@ def cycle_delete_question(request, pk, question_pk):
 
 @login_required
 @user_passes_test(is_super_admin)
+def cycle_copy_questions(request, pk):
+    """Copy all questions (with options) from another cycle into this one."""
+    cycle = get_object_or_404(AdmissionCycle, pk=pk)
+    other_cycles = AdmissionCycle.objects.exclude(pk=pk).annotate(
+        q_count=Count('admission_questions')
+    ).filter(q_count__gt=0)
+
+    if request.method == 'POST':
+        source_id = request.POST.get('source_cycle')
+        if source_id:
+            source_cycle = get_object_or_404(AdmissionCycle, pk=source_id)
+            source_questions = source_cycle.admission_questions.prefetch_related('options').all()
+
+            # Determine starting order
+            last_order = cycle.admission_questions.order_by('-order').values_list('order', flat=True).first() or 0
+
+            copied = 0
+            with transaction.atomic():
+                for sq in source_questions:
+                    last_order += 1
+                    new_q = AdmissionQuestion.objects.create(
+                        cycle=cycle,
+                        question_text=sq.question_text,
+                        order=last_order,
+                        points=sq.points,
+                    )
+                    # Copy image file if exists
+                    if sq.question_image:
+                        new_q.question_image.save(
+                            sq.question_image.name.split('/')[-1],
+                            sq.question_image.file,
+                            save=True
+                        )
+                    for opt in sq.options.all():
+                        AdmissionQuestionOption.objects.create(
+                            question=new_q,
+                            text=opt.text,
+                            is_correct=opt.is_correct,
+                            order=opt.order,
+                        )
+                    copied += 1
+
+            messages.success(request, _('Copied %(count)d questions from "%(source)s".') % {
+                'count': copied, 'source': source_cycle.name
+            })
+            return redirect('admissions:cycle_questions', pk=cycle.pk)
+
+    return render(request, 'admissions/cycle_copy_questions.html', {
+        'cycle': cycle, 'other_cycles': other_cycles
+    })
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def cycle_export_questions_xlsx(request, pk):
+    """Export all questions for a cycle to an .xlsx file."""
+    cycle = get_object_or_404(AdmissionCycle, pk=pk)
+    questions = cycle.admission_questions.prefetch_related('options').order_by('order', 'id')
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Questions"
+
+    headers = ['Order', 'Question Text', 'Points',
+               'Option A', 'Option B', 'Option C', 'Option D',
+               'Option E', 'Option F', 'Correct Option']
+    ws.append(headers)
+    header_font = Font(bold=True)
+    for cell in ws[1]:
+        cell.font = header_font
+        cell.alignment = Alignment(horizontal='center')
+
+    LETTERS = 'ABCDEF'
+
+    for q in questions:
+        opts = list(q.options.order_by('order', 'id'))
+        row = [q.order, q.question_text, q.points]
+        correct_letter = ''
+        for i in range(6):
+            if i < len(opts):
+                row.append(opts[i].text)
+                if opts[i].is_correct:
+                    correct_letter = LETTERS[i]
+            else:
+                row.append('')
+        row.append(correct_letter)
+        ws.append(row)
+
+    # Auto-width
+    for col in ws.columns:
+        max_len = max((len(str(c.value or '')) for c in col), default=10)
+        ws.column_dimensions[col[0].column_letter].width = min(max_len + 4, 60)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    safe_name = cycle.name.replace(' ', '_')
+    response['Content-Disposition'] = f'attachment; filename="Questions_{safe_name}.xlsx"'
+    wb.save(response)
+    return response
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def cycle_import_questions_xlsx(request, pk):
+    """Import questions from an uploaded .xlsx file into a cycle."""
+    cycle = get_object_or_404(AdmissionCycle, pk=pk)
+
+    if request.method == 'POST' and request.FILES.get('file'):
+        uploaded = request.FILES['file']
+        try:
+            workbook = openpyxl.load_workbook(uploaded, data_only=True)
+            sheet = workbook.active
+
+            last_order = cycle.admission_questions.order_by('-order').values_list('order', flat=True).first() or 0
+            imported = 0
+            LETTERS = 'ABCDEF'
+
+            with transaction.atomic():
+                for row_idx, row in enumerate(sheet.iter_rows(min_row=2, values_only=True)):
+                    # Expect: Order, Question Text, Points, OptA..OptF, Correct
+                    if not row or len(row) < 5:
+                        continue
+                    question_text = str(row[1] or '').strip()
+                    if not question_text:
+                        continue
+
+                    order_val = row[0]
+                    try:
+                        order_val = int(order_val)
+                    except (TypeError, ValueError):
+                        last_order += 1
+                        order_val = last_order
+
+                    points_val = row[2]
+                    try:
+                        points_val = int(points_val)
+                    except (TypeError, ValueError):
+                        points_val = 1
+
+                    new_q = AdmissionQuestion.objects.create(
+                        cycle=cycle,
+                        question_text=question_text,
+                        order=order_val,
+                        points=points_val,
+                    )
+
+                    # Parse options (columns 3..8) and correct letter (column 9)
+                    correct_letter = str(row[9] if len(row) > 9 and row[9] else '').strip().upper()
+
+                    for i in range(6):
+                        col_idx = 3 + i
+                        if col_idx < len(row) and row[col_idx] and str(row[col_idx]).strip():
+                            opt_text = str(row[col_idx]).strip()
+                            is_correct = (LETTERS[i] == correct_letter)
+                            AdmissionQuestionOption.objects.create(
+                                question=new_q,
+                                text=opt_text,
+                                is_correct=is_correct,
+                                order=i,
+                            )
+
+                    if order_val > last_order:
+                        last_order = order_val
+                    imported += 1
+
+            messages.success(request, _('Imported %(count)d questions from Excel.') % {'count': imported})
+            return redirect('admissions:cycle_questions', pk=cycle.pk)
+
+        except Exception as e:
+            messages.error(request, _('Error importing file: %(error)s') % {'error': str(e)})
+
+    return render(request, 'admissions/cycle_import_questions.html', {
+        'cycle': cycle,
+    })
+
+
+@login_required
+@user_passes_test(is_super_admin)
 def cycle_subject_splits(request, pk):
     """Configure subject ranges for a cycle calculation."""
     cycle = get_object_or_404(AdmissionCycle, pk=pk)
