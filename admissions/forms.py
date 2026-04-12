@@ -86,12 +86,34 @@ class AdmissionRegistrationForm(forms.Form):
         ('Ошская область', _('Ошская область')),
         ('Талас', _('Талас')),
         ('Чуй', _('Чуй')),
+        ('Башка', _('Башка (Другой)')),
     ]
     region = forms.ChoiceField(
         choices=REGION_CHOICES,
         label=_("Region"),
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_region'})
     )
+    custom_region = forms.CharField(
+        max_length=100,
+        required=False,
+        label=_("Your Region"),
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': _('Напр: Казахстан, Узбекистан...'),
+            'id': 'id_custom_region',
+        })
+    )
+
+    def clean(self):
+        cleaned = super().clean()
+        region = cleaned.get('region', '')
+        custom_region = cleaned.get('custom_region', '').strip()
+        if region == 'Башка':
+            if not custom_region:
+                self.add_error('custom_region', _('Please enter your region.'))
+            else:
+                cleaned['region'] = custom_region
+        return cleaned
     phone1 = forms.CharField(
         max_length=50,
         label='Номериңиз',

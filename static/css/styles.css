@@ -196,13 +196,20 @@ p {
     gap: var(--spacing-md);
 }
 
+.row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
 @media (max-width: 768px) {
     .main-content {
         margin-left: 0;
         padding: var(--spacing-md);
         padding-top: calc(70px + var(--spacing-md)); /* Space for mobile header */
     }
-    .form-grid {
+    .form-grid,
+    .row-2col {
         grid-template-columns: 1fr !important;
     }
     

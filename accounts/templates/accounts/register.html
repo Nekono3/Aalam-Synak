@@ -6,6 +6,31 @@
 {% block auth_title %}Аккаунт ачуу{% endblock %}
 {% block auth_subtitle %}Аалам Сынакка катышуу үчүн катталыңыз{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Custom address slide-down animation */
+    #custom-address-group {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
+        margin-top: 0;
+    }
+    #custom-address-group.visible {
+        max-height: 100px;
+        opacity: 1;
+        margin-top: 0.6rem;
+    }
+    /* Mobile responsive */
+    @media (max-width: 520px) {
+        .form-grid,
+        .row-2col {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block auth_content %}
 <form method="post" class="auth-form" data-validate>
     {% csrf_token %}
@@ -75,6 +100,13 @@
             {% if form.address.errors %}
             <span class="form-error">{{ form.address.errors.0 }}</span>
             {% endif %}
+            <div id="custom-address-group" {% if form.address.value == 'Башка' %}class="visible"{% endif %}>
+                <label for="id_custom_address" class="form-label">{{ form.custom_address.label }} *</label>
+                {{ form.custom_address }}
+                {% if form.custom_address.errors %}
+                <span class="form-error">{{ form.custom_address.errors.0 }}</span>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -113,4 +145,25 @@
     Аккаунтуңуз барбы?
     <a href="{% url 'accounts:login' %}" style="font-weight: 600; color: var(--primary-blue);">Кирүү</a>
 </p>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    var addressSelect = document.getElementById('id_address');
+    var customGroup = document.getElementById('custom-address-group');
+    if (!addressSelect || !customGroup) return;
+
+    function toggleCustomAddress() {
+        if (addressSelect.value === 'Башка') {
+            customGroup.classList.add('visible');
+        } else {
+            customGroup.classList.remove('visible');
+        }
+    }
+
+    addressSelect.addEventListener('change', toggleCustomAddress);
+    toggleCustomAddress();
+})();
+</script>
 {% endblock %}

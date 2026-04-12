@@ -90,7 +90,17 @@ class StudentRegistrationForm(forms.ModelForm):
     address = forms.ChoiceField(
         label=_('Дарек'),
         choices=ADDRESS_CHOICES,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_address'})
+    )
+    custom_address = forms.CharField(
+        max_length=100,
+        required=False,
+        label=_('Регионуңузду жазыңыз'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': _('Мисалы: Бишкек, Казахстан...'),
+            'id': 'id_custom_address',
+        })
     )
     previous_school = forms.CharField(
         label=_('Мектебиңиз'),
@@ -158,6 +168,15 @@ class StudentRegistrationForm(forms.ModelForm):
         
         if password and password_confirm and password != password_confirm:
             raise forms.ValidationError(_('Passwords do not match.'))
+        
+        # Merge custom_address into address when 'Башка' is selected
+        address = cleaned_data.get('address', '')
+        custom_address = cleaned_data.get('custom_address', '').strip()
+        if address == 'Башка':
+            if not custom_address:
+                self.add_error('custom_address', _('Регионуңузду жазыңыз.'))
+            else:
+                cleaned_data['address'] = custom_address
         
         return cleaned_data
     

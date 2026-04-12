@@ -57,6 +57,33 @@
         margin: 0 auto 1.5rem;
         font-size: 2.5rem;
     }
+    #custom-region-group {
+        display: none;
+        margin-top: 0.75rem;
+    }
+    #custom-region-group.visible {
+        display: block;
+    }
+    /* Mobile responsive */
+    @media (max-width: 600px) {
+        .row-2col {
+            grid-template-columns: 1fr;
+        }
+        .register-card {
+            margin: 0 4px;
+        }
+        .register-card .card {
+            padding: 1.25rem !important;
+        }
+        .register-header h1 {
+            font-size: 1.35rem;
+        }
+        .page-header .d-flex {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -156,6 +183,10 @@
             <div class="form-group">
                 <label class="form-label">{% trans "Region" %} *</label>
                 {{ form.region }}
+                <div id="custom-region-group" {% if form.region.value == 'Башка' %}class="visible"{% endif %}>
+                    <label class="form-label" style="margin-top:0.5rem;">{% trans "Enter your region" %} *</label>
+                    {{ form.custom_region }}
+                </div>
             </div>
 
             <div class="row-2col">
@@ -178,3 +209,25 @@
 {% endif %}
 {% endif %}
 {% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    var regionSelect = document.getElementById('id_region');
+    var customGroup = document.getElementById('custom-region-group');
+    if (!regionSelect || !customGroup) return;
+
+    function toggleCustomRegion() {
+        if (regionSelect.value === 'Башка') {
+            customGroup.classList.add('visible');
+        } else {
+            customGroup.classList.remove('visible');
+        }
+    }
+
+    regionSelect.addEventListener('change', toggleCustomRegion);
+    toggleCustomRegion();
+})();
+</script>
+{% endblock %}
+
