@@ -47,6 +47,30 @@ class AdmissionCycle(models.Model):
         return self.name
 
 
+class CycleLink(models.Model):
+    """
+    Configurable links shown to students who pass the admission exam.
+    E.g. WhatsApp group links, Telegram channels, etc.
+    """
+    cycle = models.ForeignKey(
+        AdmissionCycle,
+        on_delete=models.CASCADE,
+        related_name='links',
+        verbose_name=_('Cycle')
+    )
+    title = models.CharField(max_length=200, verbose_name=_('Link Title'))
+    url = models.URLField(max_length=500, verbose_name=_('URL'))
+    order = models.PositiveIntegerField(default=0, verbose_name=_('Order'))
+
+    class Meta:
+        verbose_name = _('Cycle Link')
+        verbose_name_plural = _('Cycle Links')
+        ordering = ['order', 'pk']
+
+    def __str__(self):
+        return f"{self.title} ({self.cycle.name})"
+
+
 class ExternalSchool(models.Model):
     """
     Registry for external schools that candidates are coming from.

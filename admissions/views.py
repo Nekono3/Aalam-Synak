@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
@@ -13,7 +14,7 @@ from .models import (
     AdmissionResult, AdmissionSubjectScore, AdmissionUploadSession,
     AdmissionRegistration, AdmissionQuestion, AdmissionQuestionOption,
     AdmissionSubjectSplit, AdmissionMasterAnswer, OnlineAttempt, OnlineAttemptAnswer,
-    RoundResultSession, RoundResult
+    RoundResultSession, RoundResult, CycleLink
 )
 from .forms import (
     AdmissionXLSXUploadForm, AdmissionRegistrationForm,
@@ -134,6 +135,15 @@ def cycle_create(request):
             enable_tab_warnings=enable_tab_warnings,
             max_tab_switches=max_tab_switches
         )
+        
+        # Save links
+        order = 0
+        for i in range(50):
+            title = request.POST.get(f'link_title_{i}', '').strip()
+            url = request.POST.get(f'link_url_{i}', '').strip()
+            if title and url:
+                CycleLink.objects.create(cycle=cycle, title=title, url=url, order=order)
+                order += 1
             
         messages.success(request, _('Admission cycle created successfully.'))
         return redirect('admissions:cycle_list')
@@ -157,12 +167,25 @@ def cycle_edit(request, pk):
         cycle.max_tab_switches = request.POST.get('max_tab_switches', 3)
         
         cycle.save()
+        
+        # Re-create links
+        cycle.links.all().delete()
+        order = 0
+        for i in range(50):
+            title = request.POST.get(f'link_title_{i}', '').strip()
+            url = request.POST.get(f'link_url_{i}', '').strip()
+            if title and url:
+                CycleLink.objects.create(cycle=cycle, title=title, url=url, order=order)
+                order += 1
+        
         messages.success(request, _('Admission cycle updated successfully.'))
         return redirect('admissions:cycle_list')
     
+    existing_links = list(cycle.links.all().values('title', 'url'))
     return render(request, 'admissions/cycle_form.html', {
         'cycle': cycle, 
-        'is_edit': True
+        'is_edit': True,
+        'existing_links_json': json.dumps(existing_links, ensure_ascii=False),
     })
 
 # ============================================================

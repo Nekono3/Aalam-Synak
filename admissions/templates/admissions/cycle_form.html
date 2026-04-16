@@ -66,6 +66,31 @@
                 </div>
             </div>
 
+            <!-- Links Section -->
+            <div class="links-section" style="margin-top: var(--spacing-xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--border-color);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--spacing-lg);">
+                    <div>
+                        <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin: 0;">
+                            🔗 {% trans "Links for Passed Students" %}
+                        </h3>
+                        <p class="text-muted small mb-0" style="margin-top: 4px;">{% trans "These links will be shown to students who pass the exam." %}</p>
+                    </div>
+                    <button type="button" id="add-link-btn" class="btn btn-outline btn-sm" style="white-space: nowrap;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        {% trans "Add Link" %}
+                    </button>
+                </div>
+
+                <div id="links-container">
+                    <!-- Dynamic link rows inserted here by JS -->
+                </div>
+
+                <div id="no-links-msg" class="text-center" style="padding: 2rem; color: var(--text-muted); border: 2px dashed var(--border-color); border-radius: var(--radius-md); display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto 8px; display: block; opacity: 0.5;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    {% trans "No links added yet. Click 'Add Link' to add one." %}
+                </div>
+            </div>
+
             <div class="form-actions mt-5" style="display: flex; gap: var(--spacing-md); pt: var(--spacing-lg); border-top: 1px solid var(--border-color); padding-top: var(--spacing-xl);">
                 <button type="submit" class="btn btn-primary" style="min-width: 140px;">
                     {% if is_edit %}{% trans "Save Changes" %}{% else %}{% trans "Create Cycle" %}{% endif %}
@@ -84,5 +109,119 @@
 .input:focus { outline: none; border-color: var(--primary-blue); }
 .content-container { animation: fadeIn 0.4s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Link row styles */
+.link-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    animation: slideIn 0.2s ease-out;
+}
+.link-row .link-input {
+    padding: 8px 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+}
+.link-row .link-input:focus { outline: none; border-color: var(--primary-blue); }
+.link-row .link-input::placeholder { color: var(--text-muted); }
+
+.link-delete-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.link-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .link-row {
+        grid-template-columns: 1fr auto;
+    }
+    .link-row .link-input:first-child {
+        grid-column: 1 / -1;
+    }
+}
 </style>
+
+<script>
+(function() {
+    var container = document.getElementById('links-container');
+    var addBtn = document.getElementById('add-link-btn');
+    var noLinksMsg = document.getElementById('no-links-msg');
+    var counter = 0;
+
+    function updateVisibility() {
+        var rows = container.querySelectorAll('.link-row');
+        noLinksMsg.style.display = rows.length === 0 ? 'block' : 'none';
+    }
+
+    function addLinkRow(title, url) {
+        var idx = counter++;
+        var row = document.createElement('div');
+        row.className = 'link-row';
+        row.innerHTML =
+            '<input type="text" name="link_title_' + idx + '" class="link-input" placeholder="{% trans "Link name, e.g. WhatsApp Group" %}" value="' + (title || '') + '">' +
+            '<input type="url" name="link_url_' + idx + '" class="link-input" placeholder="https://..." value="' + (url || '') + '">' +
+            '<button type="button" class="link-delete-btn" title="{% trans "Delete" %}">' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+            '</button>';
+        row.querySelector('.link-delete-btn').addEventListener('click', function() {
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(-8px)';
+            row.style.transition = 'all 0.15s';
+            setTimeout(function() { row.remove(); updateVisibility(); reindexLinks(); }, 150);
+        });
+        container.appendChild(row);
+        updateVisibility();
+    }
+
+    function reindexLinks() {
+        var rows = container.querySelectorAll('.link-row');
+        counter = 0;
+        rows.forEach(function(row, i) {
+            var inputs = row.querySelectorAll('.link-input');
+            inputs[0].name = 'link_title_' + i;
+            inputs[1].name = 'link_url_' + i;
+            counter = i + 1;
+        });
+    }
+
+    addBtn.addEventListener('click', function() { addLinkRow('', ''); });
+
+    // Load existing links on edit
+    {% if existing_links_json %}
+    var existingLinks = {{ existing_links_json|safe }};
+    existingLinks.forEach(function(link) {
+        addLinkRow(link.title, link.url);
+    });
+    {% endif %}
+
+    updateVisibility();
+})();
+</script>
 {% endblock %}
