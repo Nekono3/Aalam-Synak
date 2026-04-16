@@ -77,24 +77,13 @@ class StudentRegistrationForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     
-    ADDRESS_CHOICES = [
-        ('', _('-- Выберите регион --')),
-        ('Ош шаары', 'Ош шаары'),
-        ('Алай', 'Алай'),
-        ('Чоң-Алай', 'Чоң-Алай'),
-        ('Кара-Суу', 'Кара-Суу'),
-        ('Араван', 'Араван'),
-        ('Ноокат', 'Ноокат'),
-        ('Бишкек', 'Бишкек'),
-        ('Баткен', 'Баткен'),
-        ('Россия', 'Россия'),
-        ('Башка', 'Башка'),
-    ]
     address = forms.ChoiceField(
         label=_('Дарек'),
-        choices=ADDRESS_CHOICES,
+        choices=[],
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_address'})
     )
+
+
     custom_address = forms.CharField(
         max_length=100,
         required=False,
@@ -157,6 +146,10 @@ class StudentRegistrationForm(forms.ModelForm):
         self.fields['last_name'].required = True
         self.fields['phone'].required = True
         self.fields['father_phone'].required = True
+        
+        # Load dynamic region choices
+        from admissions.models import Region
+        self.fields['address'].choices = Region.get_region_choices()
     
     def clean_email(self):
         email = self.cleaned_data.get('email')

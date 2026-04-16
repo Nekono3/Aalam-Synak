@@ -71,6 +71,29 @@ class CycleLink(models.Model):
         return f"{self.title} ({self.cycle.name})"
 
 
+class Region(models.Model):
+    """Admin-configurable region for student registration forms."""
+    name = models.CharField(max_length=100, unique=True, verbose_name=_('Region Name'))
+    order = models.PositiveIntegerField(default=0, verbose_name=_('Order'))
+
+    class Meta:
+        verbose_name = _('Region')
+        verbose_name_plural = _('Regions')
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def get_region_choices(cls):
+        """Return choices list from DB regions + permanent Башка option."""
+        choices = [('', _('-- Выберите регион --'))]
+        for r in cls.objects.all():
+            choices.append((r.name, r.name))
+        choices.append(('Башка', _('Башка (Другой)')))
+        return choices
+
+
 class ExternalSchool(models.Model):
     """
     Registry for external schools that candidates are coming from.

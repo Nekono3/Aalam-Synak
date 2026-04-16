@@ -11,23 +11,16 @@ class AdmissionXLSXUploadForm(forms.Form):
         label=_("Admission Cycle"),
         widget=forms.Select(attrs={'class': 'form-select'})
     )
-    REGION_CHOICES = [
-        ('', _('-- Выберите регион --')),
-        ('Баткен', _('Баткен')),
-        ('Бишкек', _('Бишкек')),
-        ('Джалал-Абад', _('Джалал-Абад')),
-        ('Иссык-Куль', _('Иссык-Куль')),
-        ('Нарын', _('Нарын')),
-        ('Ош (город)', _('Ош (город)')),
-        ('Ошская область', _('Ошская область')),
-        ('Талас', _('Талас')),
-        ('Чуй', _('Чуй')),
-    ]
     region = forms.ChoiceField(
-        choices=REGION_CHOICES,
+        choices=[],
         label=_("Region"),
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from .models import Region
+        self.fields['region'].choices = Region.get_region_choices()
     admission_type = forms.ChoiceField(
         choices=AdmissionUploadSession.ADMISSION_TYPE_CHOICES,
         label=_("Admission Type"),
@@ -75,21 +68,8 @@ class AdmissionRegistrationForm(forms.Form):
             'placeholder': _('Напр: №15 мектеп, Бишкек'),
         })
     )
-    REGION_CHOICES = [
-        ('', _('-- Выберите регион --')),
-        ('Ош шаары', _('Ош шаары')),
-        ('Алай', _('Алай')),
-        ('Чоң-Алай', _('Чоң-Алай')),
-        ('Кара-Суу', _('Кара-Суу')),
-        ('Араван', _('Араван')),
-        ('Ноокат', _('Ноокат')),
-        ('Бишкек', _('Бишкек')),
-        ('Баткен', _('Баткен')),
-        ('Россия', _('Россия')),
-        ('Башка', _('Башка (Другой)')),
-    ]
     region = forms.ChoiceField(
-        choices=REGION_CHOICES,
+        choices=[],
         label=_("Region"),
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_region'})
     )
@@ -103,6 +83,11 @@ class AdmissionRegistrationForm(forms.Form):
             'id': 'id_custom_region',
         })
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from .models import Region
+        self.fields['region'].choices = Region.get_region_choices()
 
     def clean(self):
         cleaned = super().clean()

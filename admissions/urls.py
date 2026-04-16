@@ -21,6 +21,12 @@ urlpatterns = [
     path('registry/', views.school_registry, name='school_registry'),
     path('registry/new/', views.external_school_create, name='external_school_create'),
     path('registry/<int:pk>/delete/', views.external_school_delete, name='external_school_delete'),
+    
+    # Region Management
+    path('regions/', views.region_list, name='region_list'),
+    path('regions/<int:pk>/edit/', views.region_edit, name='region_edit'),
+    path('regions/<int:pk>/delete/', views.region_delete, name='region_delete'),
+    
     path('candidates/', views.candidate_list, name='candidate_list'),
     path('candidates/<int:pk>/', views.candidate_detail, name='candidate_detail'),
     path('analytics/', views.admission_analytics, name='admission_analytics'),

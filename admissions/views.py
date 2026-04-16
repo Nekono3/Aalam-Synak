@@ -555,6 +555,47 @@ def external_school_delete(request, pk):
 
 @login_required
 @user_passes_test(is_super_admin)
+def region_list(request):
+    """List all regions and handle adding new ones."""
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        if name:
+            from .models import Region
+            Region.objects.get_or_create(name=name)
+            messages.success(request, _('Region added successfully.'))
+        return redirect('admissions:region_list')
+        
+    from .models import Region
+    regions = Region.objects.all()
+    return render(request, 'admissions/region_list.html', {'regions': regions})
+
+@login_required
+@user_passes_test(is_super_admin)
+def region_edit(request, pk):
+    """Edit a region's name."""
+    from .models import Region
+    region = get_object_or_404(Region, pk=pk)
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        if name:
+            region.name = name
+            region.save()
+            messages.success(request, _('Region updated successfully.'))
+    return redirect('admissions:region_list')
+
+@login_required
+@user_passes_test(is_super_admin)
+def region_delete(request, pk):
+    """Delete a region."""
+    from .models import Region
+    region = get_object_or_404(Region, pk=pk)
+    if request.method == 'POST':
+        region.delete()
+        messages.success(request, _('Region deleted successfully.'))
+    return redirect('admissions:region_list')
+
+@login_required
+@user_passes_test(is_super_admin)
 def candidate_list(request):
     """List of all candidates with filtering and exam status."""
     search_query = request.GET.get('search', '')
