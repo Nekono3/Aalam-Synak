@@ -67,6 +67,7 @@
                                                 
                                                 <div style="display: grid; gap: 10px;">
                                                 {% for link in cycle_links %}
+                                                    {% if link.target_gender == 'all' or candidate and link.target_gender == candidate.gender %}
                                                     <a href="{{ link.url }}" target="_blank" class="cycle-link-btn {% if 'whatsapp' in link.url %}link-whatsapp{% elif 't.me' in link.url or 'telegram' in link.url %}link-telegram{% elif 'instagram' in link.url %}link-instagram{% elif 'youtube' in link.url or 'youtu.be' in link.url %}link-youtube{% else %}link-default{% endif %}">
                                                         <span class="link-icon">
                                                             {% if 'whatsapp' in link.url %}
@@ -83,6 +84,7 @@
                                                         </span>
                                                         <span>{{ link.title }}</span>
                                                     </a>
+                                                    {% endif %}
                                                 {% endfor %}
                                                 </div>
                                             </div>

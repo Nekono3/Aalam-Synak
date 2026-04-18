@@ -113,7 +113,7 @@
 /* Link row styles */
 .link-row {
     display: grid;
-    grid-template-columns: 1fr 2fr auto;
+    grid-template-columns: 1fr 2fr 1fr auto;
     gap: 10px;
     align-items: center;
     padding: 10px 14px;
@@ -123,7 +123,7 @@
     margin-bottom: 10px;
     animation: slideIn 0.2s ease-out;
 }
-.link-row .link-input {
+.link-row .link-input, .link-row .link-select {
     padding: 8px 12px;
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
@@ -132,7 +132,7 @@
     font-size: 0.875rem;
     transition: border-color 0.2s;
 }
-.link-row .link-input:focus { outline: none; border-color: var(--primary-blue); }
+.link-row .link-input:focus, .link-row .link-select:focus { outline: none; border-color: var(--primary-blue); }
 .link-row .link-input::placeholder { color: var(--text-muted); }
 
 .link-delete-btn {
@@ -180,13 +180,27 @@
         noLinksMsg.style.display = rows.length === 0 ? 'block' : 'none';
     }
 
-    function addLinkRow(title, url) {
+    function addLinkRow(title, url, target_gender) {
         var idx = counter++;
         var row = document.createElement('div');
         row.className = 'link-row';
+        
+        var genderOptions = [
+            {value: 'all', text: '{% trans "All" %}'},
+            {value: 'M', text: '{% trans "Boys" %}'},
+            {value: 'F', text: '{% trans "Girls" %}'}
+        ];
+        var genderSelectHTML = '<select name="link_gender_' + idx + '" class="link-select">';
+        genderOptions.forEach(opt => {
+            var selected = (opt.value === target_gender) ? 'selected' : '';
+            genderSelectHTML += '<option value="' + opt.value + '" ' + selected + '>' + opt.text + '</option>';
+        });
+        genderSelectHTML += '</select>';
+
         row.innerHTML =
             '<input type="text" name="link_title_' + idx + '" class="link-input" placeholder="{% trans "Link name, e.g. WhatsApp Group" %}" value="' + (title || '') + '">' +
             '<input type="url" name="link_url_' + idx + '" class="link-input" placeholder="https://..." value="' + (url || '') + '">' +
+            genderSelectHTML +
             '<button type="button" class="link-delete-btn" title="{% trans "Delete" %}">' +
                 '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
             '</button>';
@@ -205,19 +219,23 @@
         counter = 0;
         rows.forEach(function(row, i) {
             var inputs = row.querySelectorAll('.link-input');
+            var selects = row.querySelectorAll('.link-select');
             inputs[0].name = 'link_title_' + i;
             inputs[1].name = 'link_url_' + i;
+            if (selects.length > 0) {
+                selects[0].name = 'link_gender_' + i;
+            }
             counter = i + 1;
         });
     }
 
-    addBtn.addEventListener('click', function() { addLinkRow('', ''); });
+    addBtn.addEventListener('click', function() { addLinkRow('', '', 'all'); });
 
     // Load existing links on edit
     {% if existing_links_json %}
     var existingLinks = {{ existing_links_json|safe }};
     existingLinks.forEach(function(link) {
-        addLinkRow(link.title, link.url);
+        addLinkRow(link.title, link.url, link.target_gender || 'all');
     });
     {% endif %}
 

@@ -141,8 +141,9 @@ def cycle_create(request):
         for i in range(50):
             title = request.POST.get(f'link_title_{i}', '').strip()
             url = request.POST.get(f'link_url_{i}', '').strip()
+            target_gender = request.POST.get(f'link_gender_{i}', 'all').strip()
             if title and url:
-                CycleLink.objects.create(cycle=cycle, title=title, url=url, order=order)
+                CycleLink.objects.create(cycle=cycle, title=title, url=url, target_gender=target_gender, order=order)
                 order += 1
             
         messages.success(request, _('Admission cycle created successfully.'))
@@ -174,14 +175,15 @@ def cycle_edit(request, pk):
         for i in range(50):
             title = request.POST.get(f'link_title_{i}', '').strip()
             url = request.POST.get(f'link_url_{i}', '').strip()
+            target_gender = request.POST.get(f'link_gender_{i}', 'all').strip()
             if title and url:
-                CycleLink.objects.create(cycle=cycle, title=title, url=url, order=order)
+                CycleLink.objects.create(cycle=cycle, title=title, url=url, target_gender=target_gender, order=order)
                 order += 1
         
         messages.success(request, _('Admission cycle updated successfully.'))
         return redirect('admissions:cycle_list')
     
-    existing_links = list(cycle.links.all().values('title', 'url'))
+    existing_links = list(cycle.links.all().values('title', 'url', 'target_gender'))
     return render(request, 'admissions/cycle_form.html', {
         'cycle': cycle, 
         'is_edit': True,

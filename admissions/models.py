@@ -52,6 +52,12 @@ class CycleLink(models.Model):
     Configurable links shown to students who pass the admission exam.
     E.g. WhatsApp group links, Telegram channels, etc.
     """
+    GENDER_TARGET_CHOICES = [
+        ('all', _('All')),
+        ('M', _('Boys')),
+        ('F', _('Girls')),
+    ]
+    
     cycle = models.ForeignKey(
         AdmissionCycle,
         on_delete=models.CASCADE,
@@ -60,6 +66,12 @@ class CycleLink(models.Model):
     )
     title = models.CharField(max_length=200, verbose_name=_('Link Title'))
     url = models.URLField(max_length=500, verbose_name=_('URL'))
+    target_gender = models.CharField(
+        max_length=5, 
+        choices=GENDER_TARGET_CHOICES, 
+        default='all', 
+        verbose_name=_('Target Gender')
+    )
     order = models.PositiveIntegerField(default=0, verbose_name=_('Order'))
 
     class Meta:
