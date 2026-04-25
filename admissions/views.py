@@ -790,6 +790,7 @@ def export_admission_results(request, cycle_id=None, admission_type=None):
         str(_("Процент")),
         str(_("Медаль")),
         str(_("Источник")),
+        str(_("Длительность")),
         str(_("Предупреждения")),
         str(_("Статус экзамена")),
     ]
@@ -890,7 +891,8 @@ def export_admission_results(request, cycle_id=None, admission_type=None):
             round(result.percentage, 1) if result.percentage else 0.0,
             MEDAL_LABELS.get(result.medal, '—'),
             result.admission_type.title() if result.admission_type else '',
-            result.exam_attempt.tab_switch_count if hasattr(result, 'exam_attempt') and result.exam_attempt else 0,
+            result.duration_display,
+            result.tab_switch_count,
             result.exam_attempt.get_status_display() if hasattr(result, 'exam_attempt') and result.exam_attempt else "N/A"
         ]
         ws_students.append(row)
@@ -1630,6 +1632,8 @@ def cycle_exam_submit(request, attempt_pk):
                 'school_name': str(school_name),
                 'phone1': phone1,
                 'phone2': phone2,
+                'tab_switch_count': attempt.tab_switch_count,
+                'exam_duration_seconds': int((attempt.finished_at - attempt.started_at).total_seconds()) if attempt.finished_at else 0,
             }
         )
         

@@ -77,13 +77,19 @@
                 </div>
                 <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md);">
                     <div class="text-muted small">{% trans "Started" %}</div>
-                    <div>{% if attempt.started_at %}{{ attempt.started_at|date:"M d, H:i" }}{% else %}-{% endif %}</div>
+                    <div>{% if attempt.started_at %}{{ attempt.started_at|date:"M d, H:i:s" }}{% else %}-{% endif %}</div>
+                </div>
+                <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <div class="text-muted small">{% trans "Duration" %}</div>
+                    <div style="font-size: 18px; font-weight: 700;">{{ attempt.duration_display }}</div>
                 </div>
                 <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md);">
                     <div class="text-muted small">{% trans "Tab Switch Warnings" %}</div>
-                    <div style="font-size: 24px; font-weight: 700; color: {% if attempt.tab_switch_count >= attempt.cycle.max_tab_switches %}var(--danger){% elif attempt.tab_switch_count > 0 %}var(--warning){% else %}var(--text-primary){% endif %};">
-                        {{ attempt.tab_switch_count }} / {{ attempt.cycle.max_tab_switches }}
+                    {% with count=attempt.tab_switch_count limit=attempt.cycle.max_tab_switches %}
+                    <div style="font-size: 24px; font-weight: 700; color: {% if count >= limit %}var(--danger){% elif count > 0 %}var(--warning){% else %}var(--text-primary){% endif %};">
+                        {{ count }} / {{ limit }}
                     </div>
+                    {% endwith %}
                 </div>
                 
 

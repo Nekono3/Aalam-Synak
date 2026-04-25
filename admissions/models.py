@@ -260,6 +260,7 @@ class AdmissionResult(models.Model):
     exam_attempt = models.OneToOneField('OnlineAttempt', on_delete=models.SET_NULL, null=True, blank=True, related_name='admission_result')
 
     tab_switch_count = models.PositiveIntegerField(default=0, verbose_name=_('Tab Switch Warnings'))
+    exam_duration_seconds = models.PositiveIntegerField(default=0, verbose_name=_('Exam Duration (seconds)'))
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -278,6 +279,16 @@ class AdmissionResult(models.Model):
         elif self.percentage >= 50:
             return 'bronze'
         return None
+
+    @property
+    def duration_display(self):
+        if not self.exam_duration_seconds:
+            return "00:00"
+        m, s = divmod(self.exam_duration_seconds, 60)
+        h, m = divmod(m, 60)
+        if h > 0:
+            return f"{h:02d}:{m:02d}:{s:02d}"
+        return f"{m:02d}:{s:02d}"
 
     @property
     def incorrect_percentage(self):
@@ -531,6 +542,21 @@ class OnlineAttempt(models.Model):
         elapsed = (timezone.now() - self.started_at).total_seconds()
         remaining = (self.cycle.timer_minutes * 60) - elapsed
         return max(0, int(remaining))
+
+    @property
+    def duration_display(self):
+        if not self.finished_at:
+            from django.utils import timezone
+            end = timezone.now()
+        else:
+            end = self.finished_at
+        
+        diff = (end - self.started_at).total_seconds()
+        m, s = divmod(int(diff), 60)
+        h, m = divmod(m, 60)
+        if h > 0:
+            return f"{h:02d}:{m:02d}:{s:02d}"
+        return f"{m:02d}:{s:02d}"
 
     @property
     def is_suspicious(self):

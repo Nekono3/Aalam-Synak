@@ -46,6 +46,7 @@
                     <th>{% trans "Cycle" %}</th>
                     <th>{% trans "Status" %}</th>
                     <th>{% trans "Total Warnings" %}</th>
+                    <th>{% trans "Duration" %}</th>
                     <th>{% trans "Time" %}</th>
                     <th>{% trans "Actions" %}</th>
                 </tr>
@@ -79,6 +80,7 @@
                                 {{ total_warnings }}
                             </span>
                         </td>
+                        <td>{{ attempt.duration_display }}</td>
                         <td>
                             <div class="text-muted small">
                                 {% if attempt.started_at %}{{ attempt.started_at|date:"M d, H:i" }}{% else %}-{% endif %}
