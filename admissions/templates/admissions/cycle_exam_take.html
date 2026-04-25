@@ -366,7 +366,7 @@ const PROCTORING = {
 let current = 0;
 let timeLeft = {{ attempt.time_remaining }};
 let isDone = false;
-let mediaRecorder = null;
+let examStartTime = Date.now();
 let recordedChunks = [];
 let tabSwitchCount = {{ attempt.tab_switch_count|default:0 }};
 
@@ -497,34 +497,47 @@ let isSubmitting = false;
 function submitExam(warningReason = null) {
     if (isSubmitting) return;
     isSubmitting = true;
-    
     isDone = true;
+    
     if (warningReason) {
         document.getElementById('id_tab_warning').value = warningReason;
     }
     
-    // Show loading text on finish button if it's visible
+    // Show loading UI
     const finishBtn = document.getElementById('finish-btn');
-    if (finishBtn) finishBtn.textContent = '{% trans "Submitting..." %}';
+    if (finishBtn) {
+        finishBtn.disabled = true;
+        finishBtn.textContent = '{% trans "Аяктоодо..." %}';
+    }
     
+    const submitForm = () => document.getElementById('submit-form').submit();
+
     {% if require_webcam %}
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        // Handle final recording chunk
         mediaRecorder.onstop = () => {
             if (recordedChunks.length > 0) {
                 const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                uploadRecording(blob).finally(() => {
-                    document.getElementById('submit-form').submit();
+                recordedChunks = [];
+                
+                // Final upload attempt with a 3-second timeout to prevent "freezing"
+                const uploadPromise = uploadRecording(blob);
+                const timeoutPromise = new Promise(resolve => setTimeout(resolve, 3000));
+                
+                Promise.race([uploadPromise, timeoutPromise]).finally(() => {
+                    submitForm();
                 });
             } else {
-                document.getElementById('submit-form').submit();
+                submitForm();
             }
         };
+        
         stopWebcamRecording();
         return;
     }
     {% endif %}
     
-    document.getElementById('submit-form').submit();
+    submitForm();
 }
 
 // ========== NAVIGATION ==========
@@ -601,13 +614,13 @@ function updateProgress() {
 
 // ========== WEBCAM RECORDING ==========
 let webcamStream = null;
-let examStartTime = Date.now();
+let chunkTimer = null;
 
 {% if require_webcam %}
 async function startWebcamRecording() {
     try {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            throw new Error('Webcam API not supported in this browser.');
+            throw new Error('Webcam API not supported');
         }
         
         webcamStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
@@ -615,6 +628,7 @@ async function startWebcamRecording() {
         if (recIndicator) recIndicator.style.display = 'flex';
         
         mediaRecorder = new MediaRecorder(webcamStream, { mimeType: 'video/webm;codecs=vp8' });
+        // recordedChunks is global and cleared here for a new session if needed
         recordedChunks = [];
         
         mediaRecorder.ondataavailable = (e) => {
@@ -624,34 +638,37 @@ async function startWebcamRecording() {
         mediaRecorder.onstop = () => {
             if (recordedChunks.length > 0) {
                 const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                recordedChunks = [];
                 uploadRecording(blob);
             }
         };
         
-        mediaRecorder.start(5000); // Collect data every 5 seconds
+        mediaRecorder.start();
         
-        // Monitor track ending — WARN student when camera stops
+        // Use 60-second chunks to prevent memory bloat and large final uploads
+        chunkTimer = setInterval(() => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                mediaRecorder.start();
+            }
+        }, 60000);
+        
+        // Monitor track health
         const videoTrack = webcamStream.getVideoTracks()[0];
         if (videoTrack) {
             videoTrack.onended = () => {
                 const recIndicator = document.getElementById('rec-indicator');
-                if (recIndicator) {
-                    recIndicator.innerHTML = '<span style="color:var(--danger);">⚠ {% trans "Камера жок" %}</span>';
-                }
+                if (recIndicator) recIndicator.innerHTML = '<span style="color:var(--danger);">⚠ {% trans "Камера жок" %}</span>';
             };
             
-            // Periodic camera health check — every 10 seconds
             setInterval(() => {
                 if (videoTrack.readyState === 'ended' || !videoTrack.enabled) {
-                    handleViolation('camera_lost', 
-                        '{% trans "Камера табылган жок!" %}', 
-                        '{% trans "Камераңыз иштебей калды. Аны кайра күйгүзүңүз." %}', 
-                        'Camera health check failed');
+                    handleViolation('camera_lost');
                 }
             }, 10000);
         }
     } catch (err) {
-        console.error('Camera access denied:', err);
+        console.error('Camera failed:', err);
         handleViolation('camera_denied', 
             '{% trans "Камерага уруксат берилген жок!" %}', 
             '{% trans "Камерага уруксат берүү зарыл. Камераңызды күйгүзүңүз." %}', 
@@ -660,11 +677,16 @@ async function startWebcamRecording() {
 }
 
 function stopWebcamRecording() {
+    if (chunkTimer) {
+        clearInterval(chunkTimer);
+        chunkTimer = null;
+    }
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
     }
     if (webcamStream) {
         webcamStream.getTracks().forEach(t => t.stop());
+        webcamStream = null;
     }
     const recIndicator = document.getElementById('rec-indicator');
     if (recIndicator && recIndicator.innerHTML.includes('REC')) {
