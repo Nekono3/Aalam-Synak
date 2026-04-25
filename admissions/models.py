@@ -18,21 +18,33 @@ class AdmissionCycle(models.Model):
         help_text=_('Duration of the online admission exam.')
     )
     
-    # Proctoring – configurable per cycle
-    enable_tab_warnings = models.BooleanField(
-        default=True,
-        verbose_name=_('Enable Tab Switch Warnings'),
-        help_text=_('If disabled, students can switch tabs without warnings.')
+    # Configurable per cycle
+    require_webcam = models.BooleanField(
+        default=False,
+        verbose_name=_('Require Webcam Recording'),
+        help_text=_('If enabled, students must allow camera access before starting.')
     )
-    max_tab_switches = models.PositiveIntegerField(
-        default=3,
-        verbose_name=_('Max Tab Switches Before Lock')
+    prevent_back_navigation = models.BooleanField(
+        default=False,
+        verbose_name=_('Prevent Previous Question'),
+        help_text=_('If enabled, students cannot return to previous questions after answering.')
     )
 
     passing_score = models.PositiveIntegerField(
         default=60, 
         verbose_name=_('Passing Score (%)'),
         help_text=_('Minimum percentage required to pass for this cycle.')
+    )
+
+    enable_tab_warnings = models.BooleanField(
+        default=False,
+        verbose_name=_('Enable Tab Switch Warnings'),
+        help_text=_('If enabled, students will be warned when switching tabs.')
+    )
+    max_tab_switches = models.PositiveIntegerField(
+        default=3,
+        verbose_name=_('Max Tab Switches'),
+        help_text=_('Number of tab switches allowed before blocking the exam.')
     )
     
     created_at = models.DateTimeField(auto_now_add=True)
@@ -247,6 +259,8 @@ class AdmissionResult(models.Model):
     upload_session = models.ForeignKey(AdmissionUploadSession, on_delete=models.CASCADE, null=True, blank=True, related_name='results')
     exam_attempt = models.OneToOneField('OnlineAttempt', on_delete=models.SET_NULL, null=True, blank=True, related_name='admission_result')
 
+    tab_switch_count = models.PositiveIntegerField(default=0, verbose_name=_('Tab Switch Warnings'))
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -428,6 +442,7 @@ class AdmissionQuestion(models.Model):
     
     order = models.PositiveIntegerField(default=0, verbose_name=_('Order'))
     points = models.PositiveIntegerField(default=1, verbose_name=_('Points'))
+    is_survey_question = models.BooleanField(default=False, verbose_name=_('Is Survey (No points, appears first)'))
     
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -488,15 +503,16 @@ class OnlineAttempt(models.Model):
     )
     
     started_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Started At'))
+    finished_at = models.DateTimeField(null=True, blank=True, verbose_name=_('Finished At'))
     
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default='in_progress',
         verbose_name=_('Status')
     )
-    
-    # Proctoring
-    tab_switch_count = models.PositiveIntegerField(default=0, verbose_name=_('Tab Switch Count'))
-    lock_reason = models.CharField(max_length=200, blank=True, verbose_name=_('Lock Reason'))
+
+    tab_switch_count = models.PositiveIntegerField(default=0, verbose_name=_('Tab Switch Warnings'))
+    is_locked = models.BooleanField(default=False, verbose_name=_('Is Locked'))
+    lock_reason = models.TextField(blank=True, null=True, verbose_name=_('Lock Reason'))
     
     class Meta:
         verbose_name = _('Online Exam Attempt')
@@ -506,7 +522,7 @@ class OnlineAttempt(models.Model):
     
     def __str__(self):
         return f"{self.student} - {self.cycle.name}"
-    
+
     @property
     def time_remaining(self):
         from django.utils import timezone
@@ -515,6 +531,10 @@ class OnlineAttempt(models.Model):
         elapsed = (timezone.now() - self.started_at).total_seconds()
         remaining = (self.cycle.timer_minutes * 60) - elapsed
         return max(0, int(remaining))
+
+    @property
+    def is_suspicious(self):
+        return self.tab_switch_count > 0
 
 
 class OnlineAttemptAnswer(models.Model):
@@ -546,6 +566,59 @@ class OnlineAttemptAnswer(models.Model):
         verbose_name = _('Online Attempt Answer')
         verbose_name_plural = _('Online Attempt Answers')
         unique_together = ['attempt', 'question']
+
+
+
+class ExamRecording(models.Model):
+    """Webcam recording saved for an exam attempt."""
+    attempt = models.ForeignKey(
+        OnlineAttempt, on_delete=models.CASCADE,
+        related_name='recordings', verbose_name=_('Attempt')
+    )
+    video_file = models.FileField(
+        upload_to='exam_recordings/%Y/%m/', verbose_name=_('Video File')
+    )
+    started_at = models.DateTimeField(null=True, blank=True, verbose_name=_('Recording Started'))
+    ended_at = models.DateTimeField(null=True, blank=True, verbose_name=_('Recording Ended'))
+    duration_seconds = models.PositiveIntegerField(default=0, verbose_name=_('Duration (seconds)'))
+    file_size_bytes = models.BigIntegerField(default=0, verbose_name=_('File Size (bytes)'))
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Uploaded At'))
+
+    class Meta:
+        verbose_name = _('Exam Recording')
+        verbose_name_plural = _('Exam Recordings')
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return f"Recording for {self.attempt}"
+
+
+class OnlineExamViolation(models.Model):
+    """Logs individual proctoring violations during an online exam attempt."""
+    EVENT_CHOICES = [
+        ('tab_switch', _('Tab Switch')),
+        ('camera_denied', _('Camera Denied')),
+        ('camera_lost', _('Camera Lost')),
+        ('other', _('Other')),
+    ]
+    
+    attempt = models.ForeignKey(
+        OnlineAttempt,
+        on_delete=models.CASCADE,
+        related_name='violations',
+        verbose_name=_('Attempt')
+    )
+    event_type = models.CharField(max_length=50, choices=EVENT_CHOICES, verbose_name=_('Event Type'))
+    details = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_('Timestamp'))
+    
+    class Meta:
+        verbose_name = _('Exam Violation')
+        verbose_name_plural = _('Exam Violations')
+        ordering = ['timestamp']
+
+
+
 
 
 # ============================================================

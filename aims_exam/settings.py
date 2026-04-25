@@ -72,11 +72,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'aims_exam.wsgi.application'
 
 
-# Database - SQLite
+# Database - SQLite with concurrency fix
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 30,  # Wait up to 30 seconds for database lock
+        },
     }
 }
 
@@ -149,3 +152,15 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Enable SQLite WAL mode for better concurrent access (proctoring AJAX)
+from django.db.backends.signals import connection_created
+
+def enable_wal_mode(sender, connection, **kwargs):
+    if connection.vendor == 'sqlite':
+        cursor = connection.cursor()
+        cursor.execute('PRAGMA journal_mode=WAL;')
+        cursor.execute('PRAGMA busy_timeout=30000;')
+
+connection_created.connect(enable_wal_mode)

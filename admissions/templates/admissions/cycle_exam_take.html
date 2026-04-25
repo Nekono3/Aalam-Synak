@@ -194,6 +194,64 @@ body {
 
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Violation Badge */
+.violation-badge {
+    background: var(--danger);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.pulse-danger { animation: pulseDanger 0.5s ease 4; }
+@keyframes pulseDanger {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Violation Alert Overlay */
+.violation-alert-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.violation-alert-card {
+    background: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: 24px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    animation: alertBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes alertBounce {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.warning-icon { margin-bottom: 1.5rem; }
+.warning-counter { 
+    font-size: 2rem; 
+    font-weight: 800; 
+    margin: 1.5rem 0; 
+    color: var(--danger);
+    font-family: 'Inter', sans-serif;
+}
+.violation-alert-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary); }
+.violation-alert-card p { color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6; }
 </style>
 {% endblock %}
 
@@ -213,9 +271,15 @@ body {
             </div>
         </div>
         
-        <div class="timer-box" id="t-box">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <div class="timer-display" id="timer">--:--</div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <div id="violation-badge" class="violation-badge" title="Warnings" style="display: none;">0</div>
+            <div id="rec-indicator" class="rec-indicator" style="display: none;">
+                <div class="rec-dot"></div> REC
+            </div>
+            <div class="timer-box" id="t-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <div class="timer-display" id="timer">--:--</div>
+            </div>
         </div>
     </header>
 
@@ -276,9 +340,9 @@ body {
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </button>
         
-        <button type="button" class="btn btn-success footer-btn" id="finish-btn" style="display: none;" onclick="this.disabled=true; document.getElementById('submit-form').submit();">
+        <button type="button" class="btn btn-success footer-btn" id="finish-btn" style="display: none;" onclick="this.disabled=true; submitExam();">
             {% trans "Finish" %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
     </footer>
 </form>
@@ -286,11 +350,126 @@ body {
 <script>
 const TOTAL = {{ questions|length }};
 const SAVE_URL = "{% url 'admissions:save_answer_ajax' attempt_pk=attempt.pk %}";
+const VIOLATION_URL = "{% url 'admissions:save_violation_ajax' attempt_pk=attempt.pk %}";
+const UPLOAD_URL = "{% url 'admissions:upload_recording_ajax' attempt_pk=attempt.pk %}";
+const SUBMIT_URL = "{% url 'admissions:cycle_exam_submit' attempt_pk=attempt.pk %}";
+const CSRF = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+// Proctoring config from backend
+const PROCTORING = {
+    requireWebcam: {{ require_webcam|yesno:"true,false" }},
+    preventBack: {{ attempt.cycle.prevent_back_navigation|yesno:"true,false" }},
+    enableTabWarnings: {{ enable_tab_warnings|yesno:"true,false" }},
+    maxTabSwitches: {{ max_tab_switches|default:3 }},
+};
+
 let current = 0;
 let timeLeft = {{ attempt.time_remaining }};
 let isDone = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let tabSwitchCount = {{ attempt.tab_switch_count|default:0 }};
 
-// Timer logic
+// ========== TAB SWITCH DETECTION ==========
+if (PROCTORING.enableTabWarnings) {
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden' && !isDone) {
+            handleViolation('tab_switch');
+        }
+    });
+
+    // Initial sync of violation badge
+    if (tabSwitchCount > 0) {
+        const badge = document.getElementById('violation-badge');
+        if (badge) {
+            badge.style.display = 'flex';
+            badge.textContent = tabSwitchCount;
+        }
+    }
+}
+
+async function handleViolation(type) {
+    if (isDone) return;
+    
+    try {
+        const res = await fetch(VIOLATION_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ type: type }),
+            keepalive: true
+        });
+        
+        const data = await res.json();
+        
+        if (data.status === 'success' || data.status === 'locked') {
+            tabSwitchCount = data.count;
+            
+            // Update UI
+            const badge = document.getElementById('violation-badge');
+            if (badge) {
+                badge.style.display = 'flex';
+                badge.textContent = tabSwitchCount;
+                badge.classList.add('pulse-danger');
+                setTimeout(() => badge.classList.remove('pulse-danger'), 2000);
+            }
+
+            if (data.status === 'locked') {
+                showBlockingModal('{% trans "Экзамен бөгөттөлдү!" %}', '{% trans "Сиз табдарды өтө көп котордуңуз. Экзамен автоматтык түрдө тапшырылды." %}');
+                setTimeout(() => {
+                    submitExam('too_many_tab_switches');
+                }, 3000);
+            } else {
+                showViolationAlert(tabSwitchCount, PROCTORING.maxTabSwitches);
+            }
+        }
+    } catch (err) {
+        console.error('Violation report failed:', err);
+    }
+}
+
+function showViolationAlert(count, limit) {
+    // Create Alert Box if not exists
+    let alertBox = document.getElementById('violation-alert');
+    if (!alertBox) {
+        alertBox = document.createElement('div');
+        alertBox.id = 'violation-alert';
+        alertBox.className = 'violation-alert-overlay';
+        document.body.appendChild(alertBox);
+    }
+    
+    alertBox.innerHTML = `
+        <div class="violation-alert-card">
+            <div class="warning-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-danger"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            </div>
+            <h3>{% trans "Эскертүү!" %}</h3>
+            <p>{% trans "Табдарды которууга тыюу салынат!" %}</p>
+            <div class="warning-counter">${count} / ${limit}</div>
+            <button class="btn btn-primary" onclick="document.getElementById('violation-alert').remove()">{% trans "Түшүндүм" %}</button>
+        </div>
+    `;
+}
+
+function showBlockingModal(title, msg) {
+    const modal = document.createElement('div');
+    modal.className = 'violation-alert-overlay blocking';
+    modal.innerHTML = `
+        <div class="violation-alert-card">
+            <div class="warning-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-danger"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3>${title}</h3>
+            <p>${msg}</p>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// ========== TIMER ==========
 function runTimer() {
     if (isDone) return;
     const m = Math.floor(timeLeft / 60);
@@ -299,72 +478,113 @@ function runTimer() {
     
     if (timeLeft <= 300) document.getElementById('t-box').classList.add('warning');
     if (timeLeft <= 0) {
-        isDone = true;
-        document.getElementById('submit-form').submit();
-        return;
+        submitExam('timeout');
     }
     timeLeft--;
 }
 setInterval(runTimer, 1000);
 runTimer();
 
-// Navigation logic
+function updateTimerInfo() {
+    fetch("{% url 'admissions:cycle_exam_take' attempt_pk=attempt.pk %}", { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(r => r.json())
+        .then(data => { if (data.status === 'in_progress') timeLeft = data.time_remaining; })
+        .catch(() => {});
+}
+
+let isSubmitting = false;
+
+function submitExam(warningReason = null) {
+    if (isSubmitting) return;
+    isSubmitting = true;
+    
+    isDone = true;
+    if (warningReason) {
+        document.getElementById('id_tab_warning').value = warningReason;
+    }
+    
+    // Show loading text on finish button if it's visible
+    const finishBtn = document.getElementById('finish-btn');
+    if (finishBtn) finishBtn.textContent = '{% trans "Submitting..." %}';
+    
+    {% if require_webcam %}
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.onstop = () => {
+            if (recordedChunks.length > 0) {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                uploadRecording(blob).finally(() => {
+                    document.getElementById('submit-form').submit();
+                });
+            } else {
+                document.getElementById('submit-form').submit();
+            }
+        };
+        stopWebcamRecording();
+        return;
+    }
+    {% endif %}
+    
+    document.getElementById('submit-form').submit();
+}
+
+// ========== NAVIGATION ==========
 function goTo(idx) {
     if (idx < 0 || idx >= TOTAL) return;
-    
+    // Prevent returning to previous questions if configured
+    if (PROCTORING.preventBack && idx < current) return;
     document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
     document.getElementById(`q-${idx}`).classList.add('active');
-    
     current = idx;
     document.getElementById('curr-q').textContent = idx + 1;
-    
-    document.getElementById('prev-btn').disabled = (idx === 0);
+    document.getElementById('prev-btn').style.display = ((idx === 0) || PROCTORING.preventBack) ? 'none' : 'block';
     const isLast = (idx === TOTAL - 1);
     document.getElementById('next-btn').style.display = isLast ? 'none' : 'flex';
     document.getElementById('finish-btn').style.display = isLast ? 'flex' : 'none';
-    
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// AJAX answer saving
+// ========== AJAX ANSWER SAVE ==========
 function selectAndSave(el, qId, optId, qIdx) {
     const card = el.closest('.question-card');
     card.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
-    
     el.classList.add('selected');
     const radio = el.querySelector('input[type="radio"]');
     if (radio) radio.checked = true;
-    
+
     const statusBox = document.getElementById(`status-${qId}`);
     if (statusBox) {
         statusBox.className = 'status-badge saving';
         statusBox.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> {% trans "Saving..." %}';
     }
-    
     const formData = new FormData();
     formData.append('question_id', qId);
     formData.append('option_id', optId);
-    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
-    
-    fetch(SAVE_URL, {
-        method: 'POST',
-        body: formData,
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    formData.append('csrfmiddlewaretoken', CSRF);
+    fetch(SAVE_URL, { 
+        method: 'POST', 
+        body: formData, 
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        keepalive: true
     })
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) {
+            console.error('Save HTTP error:', res.status, res.statusText, res.url);
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+    })
     .then(data => {
         if (data.status === 'success' && statusBox) {
             statusBox.className = 'status-badge saved';
-            statusBox.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> {% trans "Saved" %}';
+            statusBox.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> {% trans "Сакталды" %}';
             updateProgress();
-        }
-    })
-    .catch(err => {
-        console.error('Save failed:', err);
-        if (statusBox) {
+        } else if (statusBox) {
             statusBox.className = 'status-badge error';
-            statusBox.textContent = '{% trans "Error saving" %}';
+            statusBox.textContent = data.message || '{% trans "Ката" %}';
         }
+    }).catch(err => {
+        console.error('Save failed:', err);
+        if (statusBox) { statusBox.className = 'status-badge error'; statusBox.textContent = '{% trans "Ката" %} ' + err.message; }
     });
 }
 
@@ -377,15 +597,146 @@ function updateProgress() {
     if (ptext) ptext.textContent = pct + '%';
 }
 
+
+
+// ========== WEBCAM RECORDING ==========
+let webcamStream = null;
+let examStartTime = Date.now();
+
+{% if require_webcam %}
+async function startWebcamRecording() {
+    try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error('Webcam API not supported in this browser.');
+        }
+        
+        webcamStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        const recIndicator = document.getElementById('rec-indicator');
+        if (recIndicator) recIndicator.style.display = 'flex';
+        
+        mediaRecorder = new MediaRecorder(webcamStream, { mimeType: 'video/webm;codecs=vp8' });
+        recordedChunks = [];
+        
+        mediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+            if (recordedChunks.length > 0) {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                uploadRecording(blob);
+            }
+        };
+        
+        mediaRecorder.start(5000); // Collect data every 5 seconds
+        
+        // Monitor track ending — WARN student when camera stops
+        const videoTrack = webcamStream.getVideoTracks()[0];
+        if (videoTrack) {
+            videoTrack.onended = () => {
+                const recIndicator = document.getElementById('rec-indicator');
+                if (recIndicator) {
+                    recIndicator.innerHTML = '<span style="color:var(--danger);">⚠ {% trans "Камера жок" %}</span>';
+                }
+            };
+            
+            // Periodic camera health check — every 10 seconds
+            setInterval(() => {
+                if (videoTrack.readyState === 'ended' || !videoTrack.enabled) {
+                    handleViolation('camera_lost', 
+                        '{% trans "Камера табылган жок!" %}', 
+                        '{% trans "Камераңыз иштебей калды. Аны кайра күйгүзүңүз." %}', 
+                        'Camera health check failed');
+                }
+            }, 10000);
+        }
+    } catch (err) {
+        console.error('Camera access denied:', err);
+        handleViolation('camera_denied', 
+            '{% trans "Камерага уруксат берилген жок!" %}', 
+            '{% trans "Камерага уруксат берүү зарыл. Камераңызды күйгүзүңүз." %}', 
+            err.message);
+    }
+}
+
+function stopWebcamRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+    }
+    if (webcamStream) {
+        webcamStream.getTracks().forEach(t => t.stop());
+    }
+    const recIndicator = document.getElementById('rec-indicator');
+    if (recIndicator && recIndicator.innerHTML.includes('REC')) {
+        recIndicator.style.display = 'none';
+    }
+}
+
+function uploadRecording(blob) {
+    const formData = new FormData();
+    formData.append('video', blob, 'exam_recording.webm');
+    formData.append('duration', Math.round((Date.now() - examStartTime) / 1000));
+    formData.append('csrfmiddlewaretoken', CSRF);
+    
+    return fetch(UPLOAD_URL, { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(d => console.log('Recording uploaded:', d))
+        .catch(e => {
+            console.error('Upload failed:', e);
+            // Don't retry infinitely on exit
+        });
+}
+
+// Override the submit to stop recording first
+const originalSubmitForm = document.getElementById('submit-form');
+if (originalSubmitForm) {
+    originalSubmitForm.addEventListener('submit', () => {
+        stopWebcamRecording();
+    });
+}
+{% endif %}
+
+// ========== INIT ==========
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial restoration check
     document.querySelectorAll('.option-item input[type="radio"]:checked').forEach(radio => {
         radio.closest('.option-item').classList.add('selected');
     });
     updateProgress();
     goTo(0);
+    
+    {% if require_webcam %}
+    startWebcamRecording();
+    {% endif %}
 });
-
-// Proctoring: Tab Switch functionality has been globally disabled by admin.
 </script>
+
+<style>
+
+/* Recording Indicator */
+.rec-indicator {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--danger, #ef4444);
+}
+.rec-dot {
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: recBlink 1.5s infinite;
+}
+@keyframes recBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+
+/* Anti-copy: prevent text selection on exam content */
+body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; overflow-x: hidden; }
+::selection { pointer-events: none; background: transparent; }
+</style>
 {% endblock %}

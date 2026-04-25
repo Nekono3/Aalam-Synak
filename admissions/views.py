@@ -14,7 +14,7 @@ from .models import (
     AdmissionResult, AdmissionSubjectScore, AdmissionUploadSession,
     AdmissionRegistration, AdmissionQuestion, AdmissionQuestionOption,
     AdmissionSubjectSplit, AdmissionMasterAnswer, OnlineAttempt, OnlineAttemptAnswer,
-    RoundResultSession, RoundResult, CycleLink
+    RoundResultSession, RoundResult, CycleLink, ExamRecording, OnlineExamViolation
 )
 from .forms import (
     AdmissionXLSXUploadForm, AdmissionRegistrationForm,
@@ -119,9 +119,11 @@ def cycle_create(request):
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         is_active = request.POST.get('is_active') == 'on'
+        prevent_back_navigation = request.POST.get('prevent_back_navigation') == 'on'
         passing_score = request.POST.get('passing_score', 60)
         
         timer_minutes = request.POST.get('timer_minutes', 60)
+        require_webcam = request.POST.get('require_webcam') == 'on'
         enable_tab_warnings = request.POST.get('enable_tab_warnings') == 'on'
         max_tab_switches = request.POST.get('max_tab_switches', 3)
         
@@ -130,8 +132,10 @@ def cycle_create(request):
             start_date=start_date,
             end_date=end_date,
             is_active=is_active,
+            prevent_back_navigation=prevent_back_navigation,
             passing_score=passing_score,
             timer_minutes=timer_minutes,
+            require_webcam=require_webcam,
             enable_tab_warnings=enable_tab_warnings,
             max_tab_switches=max_tab_switches
         )
@@ -161,9 +165,11 @@ def cycle_edit(request, pk):
         cycle.start_date = request.POST.get('start_date')
         cycle.end_date = request.POST.get('end_date')
         cycle.is_active = request.POST.get('is_active') == 'on'
+        cycle.prevent_back_navigation = request.POST.get('prevent_back_navigation') == 'on'
         cycle.passing_score = request.POST.get('passing_score', 60)
         
         cycle.timer_minutes = request.POST.get('timer_minutes', 60)
+        cycle.require_webcam = request.POST.get('require_webcam') == 'on'
         cycle.enable_tab_warnings = request.POST.get('enable_tab_warnings') == 'on'
         cycle.max_tab_switches = request.POST.get('max_tab_switches', 3)
         
@@ -772,6 +778,11 @@ def export_admission_results(request, cycle_id=None, admission_type=None):
         str(_("Телефон 1")),
         str(_("Телефон 2")),
     ]
+    
+    survey_qs = AdmissionQuestion.objects.filter(cycle=cycle, is_survey_question=True).order_by('order')
+    survey_headers = [str(sq.question_text[:30]) for sq in survey_qs]
+    headers_students += survey_headers
+    
     for subj in subject_names:
         headers_students.append(subj)
     headers_students += [
@@ -779,6 +790,8 @@ def export_admission_results(request, cycle_id=None, admission_type=None):
         str(_("Процент")),
         str(_("Медаль")),
         str(_("Источник")),
+        str(_("Предупреждения")),
+        str(_("Статус экзамена")),
     ]
     ws_students.append(headers_students)
 
@@ -847,6 +860,16 @@ def export_admission_results(request, cycle_id=None, admission_type=None):
             result.phone2 or '',
         ]
         
+        # Add survey answers
+        if hasattr(result, 'exam_attempt') and result.exam_attempt:
+            attempt_answers = result.exam_attempt.answers.all()
+            ans_map = {ans.question_id: ans.selected_option.text if ans.selected_option else "" for ans in attempt_answers}
+            for sq in survey_qs:
+                row.append(ans_map.get(sq.id, ""))
+        else:
+            for sq in survey_qs:
+                row.append("")
+        
         # Sheet 2 Prep: School Stats
         school = result.school_name.strip()
         if school:
@@ -867,6 +890,8 @@ def export_admission_results(request, cycle_id=None, admission_type=None):
             round(result.percentage, 1) if result.percentage else 0.0,
             MEDAL_LABELS.get(result.medal, '—'),
             result.admission_type.title() if result.admission_type else '',
+            result.exam_attempt.tab_switch_count if hasattr(result, 'exam_attempt') and result.exam_attempt else 0,
+            result.exam_attempt.get_status_display() if hasattr(result, 'exam_attempt') and result.exam_attempt else "N/A"
         ]
         ws_students.append(row)
 
@@ -1369,6 +1394,10 @@ def cycle_exam_take(request, attempt_pk):
     """Student taking the online admission exam."""
     attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk, student=request.user)
     
+    if attempt.status == 'locked':
+        messages.error(request, _('Your exam was automatically submitted due to violating proctoring rules.'))
+        return redirect('admissions:cycle_exam_submit', attempt_pk=attempt.pk)
+        
     if attempt.status != 'in_progress':
         return redirect('admissions:student_admission')
         
@@ -1403,16 +1432,20 @@ def cycle_exam_take(request, attempt_pk):
 
     import random
     
-    # Shuffle options and group questions by their subject chunk
+    survey_questions = []
     shuffled_question_list = []
     current_subject = None
     current_group = []
     
     for q in question_list:
         opts = list(q.options.all())
-        random.shuffle(opts)
         q.shuffled_opts_list = opts
         
+        if getattr(q, 'is_survey_question', False):
+            survey_questions.append(q)
+            continue
+            
+        random.shuffle(opts)
         if q.subject_name != current_subject:
             if current_group:
                 random.shuffle(current_group)
@@ -1426,7 +1459,7 @@ def cycle_exam_take(request, attempt_pk):
         random.shuffle(current_group)
         shuffled_question_list.extend(current_group)
         
-    question_list = shuffled_question_list
+    question_list = survey_questions + shuffled_question_list
 
     # Get existing answers to restore them
     existing_answers = {a.question_id: a.selected_option_id for a in attempt.answers.all()}
@@ -1437,19 +1470,81 @@ def cycle_exam_take(request, attempt_pk):
         'questions': question_list,
         'existing_answers': existing_answers,
         'splits': splits,
+        # Proctoring settings
+        'require_webcam': attempt.cycle.require_webcam,
+        'enable_tab_warnings': attempt.cycle.enable_tab_warnings,
+        'max_tab_switches': attempt.cycle.max_tab_switches,
     }
     return render(request, 'admissions/cycle_exam_take.html', context)
 
 @login_required
-@user_passes_test(is_student)
+@require_POST
+def save_violation_ajax(request, attempt_pk):
+    """AJAX: Record a proctoring violation (tab switch)."""
+    attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk, student=request.user)
+    
+    if attempt.status != 'in_progress':
+        return JsonResponse({'status': 'error', 'message': 'Exam not in progress'}, status=400)
+
+    try:
+        data = json.loads(request.body)
+        violation_type = data.get('type', 'tab_switch')
+    except json.JSONDecodeError:
+        violation_type = 'tab_switch'
+
+    if violation_type == 'tab_switch':
+        attempt.tab_switch_count += 1
+        
+        # Log detailed violation
+        OnlineExamViolation.objects.create(
+            attempt=attempt,
+            event_type='tab_switch',
+            details=_('Student switched tab/window. Total warnings: %d') % attempt.tab_switch_count
+        )
+        
+        # Check if limit reached
+        if attempt.cycle.enable_tab_warnings and attempt.tab_switch_count >= attempt.cycle.max_tab_switches:
+            attempt.is_locked = True
+            attempt.status = 'locked'
+            attempt.lock_reason = _('Too many tab switches')
+            from django.utils import timezone
+            attempt.finished_at = timezone.now()
+            attempt.save()
+            return JsonResponse({
+                'status': 'locked',
+                'count': attempt.tab_switch_count,
+            })
+            
+        attempt.save(update_fields=['tab_switch_count'])
+        return JsonResponse({
+            'status': 'success',
+            'count': attempt.tab_switch_count,
+            'limit': attempt.cycle.max_tab_switches if attempt.cycle.enable_tab_warnings else 0
+        })
+
+    return JsonResponse({'status': 'ok'})
+
+@login_required
+@user_passes_test(lambda u: is_student(u) or is_super_admin(u))
 def cycle_exam_submit(request, attempt_pk):
     """Process student's submitted exam and calculate score."""
-    attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk, student=request.user)
+    if is_super_admin(request.user):
+        attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk)
+    else:
+        attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk, student=request.user)
     
     if attempt.status == 'completed':
         return redirect('admissions:student_admission')
+    
+    # Accept locked attempts (auto-submitted due to violations)
+    if attempt.status == 'locked' or attempt.is_locked:
+        pass  # Allow processing to continue — will be set to 'completed' below
         
-    if request.method == 'POST' or attempt.status == 'timed_out':
+    tab_warning = request.POST.get('tab_warning')
+
+    if request.method == 'POST' or attempt.status in ('timed_out', 'locked'):
+        
+
         total_score = 0
         max_score = 0
         questions = attempt.cycle.admission_questions.prefetch_related('options')
@@ -1490,13 +1585,11 @@ def cycle_exam_submit(request, attempt_pk):
         is_passed = percentage >= attempt.cycle.passing_score
         
         attempt.status = 'completed'
+        from django.utils import timezone
+        attempt.finished_at = timezone.now()
         # attempt only tracks status; final score goes to AdmissionResult
-        
-        if request.POST.get('tab_warning') == 'banned':
-            attempt.status = 'locked'
-            attempt.lock_reason = _('Too many tab switches')
-            
-        attempt.save()
+
+        attempt.save(update_fields=['status', 'finished_at'])
         
         # Save to AdmissionResult for analytics dashboard
         candidate = getattr(request.user, 'admission_profile', None)
@@ -1757,13 +1850,36 @@ def recalculate_results(request, cycle_id=None):
     return redirect('admissions:admission_analytics_dashboard')
 
 
+import time
+from django.db import OperationalError
+from functools import wraps
+
+def retry_on_lock(max_retries=5, initial_wait=0.2):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(max_retries):
+                try:
+                    return func(*args, **kwargs)
+                except OperationalError as e:
+                    if 'locked' in str(e).lower() and attempt < max_retries - 1:
+                        time.sleep(initial_wait * (attempt + 1))
+                        continue
+                    raise
+        return wrapper
+    return decorator
+
+
 @login_required
+@retry_on_lock()
 def save_answer_ajax(request, attempt_pk):
     """AJAX view to save a single answer during an active online attempt."""
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
-    
-    attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk, student=request.user, status='in_progress')
+    if is_super_admin(request.user):
+        attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk, status__in=['in_progress', 'locked'])
+    else:
+        attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk, student=request.user, status__in=['in_progress', 'locked'])
     
     question_id = request.POST.get('question_id')
     option_id = request.POST.get('option_id')
@@ -1782,6 +1898,35 @@ def save_answer_ajax(request, attempt_pk):
     
     return JsonResponse({'status': 'success'})
 
+
+
+
+
+@login_required
+@user_passes_test(lambda u: is_student(u) or is_super_admin(u))
+def upload_recording_ajax(request, attempt_pk):
+    """AJAX view to upload a webcam recording for an exam attempt."""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
+    if is_super_admin(request.user):
+        attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk)
+    else:
+        attempt = get_object_or_404(OnlineAttempt, pk=attempt_pk, student=request.user)
+    
+    video_file = request.FILES.get('video')
+    if not video_file:
+        return JsonResponse({'status': 'error', 'message': 'No video file'}, status=400)
+    
+    duration = int(request.POST.get('duration', 0))
+    
+    recording = ExamRecording.objects.create(
+        attempt=attempt,
+        video_file=video_file,
+        duration_seconds=duration,
+        file_size_bytes=video_file.size,
+    )
+    
+    return JsonResponse({'status': 'success', 'recording_id': recording.pk})
 
 
 # ============================================================
@@ -2107,8 +2252,15 @@ def export_online_results_full(request):
     # Headers
     headers = [
         "Full Name", "Sex", "School", "Region", "Phone 1", "Phone 2", 
-        "Total Questions", "Total Correct", "Percentage", "Passed", "Medal"
+        "Total Questions", "Total Correct", "Percentage", "Passed", "Medal",
+        "Tab Warnings", "Exam Status"
     ]
+    
+    # Find active survey questions across these attempts
+    survey_qs = AdmissionQuestion.objects.filter(cycle=active_cycle, is_survey_question=True).order_by('order')
+    survey_headers = [f"_{sq.question_text[:30]}" for sq in survey_qs]
+    headers += survey_headers
+    
     for s in subjects:
         headers += [f"{s} Correct", f"{s} Wrong", f"{s} Score %"]
         
@@ -2144,8 +2296,20 @@ def export_online_results_full(request):
             res.correct_count,
             round(res.percentage, 1),
             "Yes" if res.is_passed else "No",
-            res.medal.title() if res.medal else ""
+            res.medal.title() if res.medal else "",
+            res.exam_attempt.tab_switch_count if hasattr(res, 'exam_attempt') and res.exam_attempt else 0,
+            res.exam_attempt.get_status_display() if hasattr(res, 'exam_attempt') and res.exam_attempt else "N/A"
         ]
+        
+        # Add survey answers
+        if hasattr(res, 'exam_attempt') and res.exam_attempt:
+            attempt_answers = res.exam_attempt.answers.all()
+            ans_map = {ans.question_id: ans.selected_option.text if ans.selected_option else "" for ans in attempt_answers}
+            for sq in survey_qs:
+                row.append(ans_map.get(sq.id, ""))
+        else:
+            for sq in survey_qs:
+                row.append("")
         
         # Add subject details
         for s in subjects:
@@ -2660,3 +2824,86 @@ def round_result_profile(request, pk):
         'rank': rank,
     }
     return render(request, 'admissions/round_result_profile.html', context)
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def exam_integrity_list(request):
+    """Admin dashboard to list exam attempts with proctoring flags."""
+    from django.core.paginator import Paginator
+    from django.db.models import F, Sum
+    
+    cycle_id = request.GET.get('cycle_id')
+    status_filter = request.GET.get('status')
+    
+    attempts = OnlineAttempt.objects.select_related('student', 'cycle').order_by('-started_at')
+    
+    if cycle_id:
+        attempts = attempts.filter(cycle_id=cycle_id)
+        
+    if status_filter == 'locked':
+        attempts = attempts.filter(status='locked')
+        
+    cycles = AdmissionCycle.objects.filter(is_active=True)
+        
+    paginator = Paginator(attempts, 30)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'cycles': cycles,
+        'selected_cycle': int(cycle_id) if cycle_id else '',
+        'selected_status': status_filter or '',
+    }
+    return render(request, 'admissions/exam_integrity_list.html', context)
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def exam_integrity_detail(request, attempt_pk):
+    """Detail view for a single attempt's integrity logs and recordings."""
+    attempt = get_object_or_404(OnlineAttempt.objects.select_related('student', 'cycle'), pk=attempt_pk)
+    
+    recordings = attempt.recordings.all().order_by('uploaded_at')
+    
+    context = {
+        'attempt': attempt,
+        'recordings': recordings,
+        'violations': attempt.violations.all(),
+        'admission_result': getattr(attempt, 'admission_result', None),
+    }
+    return render(request, 'admissions/exam_integrity_detail.html', context)
+
+
+@login_required
+@user_passes_test(is_super_admin)
+def cycle_recordings(request, pk):
+    """Admin view to list all webcam recordings for a specific admission cycle."""
+    from django.core.paginator import Paginator
+
+    cycle = get_object_or_404(AdmissionCycle, pk=pk)
+    recordings = ExamRecording.objects.filter(
+        attempt__cycle=cycle
+    ).select_related('attempt', 'attempt__student').order_by('-uploaded_at')
+
+    # Delete recording
+    if request.method == 'POST' and request.POST.get('delete_recording_id'):
+        rec_id = request.POST.get('delete_recording_id')
+        rec = get_object_or_404(ExamRecording, pk=rec_id, attempt__cycle=cycle)
+        if rec.video_file:
+            rec.video_file.delete(save=False)
+        rec.delete()
+        messages.success(request, _('Recording deleted successfully.'))
+        return redirect('admissions:cycle_recordings', pk=pk)
+
+    paginator = Paginator(recordings, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'cycle': cycle,
+        'page_obj': page_obj,
+        'total_recordings': recordings.count(),
+    }
+    return render(request, 'admissions/cycle_recordings.html', context)

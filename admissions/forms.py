@@ -128,11 +128,12 @@ class AdmissionQuestionForm(forms.ModelForm):
     
     class Meta:
         model = AdmissionQuestion
-        fields = ['question_text', 'question_image', 'points', 'order']
+        fields = ['question_text', 'question_image', 'points', 'order', 'is_survey_question']
         widgets = {
             'question_text': forms.Textarea(attrs={'class': 'form-input', 'rows': 3}),
             'points': forms.NumberInput(attrs={'class': 'form-input', 'min': 1}),
             'order': forms.NumberInput(attrs={'class': 'form-input', 'min': 0}),
+            'is_survey_question': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
         }
 
 

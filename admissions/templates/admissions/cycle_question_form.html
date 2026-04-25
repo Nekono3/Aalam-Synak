@@ -53,6 +53,13 @@
                     {{ form.order }}
                 </div>
             </div>
+            
+            <div class="form-group">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                    {{ form.is_survey_question }}
+                    <span style="font-weight: 500;">{% trans "Is Survey Question (Optional data for excel, appears first)" %}</span>
+                </label>
+            </div>
         </div>
         
         <!-- Answer Options -->

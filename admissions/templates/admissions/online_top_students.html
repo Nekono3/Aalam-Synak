@@ -43,6 +43,7 @@
                     <th>{% trans "School" %}</th>
                     <th class="text-center">{% trans "Score" %}</th>
                     <th class="text-center">{% trans "Percentage" %}</th>
+                    <th class="text-center">{% trans "Warnings" %}</th>
                     <th class="text-center">{% trans "Medal" %}</th>
                     <th class="text-right">{% trans "Status" %}</th>
                 </tr>
@@ -58,6 +59,13 @@
                     <td class="small">{{ res.school_name }}</td>
                     <td class="text-center font-bold text-primary">{{ res.score|floatformat:0 }}</td>
                     <td class="text-center font-bold">{{ res.percentage|floatformat:1 }}%</td>
+                    <td class="text-center">
+                        {% with attempt=res.exam_attempt %}
+                        {% if attempt %}
+                            <span class="{% if attempt.tab_switch_count > 0 %}text-danger font-bold{% else %}text-muted{% endif %}">{{ attempt.tab_switch_count }}</span>
+                        {% else %}<span class="text-muted">—</span>{% endif %}
+                        {% endwith %}
+                    </td>
                     <td class="text-center">
                         {% if res.medal == 'gold' %}
                             <span class="badge medal-badge-gold">🥇 {% trans "Gold" %}</span>

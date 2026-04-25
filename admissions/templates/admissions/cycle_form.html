@@ -43,25 +43,43 @@
                     <p class="text-muted small mt-1">{% trans "Minimum percentage required to pass for this cycle." %}</p>
                 </div>
 
-                <div class="form-group" style="grid-column: span 2; display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-                    <input type="checkbox" name="enable_tab_warnings" id="id_enable_tab_warnings" {% if cycle.enable_tab_warnings != False %}checked{% endif %} style="width: 20px; height: 20px; cursor: pointer;">
-                    <div>
-                        <label for="id_enable_tab_warnings" style="margin: 0; font-weight: 600; cursor: pointer;">{% trans "Enable Tab Switch Warnings" %}</label>
-                        <p class="text-muted small mb-0">{% trans "Students will be warned if they switch tabs." %}</p>
-                    </div>
-                </div>
-                
                 <div class="form-group">
                     <label for="id_max_tab_switches" class="label">{% trans "Max Tab Switches" %}</label>
                     <input type="number" name="max_tab_switches" id="id_max_tab_switches" class="input" required value="{{ cycle.max_tab_switches|default:3 }}" min="1">
-                    <p class="text-muted small mt-1">{% trans "Exam locks automatically after this many switches." %}</p>
+                    <p class="text-muted small mt-1">{% trans "Number of tab switches allowed before blocking." %}</p>
                 </div>
 
-                <div class="form-group" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-                    <input type="checkbox" name="is_active" id="id_is_active" {% if cycle.is_active != False %}checked{% endif %} style="width: 20px; height: 20px; cursor: pointer;">
+                <div class="form-group" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <input type="checkbox" name="enable_tab_warnings" id="id_enable_tab_warnings" {% if cycle.enable_tab_warnings %}checked{% endif %} style="width: 18px; height: 18px; cursor: pointer; margin-top: 2px;">
                     <div>
-                        <label for="id_is_active" style="margin: 0; font-weight: 600; cursor: pointer;">{% trans "Active Cycle" %}</label>
-                        <p class="text-muted small mb-0">{% trans "Visible to candidates." %}</p>
+                        <label for="id_enable_tab_warnings" style="margin: 0; font-weight: 600; cursor: pointer; display: block; color: var(--text-primary);">{% trans "Enable Tab Switch Warnings" %}</label>
+                        <p class="text-muted small mb-0" style="margin-top: 4px;">{% trans "Warn and block students for switching tabs during exam." %}</p>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <input type="checkbox" name="require_webcam" id="id_require_webcam" {% if cycle.require_webcam %}checked{% endif %} style="width: 18px; height: 18px; cursor: pointer; margin-top: 2px;">
+                    <div>
+                        <label for="id_require_webcam" style="margin: 0; font-weight: 600; cursor: pointer; display: block; color: var(--text-primary);">{% trans "Require Webcam Recording" %}</label>
+                        <p class="text-muted small mb-0" style="margin-top: 4px;">{% trans "Records the student's face while taking the exam." %}</p>
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <input type="checkbox" name="prevent_back_navigation" id="id_prevent_back_navigation" {% if cycle.prevent_back_navigation %}checked{% endif %} style="width: 18px; height: 18px; cursor: pointer; margin-top: 2px;">
+                    <div>
+                        <label for="id_prevent_back_navigation" style="margin: 0; font-weight: 600; cursor: pointer; display: block; color: var(--text-primary);">{% trans "Prevent Previous Question" %}</label>
+                        <p class="text-muted small mb-0" style="margin-top: 4px;">{% trans "If enabled, students cannot return to previous questions after answering." %}</p>
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <input type="checkbox" name="is_active" id="id_is_active" {% if cycle.is_active != False %}checked{% endif %} style="width: 18px; height: 18px; cursor: pointer; margin-top: 2px;">
+                    <div>
+                        <label for="id_is_active" style="margin: 0; font-weight: 600; cursor: pointer; display: block; color: var(--text-primary);">{% trans "Active Cycle" %}</label>
+                        <p class="text-muted small mb-0" style="margin-top: 4px;">{% trans "Visible to candidates." %}</p>
                     </div>
                 </div>
             </div>

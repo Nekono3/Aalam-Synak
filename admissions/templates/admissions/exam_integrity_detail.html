@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Integrity Details" %} - {{ attempt.student.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="header" style="margin-bottom: var(--spacing-xl); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+            <a href="{% url 'admissions:exam_integrity_list' %}" class="btn btn-secondary" style="padding: 4px 12px; font-size: 14px;">&larr; {% trans "Back" %}</a>
+            <h1 class="h2" style="margin: 0; color: var(--text-primary);">{% trans "Integrity Details" %}</h1>
+        </div>
+        <p class="text-muted mt-2" style="margin: 0;">{{ attempt.student.get_full_name }} | {{ attempt.cycle.name }}</p>
+    </div>
+    
+    <div style="display: flex; gap: 12px; align-items: center;">
+        {% if attempt.status == 'locked' %}
+            <span class="badge" style="background: var(--danger); color: white; padding: 8px 16px; font-size: 14px;">
+                <i class="fas fa-lock"></i> {% trans "Exam Locked" %}
+            </span>
+        {% endif %}
+        {% if attempt.is_suspicious %}
+            <span class="badge" style="background: var(--warning); color: #000; padding: 8px 16px; font-size: 14px;">
+                <i class="fas fa-exclamation-triangle"></i> {% trans "Suspicious Activity" %}
+            </span>
+        {% endif %}
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 350px; gap: var(--spacing-xl);">
+    <!-- Left Column: Video and Overview -->
+    <div style="display: flex; flex-direction: column; gap: var(--spacing-xl);">
+        
+        <!-- Recordings Section -->
+        <div class="card">
+            <h3 class="h4" style="margin-top: 0; margin-bottom: var(--spacing-md);">
+                <i class="fas fa-video"></i> {% trans "Webcam Recordings" %}
+            </h3>
+            
+            {% if recordings %}
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-md);">
+                    {% for rec in recordings %}
+                        <div style="background: var(--bg-secondary); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color);">
+                            <video controls style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;" controlsList="nodownload">
+                                <source src="{{ rec.video_file.url }}" type="video/webm">
+                                {% trans "Your browser does not support the video tag." %}
+                            </video>
+                            <div style="padding: 12px; font-size: 13px; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                                <span>{{ rec.uploaded_at|date:"H:i:s" }}</span>
+                                <span>{{ rec.duration_seconds }}s</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: var(--spacing-xl); background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px dashed var(--border-color); color: var(--text-muted);">
+                    <i class="fas fa-video-slash" style="font-size: 32px; margin-bottom: 12px;"></i>
+                    <p style="margin: 0;">{% trans "No recordings available for this attempt." %}</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Attempt Overview (includes warnings) -->
+        <div class="card">
+            <h3 class="h4" style="margin-top: 0; margin-bottom: var(--spacing-md);">
+                <i class="fas fa-poll"></i> {% trans "Attempt Overview" %}
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+                <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <div class="text-muted small">{% trans "Total Score" %}</div>
+                    <div style="font-size: 24px; font-weight: 700;">{% if admission_result %}{{ admission_result.total_score|floatformat:1 }}{% else %}-{% endif %} / {{ attempt.cycle.passing_score }}</div>
+                </div>
+                <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <div class="text-muted small">{% trans "Percentage" %}</div>
+                    <div style="font-size: 24px; font-weight: 700;">{% if admission_result %}{{ admission_result.percentage|floatformat:1 }}{% else %}-{% endif %}%</div>
+                </div>
+                <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <div class="text-muted small">{% trans "Started" %}</div>
+                    <div>{% if attempt.started_at %}{{ attempt.started_at|date:"M d, H:i" }}{% else %}-{% endif %}</div>
+                </div>
+                <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <div class="text-muted small">{% trans "Tab Switch Warnings" %}</div>
+                    <div style="font-size: 24px; font-weight: 700; color: {% if attempt.tab_switch_count >= attempt.cycle.max_tab_switches %}var(--danger){% elif attempt.tab_switch_count > 0 %}var(--warning){% else %}var(--text-primary){% endif %};">
+                        {{ attempt.tab_switch_count }} / {{ attempt.cycle.max_tab_switches }}
+                    </div>
+                </div>
+                
+
+                <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <div class="text-muted small">{% trans "Status" %}</div>
+                    <div style="font-size: 18px; font-weight: 700;">
+                        {% if attempt.status == 'completed' %}
+                            <span style="color: var(--success);">{% trans "Completed" %}</span>
+                        {% elif attempt.status == 'locked' %}
+                            <span style="color: var(--danger);">{% trans "Locked" %}</span>
+                        {% elif attempt.status == 'in_progress' %}
+                            <span style="color: var(--warning);">{% trans "In Progress" %}</span>
+                        {% else %}
+                            {{ attempt.status }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if attempt.lock_reason %}
+                <div style="grid-column: span 2; padding: 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid var(--danger); border-radius: var(--radius-md); color: var(--danger);">
+                    <div style="font-weight: 600; margin-bottom: 4px;">{% trans "Lock Reason" %}</div>
+                    {{ attempt.lock_reason }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Column: Event Timeline only -->
+    <div class="card" style="height: fit-content; max-height: calc(100vh - 100px); display: flex; flex-direction: column;">
+        <h3 class="h4" style="margin: 0 0 var(--spacing-md) 0;">{% trans "Event Timeline" %}</h3>
+        
+        <div style="flex: 1; overflow-y: auto; padding-right: 8px;">
+            {% if violations %}
+                <div style="display: flex; flex-direction: column; gap: 12px; position: relative;">
+                    <!-- Timeline vertical line -->
+                    <div style="position: absolute; left: 16px; top: 10px; bottom: 10px; width: 2px; background: var(--border-color); z-index: 1;"></div>
+                    
+                    {% for log in violations %}
+                        <div style="display: flex; gap: 16px; position: relative; z-index: 2;">
+                            <div style="width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: {% if log.event_type == 'tab_switch' %}var(--warning); color: #000;{% elif log.event_type == 'camera_denied' or log.event_type == 'camera_lost' %}var(--danger); color: white;{% else %}var(--primary); color: white;{% endif %}; flex-shrink: 0; box-shadow: 0 0 0 4px var(--bg-card);">
+                                {% if log.event_type == 'tab_switch' %}
+                                    <i class="fas fa-external-link-alt" style="font-size: 14px;"></i>
+                                {% elif log.event_type == 'camera_denied' or log.event_type == 'camera_lost' %}
+                                    <i class="fas fa-video-slash" style="font-size: 14px;"></i>
+                                {% else %}
+                                    <i class="fas fa-exclamation" style="font-size: 14px;"></i>
+                                {% endif %}
+                            </div>
+                            <div style="padding-top: 6px;">
+                                <div style="font-weight: 600; font-size: 14px;">{{ log.get_event_type_display }}</div>
+                                <div class="text-muted small" style="margin-top: 2px;">{{ log.timestamp|date:"H:i:s" }}</div>
+                                {% if log.details %}
+                                    <div class="small" style="margin-top: 4px; color: var(--text-secondary);">{{ log.details }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-muted text-center" style="padding: 24px 0;">
+                    {% trans "No violations recorded." %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

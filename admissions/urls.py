@@ -32,6 +32,9 @@ urlpatterns = [
     path('analytics/', views.admission_analytics, name='admission_analytics'),
     path('analytics/upload/', views.admission_analytics_upload, name='admission_analytics_upload'),
     path('analytics/dashboard/', views.admission_analytics_dashboard, name='admission_analytics_dashboard'),
+    path('integrity/', views.exam_integrity_list, name='exam_integrity_list'),
+    path('integrity/<int:attempt_pk>/', views.exam_integrity_detail, name='exam_integrity_detail'),
+    path('cycles/<int:pk>/recordings/', views.cycle_recordings, name='cycle_recordings'),
     path('analytics/export/', views.export_admission_results, name='export_admission_results'),
     path('analytics/export/<int:cycle_id>/', views.export_admission_results, name='export_admission_results'),
     path('analytics/export/<int:cycle_id>/online/', views.export_admission_results, {'admission_type': 'online'}, name='export_online'),
@@ -81,5 +84,7 @@ urlpatterns = [
     path('student/attempt/<int:attempt_pk>/submit/', views.cycle_exam_submit, name='cycle_exam_submit'),
     path('student/attempt/<int:attempt_pk>/result/', views.cycle_exam_result, name='cycle_exam_result'),
     path('student/attempt/<int:attempt_pk>/save-answer/', views.save_answer_ajax, name='save_answer_ajax'),
+    path('student/attempt/<int:attempt_pk>/violation/', views.save_violation_ajax, name='save_violation_ajax'),
+    path('student/attempt/<int:attempt_pk>/upload-recording/', views.upload_recording_ajax, name='upload_recording_ajax'),
 
 ]

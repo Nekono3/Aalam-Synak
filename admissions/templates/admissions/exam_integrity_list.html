@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Exam Integrity Dashboard" %}{% endblock %}
+
+{% block content %}
+<div class="header" style="margin-bottom: var(--spacing-xl); display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 class="h2" style="margin: 0; color: var(--text-primary);">{% trans "Exam Integrity Dashboard" %}</h1>
+        <p class="text-muted mt-2" style="margin: 0;">{% trans "Review flagged attempts and proctoring logs" %}</p>
+    </div>
+</div>
+
+<!-- Filter Form -->
+<div class="card" style="margin-bottom: var(--spacing-xl);">
+    <form method="get" style="display: flex; gap: var(--spacing-md); align-items: flex-end; flex-wrap: wrap;">
+        <div class="form-group" style="margin: 0; flex: 1; min-width: 200px;">
+            <label for="cycle" class="label">{% trans "Filter by Cycle" %}</label>
+            <select name="cycle_id" id="cycle" class="input">
+                <option value="">{% trans "All Cycles" %}</option>
+                {% for cycle in cycles %}
+                    <option value="{{ cycle.id }}" {% if selected_cycle == cycle.id %}selected{% endif %}>{{ cycle.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin: 0; flex: 1; min-width: 200px;">
+            <label for="status" class="label">{% trans "Filter by Status" %}</label>
+            <select name="status" id="status" class="input">
+                <option value="">{% trans "All Attempts" %}</option>
+                <option value="suspicious" {% if selected_status == 'suspicious' %}selected{% endif %}>{% trans "Suspicious Only" %}</option>
+                <option value="locked" {% if selected_status == 'locked' %}selected{% endif %}>{% trans "Locked / Auto-Submitted" %}</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="height: 48px;">
+            <i class="fas fa-filter"></i> {% trans "Filter" %}
+        </button>
+    </form>
+</div>
+
+<div class="card p-0">
+    <div style="overflow-x: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{% trans "Student" %}</th>
+                    <th>{% trans "Cycle" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Total Warnings" %}</th>
+                    <th>{% trans "Time" %}</th>
+                    <th>{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in page_obj %}
+                    {% with total_warnings=attempt.tab_switch_count %}
+                    <tr>
+                        <td>
+                            <div style="font-weight: 500;">{{ attempt.student.get_full_name }}</div>
+                            <div class="text-muted small">{{ attempt.student.email }}</div>
+                        </td>
+                        <td>{{ attempt.cycle.name }}</td>
+                        <td>
+                            {% if attempt.status == 'locked' %}
+                                <span class="badge" style="background: var(--danger); color: white;">{% trans "Locked" %}</span>
+                            {% elif attempt.status == 'completed' %}
+                                <span class="badge" style="background: var(--success); color: white;">{% trans "Completed" %}</span>
+                            {% else %}
+                                <span class="badge" style="background: var(--bg-hover); color: var(--text-secondary);">{{ attempt.get_status_display }}</span>
+                            {% endif %}
+                            
+                            {% if attempt.is_suspicious %}
+                                <span class="badge" style="background: var(--warning); color: #000; margin-left: 4px;">
+                                    <i class="fas fa-exclamation-triangle"></i> {% trans "Suspicious" %}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span style="{% if total_warnings > 0 %}color: var(--danger); font-weight: bold;{% endif %}">
+                                {{ total_warnings }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="text-muted small">
+                                {% if attempt.started_at %}{{ attempt.started_at|date:"M d, H:i" }}{% else %}-{% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <a href="{% url 'admissions:exam_integrity_detail' attempt.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 14px;">
+                                <i class="fas fa-eye"></i> {% trans "Review" %}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endwith %}
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted" style="padding: var(--spacing-xl);">
+                            {% trans "No attempts found." %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+<div style="margin-top: var(--spacing-lg); display: flex; justify-content: center; gap: 8px;">
+    {% if page_obj.has_previous %}
+        <a href="?cycle_id={{ selected_cycle }}&status={{ selected_status }}&page={{ page_obj.previous_page_number }}" class="btn btn-secondary">&laquo;</a>
+    {% endif %}
+    
+    <span class="btn btn-primary" style="pointer-events: none;">{{ page_obj.number }}</span>
+    
+    {% if page_obj.has_next %}
+        <a href="?cycle_id={{ selected_cycle }}&status={{ selected_status }}&page={{ page_obj.next_page_number }}" class="btn btn-secondary">&raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

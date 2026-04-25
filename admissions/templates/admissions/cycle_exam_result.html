@@ -66,6 +66,12 @@
             <div style="font-weight:600;">{{ attempt.end_time|date:"d M Y H:i" }}</div>
         </div>
         {% endif %}
+        <div>
+            <span class="text-muted">{% trans "Tab Switch Warnings" %}</span>
+            <div style="font-weight:600; color: {% if attempt.tab_switch_count > 0 %}var(--danger){% else %}var(--success){% endif %};">
+                {{ attempt.tab_switch_count }} / {{ attempt.cycle.max_tab_switches }}
+            </div>
+        </div>
     </div>
 </div>
 
