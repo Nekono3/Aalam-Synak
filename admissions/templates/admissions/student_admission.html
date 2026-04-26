@@ -30,7 +30,7 @@
         <!-- Admission Exam Card (NEW SYSTEM) -->
     <div class="glass-card exam-card">
         <div class="card-header">
-            <h3>📝 {% trans "Admission Exam" %}</h3>
+            <h3>{% if active_cycle.round_number > 1 %}🚀 {% trans "Second Round" %} (Экинчи тур){% else %}📝 {% trans "Admission Exam" %}{% endif %}</h3>
         </div>
         {% if has_online_exam %}
             <div class="exam-content">
@@ -136,9 +136,19 @@
                     </div>
                 {% else %}
                     <div class="exam-actions text-center mt-4">
-                        <p class="text-muted mb-4 text-lg">Сынактан өтүүгө даярсызбы?</p>
-                        <a href="{% url 'admissions:cycle_exam_start' pk=active_cycle.pk %}" class="btn btn-primary btn-block" style="font-size: 1.25rem; padding: 1.25rem; border-radius: 12px; background: linear-gradient(135deg, var(--primary-blue), #4F46E5); box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);">
-                            🚀 Экзаменди башта!
+                        <p class="text-muted mb-4 text-lg">
+                            {% if active_cycle.round_number > 1 %}
+                                {% trans "Ready for the second round?" %}
+                            {% else %}
+                                {% trans "Ready to take the exam?" %}
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'admissions:cycle_exam_start' pk=active_cycle.pk %}" class="btn btn-primary btn-block" style="font-size: 1.25rem; padding: 1.25rem; border-radius: 12px; background: linear-gradient(135deg, {% if active_cycle.round_number > 1 %}#10B981, #059669{% else %}var(--primary-blue), #4F46E5{% endif %}); box-shadow: 0 10px 25px -5px rgba({% if active_cycle.round_number > 1 %}16, 185, 129, 0.4{% else %}79, 70, 229, 0.4{% endif %});">
+                            {% if active_cycle.round_number > 1 %}
+                                🏆 {% trans "Start Second Round" %} (Экинчи тур)
+                            {% else %}
+                                🚀 {% trans "Start Exam" %}
+                            {% endif %}
                         </a>
                     </div>
                 {% endif %}

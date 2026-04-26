@@ -679,24 +679,32 @@ def student_admission_view(request):
         pass
         
     # Find all cycles the student has already participated in (active or inactive)
-    participated_cycle_ids = set(
-        OnlineAttempt.objects.filter(student=user).values_list('cycle_id', flat=True)
-    )
-    if candidate:
-        result_cycle_ids = set(
-            AdmissionResult.objects.filter(candidate=candidate).values_list('cycle_id', flat=True)
-        )
-        participated_cycle_ids.update(result_cycle_ids)
-        
-    if participated_cycle_ids:
-        # If they participated in anything, show ONLY those cycles, regardless of is_active
-        active_cycles = list(AdmissionCycle.objects.filter(id__in=participated_cycle_ids).order_by('-start_date', '-created_at'))
+    participated_cycles = AdmissionCycle.objects.filter(
+        models.Q(online_attempts__student=user) | 
+        models.Q(registrations__user=user)
+    ).distinct().order_by('-start_date', '-created_at')
+    
+    participated_cycle_ids = set(participated_cycles.values_list('id', flat=True))
+    
+    # Identify "Old Students": They have at least one participation in an INACTIVE cycle
+    # or they have an AdmissionResult from an inactive cycle
+    has_old_participation = participated_cycles.filter(is_active=False).exists()
+    
+    # Also show currently active cycles they HAVEN'T participated in yet
+    available_cycles_qs = AdmissionCycle.objects.filter(is_active=True).exclude(id__in=participated_cycle_ids)
+    
+    if not has_old_participation:
+        # New students (no past participation in inactive cycles) should ONLY see Round 1
+        available_cycles = list(available_cycles_qs.filter(round_number=1).order_by('-start_date', '-created_at'))
     else:
-        # Otherwise, show currently active cycles
-        active_cycles = list(AdmissionCycle.objects.filter(is_active=True).order_by('-start_date', '-created_at'))
+        # Old students can see Round 2+ as "Second Round"
+        available_cycles = list(available_cycles_qs.order_by('-start_date', '-created_at'))
+    
+    # Combined list for display
+    all_cycles = list(participated_cycles) + available_cycles
     
     cycles_data = []
-    for active_cycle in active_cycles:
+    for active_cycle in all_cycles:
         has_online_exam = False
         admission_attempt = None
         admission_result = None
@@ -1364,19 +1372,22 @@ def cycle_exam_start(request, pk):
         messages.error(request, _('No questions available for this cycle.'))
         return redirect('admissions:student_admission')
         
-    # Check if they have already started/finished ANY OTHER active cycle
-    active_cycles = AdmissionCycle.objects.filter(is_active=True).exclude(pk=cycle.pk)
-    has_other_attempts = OnlineAttempt.objects.filter(student=request.user, cycle__in=active_cycles).exists()
+    # Check if they have already started/finished THIS specific cycle
+    has_attempt = OnlineAttempt.objects.filter(student=request.user, cycle=cycle).exists()
     
-    has_other_results = False
+    has_result = False
     try:
         candidate = request.user.admission_profile
-        has_other_results = AdmissionResult.objects.filter(candidate=candidate, cycle__in=active_cycles).exists()
+        has_result = AdmissionResult.objects.filter(candidate=candidate, cycle=cycle).exists()
     except AdmissionCandidate.DoesNotExist:
         pass
         
-    if has_other_attempts or has_other_results:
-        messages.error(request, _('You have already participated in another admission exam. You cannot take multiple exams.'))
+    if has_attempt or has_result:
+        attempt = OnlineAttempt.objects.filter(student=request.user, cycle=cycle).first()
+        if attempt and attempt.status == 'completed':
+            messages.info(request, _('You have already completed this admission exam.'))
+        else:
+            messages.warning(request, _('You already have an active attempt for this exam.'))
         return redirect('admissions:student_admission')
         
     attempt, created = OnlineAttempt.objects.get_or_create(

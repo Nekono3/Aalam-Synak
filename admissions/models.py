@@ -47,6 +47,12 @@ class AdmissionCycle(models.Model):
         help_text=_('Number of tab switches allowed before blocking the exam.')
     )
     
+    round_number = models.PositiveIntegerField(
+        default=1,
+        verbose_name=_('Round Number'),
+        help_text=_('e.g., 1 for First Round, 2 for Second Round.')
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

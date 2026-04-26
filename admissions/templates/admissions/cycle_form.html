@@ -44,6 +44,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="id_round_number" class="label">{% trans "Round Number" %}</label>
+                    <input type="number" name="round_number" id="id_round_number" class="input" required value="{{ cycle.round_number|default:1 }}" min="1">
+                    <p class="text-muted small mt-1">{% trans "e.g., 1 for First Round, 2 for Second Round." %}</p>
+                </div>
+
+                <div class="form-group">
                     <label for="id_max_tab_switches" class="label">{% trans "Max Tab Switches" %}</label>
                     <input type="number" name="max_tab_switches" id="id_max_tab_switches" class="input" required value="{{ cycle.max_tab_switches|default:3 }}" min="1">
                     <p class="text-muted small mt-1">{% trans "Number of tab switches allowed before blocking." %}</p>
